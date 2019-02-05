@@ -4,11 +4,37 @@ The nptyping module: support for typing Numpy datatypes.
 import numpy as np
 
 
+_instances = {}
+
+
 def _meta(generic_type: type = None, rows: int = ..., cols: int = ...) -> type:
     class _ArrayMeta(type):
         _generic_type = generic_type
         _rows = rows
         _cols = cols
+
+        def __getitem__(cls, item: object) -> type:
+            if item in _instances:
+                return _instances[item]
+
+            generic_type = item
+            rows = ...
+            cols = ...
+            if isinstance(item, tuple):
+                if not len(item):
+                    raise TypeError('Parameter Array[...] cannot be empty')
+                generic_type = item[0]
+                if len(item) > 1 and item[1] is not None:
+                    rows = item[1]
+                if len(item) > 2 and item[2] is not None:
+                    cols = item[2]
+
+            class _Array(metaclass=_meta(generic_type, rows, cols)):
+                pass
+
+            result = type('Array', (_Array,), {})
+            _instances[item] = result
+            return result
 
         @classmethod
         def __instancecheck__(cls, inst):
@@ -55,27 +81,3 @@ class Array(metaclass=_meta()):
         `Array[int, 3, 2]`
 
     """
-    _instances = {}
-
-    @classmethod
-    def __class_getitem__(cls, item: object) -> type:
-        if item in Array._instances:
-            return Array._instances[item]
-
-        generic_type = item
-        rows = ...
-        cols = ...
-        if isinstance(item, tuple):
-            if not len(item):
-                raise TypeError('Parameter Array[...] cannot be empty')
-            generic_type = item[0]
-            if len(item) > 1 and item[1] is not None:
-                rows = item[1]
-            if len(item) > 2 and item[2] is not None:
-                cols = item[2]
-
-        class _Array(metaclass=_meta(generic_type, rows, cols)):
-            pass
-        result = type('Array', (_Array,), {})
-        Array._instances[item] = result
-        return result
