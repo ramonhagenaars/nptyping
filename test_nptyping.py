@@ -21,9 +21,6 @@ class NPTypingTestSuite(TestCase):
         self.assertTrue(not isinstance(arr, Array[int, ..., 5]))
         self.assertTrue(not isinstance(arr, Array[int, 5, 5]))
 
-        self.assertTrue(isinstance(np.array([1, 2, 3]), Array[np.intc]))
-        self.assertTrue(isinstance(np.array([1, 2, 3]), Array[np.intp]))
-        self.assertTrue(isinstance(np.array([1, 2, 3]), Array[np.int32]))
         self.assertTrue(isinstance(np.array([1.0, 2.0, 3.0]), Array[float]))
         self.assertTrue(not isinstance(np.array([1.0, 2.0, 3.0]), Array[int]))
         self.assertTrue(isinstance(np.array([1.0, 2.0, 3.0]), Array))
