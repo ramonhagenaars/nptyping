@@ -22,8 +22,7 @@ Use the `nptyping` type hints like the regular type hints from `typing`:
    from nptyping import Array
 
 
-   def func1(arr: Array[int]):
-       # A numpy.ndarray that contains numbers
+   def func1(arr: Array[int]):  # A numpy.ndarray that contains numbers
        ...
 
 You can also define the shape of an array:
