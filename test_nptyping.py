@@ -28,6 +28,32 @@ class NPTypingTestSuite(TestCase):
 
         self.assertTrue(isinstance(np.array(['1', '22', '333']), Array[str]))
 
+    def test_heterogeneous_array(self):
+        dtype = [('a', float), ('b', float), ('c', int), ('d', str)]
+        a = np.array(
+            [
+                (1.0, 2.0, 3, '4'),
+                (5.0, 6.0, 7, '8')
+            ],
+            dtype=dtype)
+
+        self.assertTrue(isinstance(a, Array[float, float, int, str, 2]))
+        self.assertTrue(isinstance(a, Array[float, float, int, str, ...]))
+        self.assertTrue(isinstance(a, Array[float, float, int, str]))
+        self.assertTrue(not isinstance(a, Array[float, int, int, str, 2]))
+        self.assertTrue(not isinstance(a, Array[float, float, str, 2]))
+        self.assertTrue(not isinstance(a, Array[float, float, str, 3]))
+        with self.assertRaises(TypeError):
+            Array[float, float, int, 'should be an int']
+
+        dtype = [('a', int), ('b', int), ('c', int), ('d', int)]
+        a = np.array(
+            [
+                (1, 2, 3, 4),
+                (11, 22, 33, 44)
+            ],
+            dtype=dtype)
+
     def test_identity(self):
         self.assertTrue(Array is Array)
         self.assertTrue(Array[int] is Array[int])

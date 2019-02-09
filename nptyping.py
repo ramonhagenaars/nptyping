@@ -19,11 +19,32 @@ def _meta(generic_type: type = None, rows: int = ..., cols: int = ...) -> type:
             if isinstance(item, tuple):
                 if not len(item):
                     raise TypeError('Parameter Array[...] cannot be empty')
-                generic_type = item[0]
-                if len(item) > 1 and item[1] is not None:
-                    rows = item[1]
-                if len(item) > 2 and item[2] is not None:
-                    cols = item[2]
+
+                generic_type = tuple()
+                for index, value in enumerate(item):
+                    if isinstance(value, type):
+                        generic_type += (value,)
+                    else:
+                        break
+                else:
+                    index += 1
+
+                if len(generic_type) == 1:
+                    generic_type = generic_type[0]
+
+                rowcol_types = [int, type(...), type(None)]
+                if len(item) > index:
+                    if type(item[index]) not in rowcol_types:
+                        raise TypeError('Unexpected type %s, expecting int or ... or None' % item[index])
+                    rows = item[index] or ...
+                index += 1
+                if len(item) > index:
+                    if isinstance(generic_type, tuple):
+                        raise TypeError('You are not allowed to specify a column count, combined with multiple column '
+                                        'types.')
+                    if type(item[index]) not in rowcol_types:
+                        raise TypeError('Unexpected type %s, expecting int or ... or None' % item[index])
+                    cols = item[index] or ...
 
             class _Array(metaclass=_meta(generic_type, rows, cols)):
                 pass
@@ -44,8 +65,13 @@ def _meta(generic_type: type = None, rows: int = ..., cols: int = ...) -> type:
                     cols = inst.shape[1]
 
                 if inst.size > 0 and cls._generic_type:
-                    result = isinstance(inst[0], cls._generic_type)
-                    result |= inst.dtype == np.dtype(cls._generic_type)
+                    if isinstance(cls._generic_type, tuple):
+                        inst_dtypes = [inst.dtype[name] for name in inst.dtype.names]
+                        cls_dtypes = [np.dtype(typ) for typ in cls._generic_type]
+                        result = inst_dtypes == cls_dtypes
+                    else:
+                        result = isinstance(inst[0], cls._generic_type)
+                        result |= inst.dtype == np.dtype(cls._generic_type)
                     result &= cls._rows is ... or cls._rows == rows
                     result &= cls._cols is ... or cls._cols == cols
             return result

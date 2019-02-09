@@ -5,7 +5,7 @@ with open('README.rst', 'r') as fh:
     long_description = fh.read()
 
 setup(name='nptyping',
-      version='0.1.0',
+      version='0.2.0',
       description='Type hints for Numpy',
       long_description=long_description,
       py_modules=['nptyping'],
