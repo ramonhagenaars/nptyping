@@ -76,7 +76,7 @@ Also for heterogeneous arrays:
       isinstance(arr, Array[int, float, str, 2])  # True
 
 
-.. include:: ./HISTORY.rst
+.. include:: HISTORY.rst
 
 
 .. |PyPI version| image:: https://badge.fury.io/py/nptyping.svg
