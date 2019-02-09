@@ -1,10 +1,8 @@
 """
 The nptyping module: support for typing Numpy datatypes.
 """
+from functools import lru_cache
 import numpy as np
-
-
-_instances = {}
 
 
 def _meta(generic_type: type = None, rows: int = ..., cols: int = ...) -> type:
@@ -13,10 +11,8 @@ def _meta(generic_type: type = None, rows: int = ..., cols: int = ...) -> type:
         _rows = rows
         _cols = cols
 
+        @lru_cache(maxsize=32)
         def __getitem__(cls, item: object) -> type:
-            if item in _instances:
-                return _instances[item]
-
             generic_type = item
             rows = ...
             cols = ...
@@ -33,7 +29,6 @@ def _meta(generic_type: type = None, rows: int = ..., cols: int = ...) -> type:
                 pass
 
             result = type('Array', (_Array,), {})
-            _instances[item] = result
             return result
 
         @classmethod
