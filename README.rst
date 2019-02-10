@@ -75,10 +75,6 @@ Also for heterogeneous arrays:
       isinstance(arr, Array[float, float, str])   # False
       isinstance(arr, Array[int, float, str, 2])  # True
 
-
-.. include:: HISTORY.rst
-
-
 .. |PyPI version| image:: https://badge.fury.io/py/nptyping.svg
    :target: https://badge.fury.io/py/nptyping
 
