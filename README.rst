@@ -1,4 +1,4 @@
-|Python versions| |PyPI version| |Build Status|
+|Python versions| |PyPI version| |Build Status| |Downloads|
 
 nptyping
 ========
@@ -84,3 +84,6 @@ Also for heterogeneous arrays:
 
 .. |Build Status| image:: https://api.travis-ci.org/ramonhagenaars/nptyping.svg?branch=master
    :target: https://travis-ci.org/ramonhagenaars/nptyping
+
+.. |Downloads| image:: https://img.shields.io/pypi/dm/nptyping.svg
+   :target: https://pypistats.org/packages/nptyping
