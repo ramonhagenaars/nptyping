@@ -10,6 +10,7 @@ class NPTypingTestSuite(TestCase):
                         [7, 8, 9],
                         [8, 7, 6]])
 
+        self.assertTrue(isinstance(arr, Array))
         self.assertTrue(isinstance(arr, Array[int, 4, ...]))
         self.assertTrue(isinstance(arr, Array[int, 4]))
         self.assertTrue(isinstance(arr, Array[int, 4, None]))
@@ -62,3 +63,7 @@ class NPTypingTestSuite(TestCase):
     def test_empty_arg(self):
         with self.assertRaises(TypeError):
             Array[tuple()]
+
+    def test_instantiation(self):
+        with self.assertRaises(TypeError):
+            Array()
