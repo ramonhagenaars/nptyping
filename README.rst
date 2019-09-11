@@ -1,4 +1,4 @@
-|PyPI version| |Build Status|
+|Python versions| |PyPI version| |Build Status|
 
 nptyping
 ========
@@ -74,6 +74,10 @@ Also for heterogeneous arrays:
       isinstance(arr, Array[int, float, str])     # True
       isinstance(arr, Array[float, float, str])   # False
       isinstance(arr, Array[int, float, str, 2])  # True
+
+
+.. |Python versions| image:: https://img.shields.io/pypi/pyversions/nptyping.svg
+   :target: https://img.shields.io/pypi/pyversions/nptyping.svg
 
 .. |PyPI version| image:: https://badge.fury.io/py/nptyping.svg
    :target: https://badge.fury.io/py/nptyping

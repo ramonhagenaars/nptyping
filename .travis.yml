@@ -3,7 +3,17 @@ language: python
 python:
   - "3.5"
   - "3.6"
-  # - "3.7"  Travis does not support 3.7 yet.
+
+matrix:
+  include:
+    - python: 3.7
+      dist: xenial
+      sudo: true
 
 script:
-  - pytest
+  - pip3 install .
+  - pip3 install coverage
+  - pip3 install codecov
+  - python3 setup.py test
+  - coverage run setup.py test
+  - codecov
