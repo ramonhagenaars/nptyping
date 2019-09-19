@@ -44,8 +44,12 @@ class NPTypingTestSuite(TestCase):
         self.assertTrue(not isinstance(a, Array[float, int, int, str, 2]))
         self.assertTrue(not isinstance(a, Array[float, float, str, 2]))
         self.assertTrue(not isinstance(a, Array[float, float, str, 3]))
+
         with self.assertRaises(TypeError):
             Array[float, float, int, 'should be an int']
+
+        with self.assertRaises(TypeError):
+            Array[float, float, int, 10, 10]
 
         dtype = [('a', int), ('b', int), ('c', int), ('d', int)]
         a = np.array(
