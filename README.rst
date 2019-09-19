@@ -40,19 +40,19 @@ Heterogeneous arrays are supported as well:
 
    Array[int, float, str]       # int, float and str on columns 1, 2 and 3 resp.
    Array[int, float, str, ...]  # int, float and str on columns 1, 2 and 3 resp.
-   Array[int, float, str, 3]    # 3 rows and int, float and str on columns 1, 2 and 3 resp.
+   Array[int, float, str, 3]    # int, float and str on columns 1, 2 and 3 resp. and with 3 rows
 
 `nptyping` also supports instance checks:
 
 .. code:: python
 
-   import numpy
+   import numpy as np
    from nptyping import Array
 
 
-   arr = numpy.array([[1, 2],
-                      [3, 4],
-                      [5, 6]])
+   arr = np.array([[1, 2],
+                   [3, 4],
+                   [5, 6]])
 
    isinstance(arr, Array[int, 3, 2])    # True
    isinstance(arr, Array[str, 3, 2])    # False
@@ -63,7 +63,7 @@ Also for heterogeneous arrays:
 
 .. code:: python
 
-      import numpy
+      import numpy as np
       from nptyping import Array
 
 
