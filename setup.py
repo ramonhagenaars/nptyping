@@ -7,10 +7,10 @@ with open('README.rst', 'r') as fh:
 
 
 setup(name='nptyping',
-      version='0.3.0',
+      version='0.3.1',
       description='Type hints for Numpy',
       long_description=long_description,
-      py_modules=[
+      packages=[
           'nptyping',
       ],
       install_requires=[
