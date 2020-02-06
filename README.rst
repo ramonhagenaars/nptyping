@@ -1,5 +1,7 @@
 |Python versions| |PyPI version| |Build Status| |Downloads|
 
+*Wanna help with a new design? Please join the discussion at https://github.com/ramonhagenaars/nptyping/issues/12*
+
 nptyping
 ========
 
