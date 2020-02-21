@@ -5,9 +5,8 @@ from setuptools import setup
 with open('README.rst', 'r') as fh:
     long_description = fh.read()
 
-import nptyping
 setup(name='nptyping',
-      version=nptyping.__version__,
+      version='0.3.1',
       description='Type hints for Numpy',
       long_description=long_description,
       packages=[
