@@ -1,0 +1,90 @@
+from typing import Any
+from unittest import TestCase
+
+import numpy as np
+
+from nptyping.ndarray import NDArray
+
+
+class TestNDArray(TestCase):
+    def test_initialize_with_size(self):
+        self.assertEqual(1, len(NDArray[5].shape))
+        self.assertEqual(5, NDArray[5].shape[0])
+        self.assertEqual(Any, NDArray[5].type_)
+
+    def test_initialize_with_any_size(self):
+        self.assertEqual(1, len(NDArray[...].shape))
+        self.assertEqual(Any, NDArray[...].shape[0])
+        self.assertEqual(Any, NDArray[...].type_)
+
+    def test_initialize_with_type(self):
+        self.assertEqual(Any, NDArray[int].shape)
+        self.assertEqual(int, NDArray[int].type_)
+
+    def test_initialize_with_size_and_type(self):
+        self.assertEqual(1, len(NDArray[3, int].shape))
+        self.assertEqual(3, NDArray[3, int].shape[0])
+        self.assertEqual(int, NDArray[3, int].type_)
+
+    def test_initialize_with_only_sizes(self):
+        self.assertEqual(3, len(NDArray[(2, 4, ...)].shape))
+        self.assertEqual(2, NDArray[(2, 4, ...)].shape[0])
+        self.assertEqual(4, NDArray[(2, 4, ...)].shape[1])
+        self.assertEqual(Any, NDArray[(2, 4, ...)].shape[2])
+        self.assertEqual(Any, NDArray[(2, 4, ...)].type_)
+
+    def test_initialize_with_sizes_and_type(self):
+        self.assertEqual(3, len(NDArray[(2, 4, ...), int].shape))
+        self.assertEqual(2, NDArray[(2, 4, ...), int].shape[0])
+        self.assertEqual(4, NDArray[(2, 4, ...), int].shape[1])
+        self.assertEqual(Any, NDArray[(2, 4, ...), int].shape[2])
+        self.assertEqual(int, NDArray[(2, 4, ...), int].type_)
+
+    def test_initialize_with_sizes_and_dtype(self):
+        arr = NDArray[(2, 4, ...), np.dtype(int)]
+
+        self.assertEqual(3, len(arr.shape))
+        self.assertEqual(2, arr.shape[0])
+        self.assertEqual(4, arr.shape[1])
+        self.assertEqual(Any, arr.shape[2])
+        self.assertEqual(np.dtype(int), arr.type_)
+
+    def test_invalid_initialization(self):
+        with self.assertRaises(TypeError):
+            NDArray['test']
+
+    def test_instance_check_dimension_sizes(self):
+        arr2x2x2 = np.array([[[1, 2], [3, 4]], [[5, 6], [7, 8]]])
+        arr1x2x2 = np.array([[[1, 2], [3, 4]]])
+        arr3x2x2 = np.array([[[1, 2], [3, 4]], [[5, 6], [7, 8]], [[9, 10], [11, 12]]])
+        arr2x2 = np.array([[1, 2], [3, 4]])
+
+        self.assertTrue(isinstance(arr2x2x2, NDArray[(2, 2, 2), int]))
+        self.assertTrue(not isinstance(arr1x2x2, NDArray[(2, 2, 2), int]))
+        self.assertTrue(not isinstance(arr3x2x2, NDArray[(2, 2, 2), int]))
+        self.assertTrue(not isinstance(arr2x2, NDArray[(2, 2, 2), int]))
+
+    def test_instance_check_dimension_any(self):
+        arr3x2x2 = np.array([[[1, 2], [3, 4]], [[5, 6], [7, 8]], [[9, 10], [11, 12]]])
+        arr2x2 = np.array([[[1, 2], [3, 4]]])
+
+        self.assertTrue(isinstance(arr3x2x2, NDArray[int]))
+        self.assertTrue(isinstance(arr2x2, NDArray[int]))
+
+    def test_instance_check_types(self):
+        arr2x2x2_float = np.array([[[1.0, 2.0], [3.0, 4.0]],
+                                  [[5.0, 6.0], [7.0, 8.0]]])
+        arr2x2x2 = np.array([[[1, 2], [3, 4]], [[5, 6], [7, 8]]])
+
+        self.assertTrue(isinstance(arr2x2x2_float, NDArray[(2, 2, 2), float]))
+        self.assertTrue(not isinstance(arr2x2x2, NDArray[(2, 2, 2), str]))
+
+    def test_instance_check_types_any(self):
+        arr2x2x2_float = np.array([[[1.0, 2.0], [3.0, 4.0]],
+                                  [[5.0, 6.0], [7.0, 8.0]]])
+        arr2x2x2 = np.array([[[1, 2], [3, 4]], [[5, 6], [7, 8]]])
+        arr2x2 = np.array([[[1, 2], [3, 4]]])
+
+        self.assertTrue(isinstance(arr2x2x2, NDArray[(2, 2, 2)]))
+        self.assertTrue(isinstance(arr2x2x2_float, NDArray[(2, 2, 2)]))
+        self.assertTrue(not isinstance(arr2x2, NDArray[(2, 2, 2)]))
