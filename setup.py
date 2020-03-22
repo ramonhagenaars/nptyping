@@ -15,7 +15,7 @@ setup(name='nptyping',
       ],
       install_requires=[
           'numpy',
-          'typish',
+          'typish>=1.4.0',
       ],
       classifiers=[
           'Intended Audience :: Developers',

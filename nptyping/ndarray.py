@@ -1,51 +1,61 @@
 from typing import Any, Tuple, Union
 
 import numpy as np
-from typish import SubscriptableType, Ellipsis_, instance_of, ClsDict
+from typish import SubscriptableType, Ellipsis_, ClsDict, Literal
 
-_Size = Union[int, Ellipsis_]  # TODO add type vars as well
+_Size = Union[int, Literal[Any]]  # TODO add type vars as well
 _Type = Union[type, np.dtype]
 
 
-def _is_eq_to(a: Any, b: Any) -> bool:
-    return b is Any or a == b
-
-
 class _NDArrayMeta(SubscriptableType):
+    _shape = ...  # Overridden by _NDArray._shape.
+    _type = ...  # Overridden by _NDArray._type.
+
+    @property
+    def dtype(self):
+        return np.dtype(self._type)
+
+    @property
+    def shape(self):
+        return self._shape
 
     def __instancecheck__(self, instance):
         return self._is_shape_eq(instance) and self._is_type_eq(instance)
 
     def _is_shape_eq(cls, instance: np.ndarray) -> bool:
-        if cls.shape is Any:
+
+        def _is_eq_to(a: Any, b: Any) -> bool:
+            return b is Any or a == b
+
+        if cls._shape is Any:
             return True
-        if len(instance.shape) != len(cls.shape):
+        if len(cls._shape) == 2 and cls._shape[1] is ...:
+            size = cls._shape[0]
+            return all([s == size for s in instance.shape])
+        if len(instance.shape) != len(cls._shape):
             return False
-        zipped = zip(instance.shape, cls.shape)
+        zipped = zip(instance.shape, cls._shape)
         return all([_is_eq_to(a, b) for a, b in zipped])
 
     def _is_type_eq(cls, instance: np.ndarray) -> bool:
-        if cls.type_ is Any:
+        if cls._type is Any:
             return True
-        return cls.dtype(cls) == instance.dtype
+        return cls.dtype == instance.dtype
 
 
 class _NDArray(metaclass=_NDArrayMeta):
-    shape = Any
-    type_ = Any
-
-    def dtype(self):
-        return np.dtype(self.type_)
+    _shape = Any
+    _type = Any
 
     @classmethod
     def _after_subscription(cls, item: Any) -> None:
         method_per_type = ClsDict({
-            int: cls._only_size,
-            Ellipsis_: cls._only_ellipsis,
+            _Size: cls._only_size,
             _Type: cls._only_type,
             Tuple[_Size, _Type]: cls._size_and_type,
             Tuple[_Size, ...]: cls._only_sizes,
             Tuple[Tuple[_Size, ...], _Type]: cls._sizes_and_type,
+            Tuple[Tuple[_Size, Ellipsis_], _Type]: cls._sizes_and_type,
         })
         method = method_per_type.get(item)
         if not method:
@@ -53,49 +63,39 @@ class _NDArray(metaclass=_NDArrayMeta):
         return method(item)
 
     @classmethod
-    def _only_ellipsis(cls, _: Ellipsis_):
-        # I.e. NDArray[...]
-        # The given item is an ellipsis; a single dimension of any size of any
-        # type.
-        cls.shape = (Any,)
-
-    @classmethod
     def _only_size(cls, item: int):
         # E.g. NDArray[3]
         # The given item is the size of the single dimension.
-        cls.shape = (item,)
+        cls._shape = (item,)
 
     @classmethod
     def _only_type(cls, item: type):
         # E.g. NDArray[int]
         # The given item is the type of the single dimension.
-        cls.type_ = item
+        cls._type = item
 
     @classmethod
     def _size_and_type(cls, item: Tuple[_Size, _Type]):
         # E.g. NDArray[3, int]
         # The given item is the size of the single dimension and its type.
-        cls.shape = (item[0],)
-        cls.type_ = item[1]
+        cls._shape = (item[0],)
+        cls._type = item[1]
 
     @classmethod
     def _only_sizes(cls, item: Tuple[_Size, ...]):
-        # E.g. NDArray[(2, ..., 2)]
+        # E.g. NDArray[(2, Any, 2)]
         # The given item is a tuple with just sizes of the dimensions.
-        cls.shape = tuple()
-        for d in item:
-            size = d
-            if instance_of(d, Ellipsis_):
-                size = Any
-            cls.shape += (size,)
+        cls._shape = item
 
     @classmethod
     def _sizes_and_type(cls, item: Tuple[Tuple[_Size, ...], _Type]):
-        # E.g. NDArray[(2, ..., 2), int]
+        # E.g. NDArray[(2, Any, 2), int]
         # The given item is a tuple with sizes of the dimensions and the type.
+        # Or e.g. NDArray[(3, ...), int]
+        # The given item is a tuple with sizes of n dimensions and the type.
         cls._only_sizes(item[0])
         cls._only_type(item[1])
 
 
-class NDArray(_NDArray):
+class NDArray(np.ndarray, _NDArray):
     ...
