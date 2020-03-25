@@ -7,10 +7,19 @@ from nptyping.ndarray import NDArray
 
 
 class TestNDArray(TestCase):
+
+    def test_initialize_with_nothing(self):
+        self.assertEqual((Any, ...), NDArray.shape)
+        self.assertEqual(Any, NDArray._type)
+        self.assertEqual((Any, ...), NDArray[(Any, ...), Any].shape)
+        self.assertEqual(Any, NDArray[(Any, ...), Any]._type)
+
     def test_initialize_with_size(self):
         self.assertEqual(1, len(NDArray[5].shape))
         self.assertEqual(5, NDArray[5].shape[0])
         self.assertEqual(Any, NDArray[5]._type)
+        self.assertEqual(NDArray[5], NDArray[(5,)])
+        self.assertEqual(NDArray[5], NDArray[(5,), Any])
 
     def test_initialize_with_any_size(self):
         self.assertEqual(1, len(NDArray[Any].shape))
@@ -18,7 +27,7 @@ class TestNDArray(TestCase):
         self.assertEqual(Any, NDArray[Any]._type)
 
     def test_initialize_with_type(self):
-        self.assertEqual(Any, NDArray[int].shape)
+        self.assertEqual((Any, ...), NDArray[int].shape)
         self.assertEqual(int, NDArray[int]._type)
 
     def test_initialize_with_size_and_type(self):
@@ -32,6 +41,7 @@ class TestNDArray(TestCase):
         self.assertEqual(4, NDArray[(2, 4, Any)].shape[1])
         self.assertEqual(Any, NDArray[(2, 4, Any)].shape[2])
         self.assertEqual(Any, NDArray[(2, 4, Any)]._type)
+        self.assertEqual(NDArray[(2, 4, Any)], NDArray[2, 4, Any])
 
     def test_initialize_with_sizes_and_type(self):
         self.assertEqual(3, len(NDArray[(2, 4, Any), int].shape))
@@ -77,6 +87,8 @@ class TestNDArray(TestCase):
         arr3x2x2 = np.array([[[1, 2], [3, 4]], [[5, 6], [7, 8]], [[9, 10], [11, 12]]])
         arr2x2 = np.array([[1, 2], [3, 4]])
 
+        self.assertTrue(isinstance(arr3x2x2, NDArray))
+        self.assertTrue(isinstance(arr2x2, NDArray))
         self.assertTrue(isinstance(arr3x2x2, NDArray[int]))
         self.assertTrue(isinstance(arr2x2, NDArray[int]))
 
@@ -108,3 +120,21 @@ class TestNDArray(TestCase):
         self.assertTrue(isinstance(arr2x2, NDArray[(2, ...), int]))
         self.assertTrue(isinstance(arr2x2x2, NDArray[(2, ...), int]))
         self.assertTrue(not isinstance(arr3x2x2, NDArray[(2, ...), int]))
+
+    def test_repr(self):
+        arr_1a = NDArray[(2, 2), int]
+        arr_1b = eval(repr(arr_1a))
+
+        arr_2a = NDArray[(Any, ...), int]
+        arr_2b = eval(repr(arr_2a))
+
+        arr_3a = NDArray
+        arr_3b = eval(repr(arr_3a))
+
+        arr_4a = NDArray[5]
+        arr_4b = eval(repr(arr_4a))
+
+        self.assertEqual(arr_1a, arr_1b)
+        self.assertEqual(arr_2a, arr_2b)
+        self.assertEqual(arr_3a, arr_3b)
+        self.assertEqual(arr_4a, arr_4b)

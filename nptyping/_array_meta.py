@@ -1,8 +1,10 @@
+# pylint: skip-file
 """
 PRIVATE MODULE: do not import (from) it directly.
 This module contains meta functionality for the ``Array`` type.
 """
 from functools import lru_cache
+
 import numpy as np
 from typish import SubscriptableType
 from typish._types import Ellipsis_, NoneType
@@ -27,7 +29,8 @@ class _ArrayMeta(SubscriptableType):
 
             if inst.size > 0 and self.generic_type:
                 if isinstance(self.generic_type, tuple):
-                    inst_dtypes = [inst.dtype[name] for name in inst.dtype.names]
+                    inst_dtypes = [inst.dtype[name]
+                                   for name in inst.dtype.names]
                     cls_dtypes = [np.dtype(typ) for typ in self.generic_type]
                     result = inst_dtypes == cls_dtypes
                 else:
@@ -74,14 +77,17 @@ class _Array(metaclass=_ArrayMeta):
 
             if len(item) > index:
                 if type(item[index]) not in cls._ROWCOL_TYPES:
-                    raise TypeError('Unexpected type %s, expecting int or ... or None' % item[index])
+                    raise TypeError('Unexpected type %s, expecting int or ... '
+                                    'or None' % item[index])
                 cls.rows = item[index] or ...
             index += 1
 
             if len(item) > index:
                 if isinstance(cls.generic_type, tuple):
-                    raise TypeError('You are not allowed to specify a column count, combined with multiple column '
+                    raise TypeError('You are not allowed to specify a column '
+                                    'count, combined with multiple column '
                                     'types.')
                 if type(item[index]) not in cls._ROWCOL_TYPES:
-                    raise TypeError('Unexpected type %s, expecting int or ... or None' % item[index])
+                    raise TypeError('Unexpected type %s, expecting int or ... '
+                                    'or None' % item[index])
                 cls.cols = item[index] or ...

@@ -1,4 +1,4 @@
-|Python versions| |PyPI version| |Build Status| |Downloads|
+|Python versions| |PyPI version| |Downloads|
 
 nptyping
 ========
@@ -15,65 +15,62 @@ Installation
 Usage
 '''''
 
-Use the `nptyping` type hints like the regular type hints from `typing`:
+`nptyping.NDArray` lets you define the shape and type of your `numpy.ndarray`.
+
+You can specify:
+  * the number of dimensions;
+  * the size per dimension;
+  * the type of the array.
+
+
+The code below illustrates how to define NDArray types:
 
 .. code:: python
 
-   from nptyping import Array
+   from nptyping import NDArray
 
 
-   def func1(arr: Array[int]):  # A numpy.ndarray that contains numbers
-       ...
-
-You can also define the shape of an array:
-
-.. code:: python
-
-   Array[str, 3, 2]    # 3 rows and 2 columns
-   Array[str, 3]       # 3 rows and an undefined number of columns
-   Array[str, 3, ...]  # 3 rows and an undefined number of columns
-   Array[str, ..., 2]  # an undefined number of rows and 2 columns
-
-Heterogeneous arrays are supported as well:
-
-.. code:: python
-
-   Array[int, float, str]       # int, float and str on columns 1, 2 and 3 resp.
-   Array[int, float, str, ...]  # int, float and str on columns 1, 2 and 3 resp.
-   Array[int, float, str, 3]    # int, float and str on columns 1, 2 and 3 resp. and with 3 rows
-
-`nptyping` also supports instance checks:
-
-.. code:: python
-
-   import numpy as np
-   from nptyping import Array
+   # An Array with any dimensions of any size and any type.
+   NDArray
+   NDArray[(Any, ...)]
+   NDArray[(Any, ...), Any]
 
 
-   arr = np.array([[1, 2],
-                   [3, 4],
-                   [5, 6]])
-
-   isinstance(arr, Array[int, 3, 2])    # True
-   isinstance(arr, Array[str, 3, 2])    # False
-   isinstance(arr, Array[int, 3, ...])  # True
-   isinstance(arr, Array[int, 3, 6])    # False
-
-Also for heterogeneous arrays:
-
-.. code:: python
-
-      import numpy as np
-      from nptyping import Array
+   # An array with 1 dimension of any size and any type.
+   NDArray[Any]
+   NDArray[(Any,)]
+   NDArray[Any, Any]
+   NDArray[(Any,), Any]
 
 
-      arr = np.array([(1, 2.0, '3'),
-                      (4, 5.0, '6')],
-                     dtype=[('a', int), ('b', float), ('c', str)])
+   # An array with 1 dimension of size 3 and any type.
+   NDArray[3]
+   NDArray[(3,)]
+   NDArray[(3,), Any]
 
-      isinstance(arr, Array[int, float, str])     # True
-      isinstance(arr, Array[float, float, str])   # False
-      isinstance(arr, Array[int, float, str, 2])  # True
+
+   # An array with 3 dimensions of size 3, 3 and any and any type.
+   NDArray[3, 3, Any]
+   NDArray[(3, 3, Any)]
+   NDArray[(3, 3, Any), Any]
+
+
+   # An array with any dimensions of any size and type int.
+   NDArray[int]
+   NDArray[(Any, ...), int]
+
+
+   # An array with 1 dimension of size 3 and type int.
+   NDArray[3, int]
+   NDArray[(3,), int]
+
+
+   # An array with any dimensions of size 3 and type int.
+   NDArray[(3, ...), int]
+
+
+   # An array with 3 dimensions of sizes 3, 3, 5 and type int.
+   NDArray[(3, 3, 5), int]
 
 
 .. |Python versions| image:: https://img.shields.io/pypi/pyversions/nptyping.svg
@@ -81,9 +78,6 @@ Also for heterogeneous arrays:
 
 .. |PyPI version| image:: https://badge.fury.io/py/nptyping.svg
    :target: https://badge.fury.io/py/nptyping
-
-.. |Build Status| image:: https://api.travis-ci.org/ramonhagenaars/nptyping.svg?branch=master
-   :target: https://travis-ci.org/ramonhagenaars/nptyping
 
 .. |Downloads| image:: https://img.shields.io/pypi/dm/nptyping.svg
    :target: https://pypistats.org/packages/nptyping

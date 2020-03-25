@@ -1,8 +1,15 @@
+# pylint: skip-file
 """
 The array module: support for typing Numpy ndarrays.
 """
+import warnings
+
 import numpy as np
+
 from nptyping._array_meta import _Array
+
+warnings.warn("The use of nptyping.Array is deprecated in favor of "
+              "nptyping.NDArray", DeprecationWarning)
 
 
 class Array(_Array, np.ndarray):
