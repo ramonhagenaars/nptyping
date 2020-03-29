@@ -1,7 +1,7 @@
 from typing import Any, Tuple, Union
 
 import numpy as np
-from typish import SubscriptableType, Ellipsis_, ClsDict, Literal
+from typish import SubscriptableType, Ellipsis_, Literal, ClsFunction
 
 _Size = Union[int, Literal[Any]]  # TODO add type vars as well
 _Type = Union[type, Literal[Any], np.dtype]
@@ -81,7 +81,7 @@ class _NDArray(metaclass=_NDArrayMeta):
 
     @classmethod
     def _after_subscription(cls, item: Any) -> None:
-        method_per_type = ClsDict({
+        method = ClsFunction({
             _Size: cls._only_size,
             _Type: cls._only_type,
             Tuple[_Size, _Type]: cls._size_and_type,
@@ -90,8 +90,7 @@ class _NDArray(metaclass=_NDArrayMeta):
             Tuple[Tuple[_Size, Ellipsis_], _Type]: cls._sizes_and_type,
             Tuple[Tuple[Literal[Any], Ellipsis_], Literal[Any]]: lambda _: ...,
         })
-        method = method_per_type.get(item)
-        if not method:
+        if not method.understands(item):
             raise TypeError('Invalid parameter for NDArray: "{}"'.format(item))
         return method(item)
 
