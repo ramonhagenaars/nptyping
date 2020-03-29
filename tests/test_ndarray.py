@@ -157,13 +157,7 @@ class TestNDArray(TestCase):
         t3 = NDArray.type_of(arr3)
         t4 = NDArray.type_of(arr4)
 
-        self.assertEqual(NDArray[(3,), int], t1)
-        self.assertEqual(NDArray[(3,), str], t2)
-        self.assertEqual(NDArray[(3,), float], t3)
-        self.assertEqual(NDArray[(3,), object], t4)
-
-        # TODO the following lines should work as well.
-        # self.assertIsInstance(arr1, t1)
-        # self.assertIsInstance(arr2, t2)
-        # self.assertIsInstance(arr3, t3)
-        # self.assertIsInstance(arr4, t4)
+        self.assertIsInstance(arr1, t1)
+        self.assertIsInstance(arr2, t2)
+        self.assertIsInstance(arr3, t3)
+        self.assertIsInstance(arr4, t4)

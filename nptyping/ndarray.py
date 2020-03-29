@@ -3,7 +3,6 @@ from typing import Type
 import numpy as np
 
 from nptyping._ndarray_meta import _NDArray
-from nptyping.py_type import py_type
 
 
 class NDArray(np.ndarray, _NDArray):
@@ -42,14 +41,14 @@ class NDArray(np.ndarray, _NDArray):
     """
 
     @staticmethod
-    def type_of(arr: 'NDArray') -> Type['NDArray']:
+    def type_of(arr: np.ndarray) -> Type['NDArray']:
         """
         Return an nptyping.NDArray type T such that isinstance(arr, T).
 
         >>> NDArray.type_of(np.array([[1, 2], [3, 4.0]]))
-        NDArray[(2, 2), float]
+        NDArray[(2, 2), float64]
 
         :param arr: any numpy.ndarray.
         :return: a nptyping.NDArray.
         """
-        return NDArray[arr.shape, py_type(arr.dtype)]
+        return NDArray[arr.shape, arr.dtype]
