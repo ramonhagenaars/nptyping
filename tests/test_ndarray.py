@@ -121,11 +121,13 @@ class TestNDArray(TestCase):
         self.assertTrue(isinstance(arr2x2x2, NDArray[(2, ...), int]))
         self.assertTrue(not isinstance(arr3x2x2, NDArray[(2, ...), int]))
 
-    def test_repr(self):
+    def test_repr_and_str(self):
+        import typing  # This import is need for the evals to work.
+
         arr_1a = NDArray[(2, 2), int]
         arr_1b = eval(repr(arr_1a))
 
-        arr_2a = NDArray[(Any, ...), int]
+        arr_2a = NDArray[(typing.Any, ...), int]
         arr_2b = eval(repr(arr_2a))
 
         arr_3a = NDArray
@@ -138,3 +140,30 @@ class TestNDArray(TestCase):
         self.assertEqual(arr_2a, arr_2b)
         self.assertEqual(arr_3a, arr_3b)
         self.assertEqual(arr_4a, arr_4b)
+
+        self.assertEqual(str(arr_1a), repr(arr_1a))
+        self.assertEqual(str(arr_2a), repr(arr_2a))
+        self.assertEqual(str(arr_3a), repr(arr_3a))
+        self.assertEqual(str(arr_4a), repr(arr_4a))
+
+    def test_type_of(self):
+        arr1 = np.array([1, 2, 3])
+        arr2 = np.array([1, 2, '3'])
+        arr3 = np.array([1, 2, 3.0])
+        arr4 = np.array([1, 2, {}])
+
+        t1 = NDArray.type_of(arr1)
+        t2 = NDArray.type_of(arr2)
+        t3 = NDArray.type_of(arr3)
+        t4 = NDArray.type_of(arr4)
+
+        self.assertEqual(NDArray[(3,), int], t1)
+        self.assertEqual(NDArray[(3,), str], t2)
+        self.assertEqual(NDArray[(3,), float], t3)
+        self.assertEqual(NDArray[(3,), object], t4)
+
+        # TODO the following lines should work as well.
+        # self.assertIsInstance(arr1, t1)
+        # self.assertIsInstance(arr2, t2)
+        # self.assertIsInstance(arr3, t3)
+        # self.assertIsInstance(arr4, t4)

@@ -8,7 +8,7 @@ with open(os.path.join(here, 'nptyping', '_meta.py'),
           mode='r', encoding='utf-8') as f:
     exec(f.read(), meta_info)
 
-with open('README.rst', mode='r', encoding='utf-8') as f:
+with open('README.md', mode='r', encoding='utf-8') as f:
     long_description = f.read()
 
 requirements = [

@@ -1,6 +1,9 @@
+from typing import Type
+
 import numpy as np
 
 from nptyping._ndarray_meta import _NDArray
+from nptyping.py_type import py_type
 
 
 class NDArray(np.ndarray, _NDArray):
@@ -37,3 +40,16 @@ class NDArray(np.ndarray, _NDArray):
     NDArray[(3, 3, 5), int]
 
     """
+
+    @staticmethod
+    def type_of(arr: 'NDArray') -> Type['NDArray']:
+        """
+        Return an nptyping.NDArray type T such that isinstance(arr, T).
+
+        >>> NDArray.type_of(np.array([[1, 2], [3, 4.0]]))
+        NDArray[(2, 2), float]
+
+        :param arr: any numpy.ndarray.
+        :return: a nptyping.NDArray.
+        """
+        return NDArray[arr.shape, py_type(arr.dtype)]
