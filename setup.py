@@ -18,8 +18,9 @@ requirements = [
 test_requirements = [
     'pycodestyle',
     'pylint',
-    'mypy',
     'pytest',
+    'coverage',
+    'codecov',
 ]
 
 extras = {

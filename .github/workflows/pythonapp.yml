@@ -24,6 +24,10 @@ jobs:
       - name: Test
         run: |
             python setup.py test
+            coverage run setup.py test
+            codecov
+      - name: Coverage
+        uses: codecov/codecov-action@v1
       - name: Doctest
         run: |
             pytest --doctest-modules --ignore=tests
