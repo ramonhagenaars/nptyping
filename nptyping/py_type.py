@@ -1,7 +1,7 @@
 from typing import Union
 
 import numpy as np
-from typish import ClsDict
+from typish import ClsFunction
 
 
 def py_type(np_type: Union[np.dtype, type]) -> type:
@@ -14,15 +14,14 @@ def py_type(np_type: Union[np.dtype, type]) -> type:
     >>> py_type(np.int32)
     <class 'int'>
 
-    :param np_type:a numpy type (dtype).
+    :param np_type: a numpy type (dtype).
     :return: a Python builtin type.
     """
-    cls_dict = ClsDict({
+    function = ClsFunction({
         np.dtype: lambda x: _TYPE_PER_KIND[x.kind],
         type: lambda x: py_type(np.dtype(x)),
     })
-
-    return cls_dict[np_type](np_type)
+    return function(np_type)
 
 
 _TYPE_PER_KIND = {
