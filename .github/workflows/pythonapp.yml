@@ -33,7 +33,7 @@ jobs:
             pytest --doctest-modules --ignore=tests
       - name: Pycodestyle
         run: |
-            pycodestyle barentsz -v
+            pycodestyle nptyping -v
       - name: Pylint
         run: |
             pylint --rcfile=setup.cfg nptyping
