@@ -2,10 +2,15 @@ from collections import OrderedDict
 from typing import Any, Tuple, Union
 
 import numpy as np
-from typish import SubscriptableType, Ellipsis_, Literal, ClsFunction
+from typish import SubscriptableType, Literal, ClsFunction, EllipsisType
 
 _Size = Union[int, Literal[Any]]  # TODO add type vars as well
 _Type = Union[type, Literal[Any], np.dtype]
+_SizeAndType = Tuple[_Size, _Type]
+_Sizes = Tuple[_Size, ...]
+_SizesAndType = Tuple[Tuple[_Size, ...], _Type]
+_NSizesAndType = Tuple[Tuple[_Size, EllipsisType], _Type]
+_Default = Tuple[Tuple[Literal[Any], EllipsisType], Literal[Any]]
 
 
 class _NDArrayMeta(SubscriptableType):
@@ -85,11 +90,11 @@ class _NDArray(metaclass=_NDArrayMeta):
         method = ClsFunction(OrderedDict([
             (_Size, cls._only_size),
             (_Type, cls._only_type),
-            (Tuple[_Size, _Type], cls._size_and_type),
-            (Tuple[_Size, ...], cls._only_sizes),
-            (Tuple[Tuple[_Size, ...], _Type], cls._sizes_and_type),
-            (Tuple[Tuple[_Size, Ellipsis_], _Type], cls._sizes_and_type),
-            (Tuple[Tuple[Literal[Any], Ellipsis_], Literal[Any]], lambda _: ...),
+            (_SizeAndType, cls._size_and_type),
+            (_Sizes, cls._only_sizes),
+            (_SizesAndType, cls._sizes_and_type),
+            (_NSizesAndType, cls._sizes_and_type),
+            (_Default, lambda _: ...),
         ]))
 
         if not method.understands(item):
