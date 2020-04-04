@@ -13,7 +13,7 @@ with open('README.md', mode='r', encoding='utf-8') as f:
 
 requirements = [
     'numpy',
-    'typish>=1.5.1',
+    'typish>=1.5.2',
 ],
 
 test_requirements = [

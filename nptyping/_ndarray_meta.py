@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from typing import Any, Tuple, Union
 
 import numpy as np
@@ -81,15 +82,16 @@ class _NDArray(metaclass=_NDArrayMeta):
 
     @classmethod
     def _after_subscription(cls, item: Any) -> None:
-        method = ClsFunction({
-            _Size: cls._only_size,
-            _Type: cls._only_type,
-            Tuple[_Size, _Type]: cls._size_and_type,
-            Tuple[_Size, ...]: cls._only_sizes,
-            Tuple[Tuple[_Size, ...], _Type]: cls._sizes_and_type,
-            Tuple[Tuple[_Size, Ellipsis_], _Type]: cls._sizes_and_type,
-            Tuple[Tuple[Literal[Any], Ellipsis_], Literal[Any]]: lambda _: ...,
-        })
+        method = ClsFunction(OrderedDict([
+            (_Size, cls._only_size),
+            (_Type, cls._only_type),
+            (Tuple[_Size, _Type], cls._size_and_type),
+            (Tuple[_Size, ...], cls._only_sizes),
+            (Tuple[Tuple[_Size, ...], _Type], cls._sizes_and_type),
+            (Tuple[Tuple[_Size, Ellipsis_], _Type], cls._sizes_and_type),
+            (Tuple[Tuple[Literal[Any], Ellipsis_], Literal[Any]], lambda _: ...),
+        ]))
+
         if not method.understands(item):
             raise TypeError('Invalid parameter for NDArray: "{}"'.format(item))
         return method(item)
