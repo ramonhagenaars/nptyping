@@ -6,10 +6,11 @@ from typish import SubscriptableType, Literal, ClsFunction, EllipsisType
 
 _Size = Union[int, Literal[Any]]  # TODO add type vars as well
 _Type = Union[type, Literal[Any], np.dtype]
+_NSizes = Tuple[_Size, EllipsisType]
 _SizeAndType = Tuple[_Size, _Type]
 _Sizes = Tuple[_Size, ...]
 _SizesAndType = Tuple[Tuple[_Size, ...], _Type]
-_NSizesAndType = Tuple[Tuple[_Size, EllipsisType], _Type]
+_NSizesAndType = Tuple[_NSizes, _Type]
 _Default = Tuple[Tuple[Literal[Any], EllipsisType], Literal[Any]]
 
 
@@ -90,6 +91,7 @@ class _NDArray(metaclass=_NDArrayMeta):
         method = ClsFunction(OrderedDict([
             (_Size, cls._only_size),
             (_Type, cls._only_type),
+            (_NSizes, lambda _: ...),
             (_SizeAndType, cls._size_and_type),
             (_Sizes, cls._only_sizes),
             (_SizesAndType, cls._sizes_and_type),

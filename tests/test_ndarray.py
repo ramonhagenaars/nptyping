@@ -11,6 +11,8 @@ class TestNDArray(TestCase):
     def test_initialize_with_nothing(self):
         self.assertEqual((Any, ...), NDArray.shape)
         self.assertEqual(Any, NDArray._type)
+        self.assertEqual((Any, ...), NDArray[(Any, ...)].shape)
+        self.assertEqual(Any, NDArray[(Any, ...)]._type)
         self.assertEqual((Any, ...), NDArray[(Any, ...), Any].shape)
         self.assertEqual(Any, NDArray[(Any, ...), Any]._type)
 

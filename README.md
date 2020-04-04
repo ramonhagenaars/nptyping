@@ -20,68 +20,141 @@ pip install nptyping
 
 `nptyping.NDArray` lets you define the shape and type of your `numpy.ndarray`.
 
-You can specify:
-  * the number of dimensions;
-  * the size per dimension;
-  * the type of the array.
+You can:
+  * specify the number of dimensions;
+  * specify the size per dimension;
+  * specify the type of the array;
+  * instance check your array with your nptying type.
 
-The code below illustrates how to define NDArray types:
+#### Examples
 
+An Array with any dimensions of any size and any type:
 ```python
-from nptyping import NDArray
+>>> from nptyping import NDArray
+>>> from typing import Any
 
 
-# An Array with any dimensions of any size and any type.
-NDArray
-NDArray[(Any, ...)]
-NDArray[(Any, ...), Any]
+>>> NDArray
+NDArray[(typing.Any, ...), typing.Any]
 
-# An array with 1 dimension of any size and any type.
-NDArray[Any]
-NDArray[(Any,)]
-NDArray[Any, Any]
-NDArray[(Any,), Any]
+>>> NDArray[(Any, ...)]
+NDArray[(typing.Any, ...), typing.Any]
 
-# An array with 1 dimension of size 3 and any type.
-NDArray[3]
-NDArray[(3,)]
-NDArray[(3,), Any]
+>>> NDArray[(Any, ...), Any]
+NDArray[(typing.Any, ...), typing.Any]
 
-# An array with 3 dimensions of size 3, 3 and any and any type.
-NDArray[3, 3, Any]
-NDArray[(3, 3, Any)]
-NDArray[(3, 3, Any), Any]
-
-# An array with any dimensions of any size and type int.
-NDArray[int]
-NDArray[(Any, ...), int]
-
-# An array with 1 dimension of size 3 and type int.
-NDArray[3, int]
-NDArray[(3,), int]
-
-# An array with any dimensions of size 3 and type int.
-NDArray[(3, ...), int]
-
-# An array with 3 dimensions of sizes 3, 3, 5 and type int.
-NDArray[(3, 3, 5), int]
 ```
 
-You can use `NDArray` to find the type of a numpy array for you using `NDArray.type_of`:
+An array with 1 dimension of any size and any type:
+```python
+>>> NDArray[Any]
+NDArray[(typing.Any,), typing.Any]
+
+>>> NDArray[(Any,)]
+NDArray[(typing.Any,), typing.Any]
+
+>>> NDArray[Any, Any]
+NDArray[(typing.Any,), typing.Any]
+
+>>> NDArray[(Any,), Any]
+NDArray[(typing.Any,), typing.Any]
+
+```
+
+An array with 1 dimension of size 3 and any type:
+```python
+>>> NDArray[3]
+NDArray[(3,), typing.Any]
+
+>>> NDArray[(3,)]
+NDArray[(3,), typing.Any]
+
+>>> NDArray[(3,), Any]
+NDArray[(3,), typing.Any]
+
+```
+
+An array with 3 dimensions of size 3, 3 and any and any type:
+```python
+>>> NDArray[3, 3, Any]
+NDArray[(3, 3, typing.Any), typing.Any]
+
+>>> NDArray[(3, 3, Any)]
+NDArray[(3, 3, typing.Any), typing.Any]
+
+>>> NDArray[(3, 3, Any), Any]
+NDArray[(3, 3, typing.Any), typing.Any]
+
+```
+
+An array with any dimensions of any size and type int:
+```python
+>>> NDArray[int]
+NDArray[(typing.Any, ...), int]
+
+>>> NDArray[(Any, ...), int]
+NDArray[(typing.Any, ...), int]
+
+```
+
+An array with 1 dimension of size 3 and type int:
+```python
+>>> NDArray[3, int]
+NDArray[(3,), int]
+
+>>> NDArray[(3,), int]
+NDArray[(3,), int]
+
+```
+
+An array with any dimensions of size 3 and type int:
+```python
+>>> NDArray[(3, ...), int]
+NDArray[(3, ...), int]
+
+```
+
+An array with 3 dimensions of sizes 3, 3, 5 and type int:
+```python
+>>> NDArray[(3, 3, 5), int]
+NDArray[(3, 3, 5), int]
+
+```
+
+#### Checking your instances
+You can use `NDArray` with `isinstance` to dynamically check your arrays.
 
 ```python
 >>> import numpy as np
->>> from nptyping import NDArray
+
+>>> arr = np.array([[1, 2, 3],
+...                 [4, 5, 6]])
+
+>>> isinstance(arr, NDArray[(2, 3), int])
+True
+>>> isinstance(arr, NDArray[(2, 3), float])
+False
+>>> isinstance(arr, NDArray[(2, 3, 1), int])
+False
+
+```
+
+#### Finding the right annotation
+You can use `NDArray` to find the type of a numpy array for you using `NDArray.type_of`:
+
+```python
 >>> NDArray.type_of(np.array([[1, 2], [3, 4.0]]))
-NDArray[(2, 2), float]
+NDArray[(2, 2), float64]
+
 ```
 
 ### py_type
 With `py_type` you can get the Python builtin type that corresponds to a Numpy `dtype`:
 
 ```python
->>> import numpy as np
 >>> from nptyping import py_type
+
 >>> py_type(np.int32)
 <class 'int'>
+
 ```
