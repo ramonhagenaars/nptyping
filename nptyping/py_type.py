@@ -21,7 +21,7 @@ def py_type(np_type: Union[np.dtype, type]) -> type:
         np.dtype: lambda x: _TYPE_PER_KIND[x.kind],
         type: lambda x: py_type(np.dtype(x)),
     })
-    return function(np_type)
+    return function(np_type)  # type: ignore
 
 
 _TYPE_PER_KIND = {

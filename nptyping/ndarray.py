@@ -5,7 +5,7 @@ import numpy as np
 from nptyping._ndarray_meta import _NDArray
 
 
-class NDArray(np.ndarray, _NDArray):
+class NDArray(np.ndarray, _NDArray):  # type: ignore
     """
     NDArray is a representation of numpy.ndarray.
 
@@ -51,4 +51,4 @@ class NDArray(np.ndarray, _NDArray):
         :param arr: any numpy.ndarray.
         :return: a nptyping.NDArray.
         """
-        return NDArray[arr.shape, arr.dtype]
+        return NDArray[arr.shape, arr.dtype]  # type: ignore

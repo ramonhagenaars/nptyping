@@ -14,9 +14,9 @@ _NSizesAndType = Tuple[_NSizes, _Type]
 _Default = Tuple[Tuple[Literal[Any], EllipsisType], Literal[Any]]
 
 
-class _NDArrayMeta(SubscriptableType):
-    _shape = tuple()  # Overridden by _NDArray._shape.
-    _type = ...  # Overridden by _NDArray._type.
+class _NDArrayMeta(SubscriptableType):  # type: ignore
+    _shape = tuple()  # type: Union[Tuple[int, ...], Tuple[int, EllipsisType]]
+    _type = ...  # type: Union[type, Literal[Any]]
 
     @property
     def dtype(cls) -> np.dtype:
@@ -27,14 +27,14 @@ class _NDArrayMeta(SubscriptableType):
         return np.dtype(cls._type)  # TODO if type is Any, this wont work
 
     @property
-    def shape(cls) -> Tuple[int, int]:
+    def shape(cls) -> Tuple[int, ...]:
         """
         Return the shape as a tuple of ints.
         :return: the shape as a tuple of ints.
         """
         return cls._shape
 
-    def __repr__(cls):
+    def __repr__(cls) -> str:
         shape_ = cls._shape
         if len(cls._shape) == 2 and cls._shape[1] is ...:
             shape_ = (cls._shape[0], '...')
@@ -42,10 +42,10 @@ class _NDArrayMeta(SubscriptableType):
         type_ = getattr(cls._type, '__name__', cls._type)
         return 'NDArray[{}, {}]'.format(shape_, type_).replace('\'', '')
 
-    def __str__(cls):
+    def __str__(cls) -> str:
         return repr(cls)
 
-    def __eq__(cls, other) -> bool:
+    def __eq__(cls, other: object) -> bool:
         return (isinstance(other, _NDArrayMeta)
                 and cls._shape == other._shape
                 and cls._type == other._type)
@@ -86,57 +86,57 @@ class _NDArrayMeta(SubscriptableType):
     def _is_type_eq(cls, instance: np.ndarray) -> bool:
         if cls._type is Any:
             return True
-        return cls.dtype == instance.dtype
+        return bool(cls.dtype == instance.dtype)
 
 
 class _NDArray(metaclass=_NDArrayMeta):
-    _shape = (Any, ...)
+    _shape = (Any, ...)  # type: Union[Tuple[int, ...], Tuple[Any, EllipsisType]]
     _type = Any
 
     @classmethod
     def _after_subscription(cls, item: Any) -> None:
         method = ClsFunction(OrderedDict([
-            (_Size, cls._only_size),
-            (_Type, cls._only_type),
-            (_NSizes, lambda _: ...),
-            (_SizeAndType, cls._size_and_type),
+            (_Size, cls._only_size),  # type: ignore
+            (_Type, cls._only_type),  # type: ignore
+            (_NSizes, lambda _: ...),  # type: ignore
+            (_SizeAndType, cls._size_and_type),  # type: ignore
             (_Sizes, cls._only_sizes),
-            (_SizesAndType, cls._sizes_and_type),
-            (_NSizesAndType, cls._sizes_and_type),
-            (_Default, lambda _: ...),
+            (_SizesAndType, cls._sizes_and_type),  # type: ignore
+            (_NSizesAndType, cls._sizes_and_type),  # type: ignore
+            (_Default, lambda _: ...),  # type: ignore
         ]))
 
         if not method.understands(item):
             raise TypeError('Invalid parameter for NDArray: "{}"'.format(item))
-        return method(item)
+        method(item)
 
     @classmethod
-    def _only_size(cls, item: int):
+    def _only_size(cls, item: int) -> None:
         # E.g. NDArray[3]
         # The given item is the size of the single dimension.
         cls._shape = (item,)
 
     @classmethod
-    def _only_type(cls, item: type):
+    def _only_type(cls, item: type) -> None:
         # E.g. NDArray[int]
         # The given item is the type of the single dimension.
         cls._type = item
 
     @classmethod
-    def _size_and_type(cls, item: Tuple[_Size, _Type]):
+    def _size_and_type(cls, item: Tuple[_Size, _Type]) -> None:
         # E.g. NDArray[3, int]
         # The given item is the size of the single dimension and its type.
         cls._shape = (item[0],)
         cls._type = item[1]
 
     @classmethod
-    def _only_sizes(cls, item: Tuple[_Size, ...]):
+    def _only_sizes(cls, item: Tuple[_Size, ...]) -> None:
         # E.g. NDArray[(2, Any, 2)]
         # The given item is a tuple with just sizes of the dimensions.
         cls._shape = item
 
     @classmethod
-    def _sizes_and_type(cls, item: Tuple[Tuple[_Size, ...], _Type]):
+    def _sizes_and_type(cls, item: Tuple[Tuple[_Size, ...], _Type]) -> None:
         # E.g. NDArray[(2, Any, 2), int]
         # The given item is a tuple with sizes of the dimensions and the type.
         # Or e.g. NDArray[(3, ...), int]

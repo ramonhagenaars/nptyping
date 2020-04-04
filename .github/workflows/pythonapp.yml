@@ -32,6 +32,9 @@ jobs:
         run: |
             pytest --doctest-modules --ignore=tests
             python -m doctest README.md
+      - name: MyPy
+        run: |
+            mypy nptyping --strict
       - name: Pycodestyle
         run: |
             pycodestyle nptyping -v
