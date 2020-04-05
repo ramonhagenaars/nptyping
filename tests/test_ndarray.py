@@ -170,3 +170,4 @@ class TestNDArray(TestCase):
 
         # You now be able to wrap an NDArray in an optional.
         Optional[NDArray[(3,), int]]
+        Optional[NDArray]
