@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Optional
 from unittest import TestCase
 
 import numpy as np
@@ -163,3 +163,10 @@ class TestNDArray(TestCase):
         self.assertIsInstance(arr2, t2)
         self.assertIsInstance(arr3, t3)
         self.assertIsInstance(arr4, t4)
+
+    def test_hash_ndarray(self):
+        # Hashing should not raise.
+        hash(NDArray[(3,), int])
+
+        # You now be able to wrap an NDArray in an optional.
+        Optional[NDArray[(3,), int]]

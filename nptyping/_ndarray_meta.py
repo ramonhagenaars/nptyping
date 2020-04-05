@@ -61,6 +61,13 @@ class _NDArrayMeta(SubscriptableType):
                 and _NDArrayMeta._is_shape_eq(cls, instance)
                 and _NDArrayMeta._is_type_eq(cls, instance))
 
+    def __hash__(cls) -> int:
+        """
+        Hash this _NDArrayMeta by means of its attributes.
+        :return: a hash (int).
+        """
+        return hash((cls._shape, cls._type))
+
     def _is_shape_eq(cls, instance: np.ndarray) -> bool:
 
         def _is_eq_to(this: Any, that: Any) -> bool:
