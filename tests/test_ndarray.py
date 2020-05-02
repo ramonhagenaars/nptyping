@@ -123,6 +123,12 @@ class TestNDArray(TestCase):
         self.assertTrue(isinstance(arr2x2x2, NDArray[(2, ...), int]))
         self.assertTrue(not isinstance(arr3x2x2, NDArray[(2, ...), int]))
 
+    def test_subclass_check(self):
+        self.assertTrue(issubclass(NDArray[(2, 2, 2), int], NDArray[(2, 2, 2), int]))
+        self.assertTrue(issubclass(NDArray[(2, 2, 2), int], NDArray))
+        self.assertTrue(issubclass(NDArray[(2, 2, 2), int], NDArray[int]))
+        self.assertTrue(not issubclass(NDArray[(2, 2, 2), int], NDArray[(2, 2, 3), int]))
+
     def test_repr_and_str(self):
         import typing  # This import is need for the evals to work.
 
@@ -168,6 +174,6 @@ class TestNDArray(TestCase):
         # Hashing should not raise.
         hash(NDArray[(3,), int])
 
-        # You now be able to wrap an NDArray in an optional.
+        # You should now be able to wrap an NDArray in an optional.
         Optional[NDArray[(3,), int]]
         Optional[NDArray]

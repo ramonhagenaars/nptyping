@@ -14,6 +14,10 @@ _NSizesAndType = Tuple[_NSizes, _Type]
 _Default = Tuple[Tuple[Literal[Any], EllipsisType], Literal[Any]]
 
 
+def _is_eq_to(this: Any, that: Any) -> bool:
+    return that is Any or this == that
+
+
 class _NDArrayMeta(SubscriptableType):  # type: ignore
     _shape = tuple()  # type: Union[Tuple[int, ...], Tuple[int, EllipsisType]]
     _type = ...  # type: Union[type, Literal[Any]]
@@ -48,18 +52,27 @@ class _NDArrayMeta(SubscriptableType):  # type: ignore
     def __eq__(cls, other: object) -> bool:
         return (isinstance(other, _NDArrayMeta)
                 and cls._shape == other._shape
-                and cls._type == other._type)
+                and _is_eq_to(cls._type, other._type))
 
-    def __instancecheck__(cls, instance: np.ndarray) -> bool:
+    def __instancecheck__(cls, instance: Any) -> bool:
         """
-        Checks whether the given instance conforms the current NDArray type by
+        Check whether the given instance conforms the current NDArray type by
         checking the shape and the dtype.
-        :param instance: a numpy.ndarray.
+        :param instance: the instance that is checked.
         :return: True if instance is an instance of cls.
         """
-        return (isinstance(instance, np.ndarray)
-                and _NDArrayMeta._is_shape_eq(cls, instance)
-                and _NDArrayMeta._is_type_eq(cls, instance))
+        return cls.__subclasscheck__(_NDArray[instance.shape, instance.dtype])
+
+    def __subclasscheck__(cls, subclass: type) -> bool:
+        """
+        Check whether the given class is a sub class of cls.
+        :param subclass: the class that is to be checked.
+        :return: True if subclass is a sub class of cls.
+        """
+        return (subclass == cls
+                or (isinstance(subclass, _NDArrayMeta)
+                    and cls._is_dtype_eq(subclass.dtype)
+                    and cls._is_shape_eq(subclass.shape)))
 
     def __hash__(cls) -> int:
         """
@@ -68,25 +81,19 @@ class _NDArrayMeta(SubscriptableType):  # type: ignore
         """
         return hash((cls._shape, cls._type))
 
-    def _is_shape_eq(cls, instance: np.ndarray) -> bool:
-
-        def _is_eq_to(this: Any, that: Any) -> bool:
-            return that is Any or this == that
-
+    def _is_shape_eq(cls, shape: Tuple[int, ...]) -> bool:
         if cls._shape == (Any, ...):
             return True
         if len(cls._shape) == 2 and cls._shape[1] is ...:
             size = cls._shape[0]
-            return all([s == size for s in instance.shape])
-        if len(instance.shape) != len(cls._shape):
+            return all([s == size for s in shape])
+        if len(shape) != len(cls._shape):
             return False
-        zipped = zip(instance.shape, cls._shape)
+        zipped = zip(shape, cls._shape)
         return all([_is_eq_to(a, b) for a, b in zipped])
 
-    def _is_type_eq(cls, instance: np.ndarray) -> bool:
-        if cls._type is Any:
-            return True
-        return bool(cls.dtype == instance.dtype)
+    def _is_dtype_eq(cls, dtype: np.dtype) -> bool:
+        return cls._type is Any or bool(cls.dtype == dtype)
 
 
 class _NDArray(metaclass=_NDArrayMeta):
