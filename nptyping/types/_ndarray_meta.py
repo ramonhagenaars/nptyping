@@ -4,6 +4,8 @@ from typing import Any, Tuple, Union
 import numpy as np
 from typish import SubscriptableType, Literal, ClsFunction, EllipsisType
 
+from nptyping.types._nptype import NPType
+
 _Size = Union[int, Literal[Any]]  # TODO add type vars as well
 _Type = Union[type, Literal[Any], np.dtype]
 _NSizes = Tuple[_Size, EllipsisType]
@@ -96,7 +98,7 @@ class _NDArrayMeta(SubscriptableType):  # type: ignore
         return cls._type is Any or bool(cls.dtype == dtype)
 
 
-class _NDArray(metaclass=_NDArrayMeta):
+class _NDArray(NPType, metaclass=_NDArrayMeta):
     _shape = (Any, ...)  # type: Union[Tuple[int, ...], Tuple[Any, EllipsisType]]
     _type = Any
 
