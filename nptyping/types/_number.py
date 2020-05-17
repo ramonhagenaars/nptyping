@@ -12,18 +12,30 @@ class _NumberMeta(SimpleNPTypeMeta):
     Super metaclass for the Number class.
     """
     def __instancecheck__(cls, instance: Any) -> bool:
+        py_number_types = (int, float)
+        if type(instance) in py_number_types:
+            # Covers Python types.
+            return True
+        if getattr(instance, 'base', None) in py_number_types:
+            # Covers nptyping types.
+            return True
+
         npbase = getattr(cls, 'npbase', None)
         if not npbase:
+            # Raw nptyping.Number.
             try:
-                return py_type(instance) in (int, float)
+                return py_type(instance) in py_number_types
             except ValueError:
                 return False
+
         # This instance check simply relies on the numpy instance check.
         return isinstance(instance, npbase)
 
     def __subclasscheck__(cls, subclass: type) -> bool:
-        return (isinstance(subclass, Number)
-                and not cls.npbase or issubclass(subclass.npbase, cls.npbase))
+        if not isinstance(subclass, Number):
+            return False
+
+        return not cls.npbase or issubclass(subclass.npbase, cls.npbase)
 
 
 class Number(NPType, metaclass=_NumberMeta):

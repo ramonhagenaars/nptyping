@@ -8,17 +8,17 @@ from nptyping.py_type import py_type
 class TestPyType(TestCase):
 
     def test_py_type(self):
-        self.assertEqual(int, py_type(np.dtype(int)))
-        self.assertEqual(str, py_type(np.dtype(str)))
-        self.assertEqual(object, py_type(np.dtype(object)))
-        self.assertEqual(float, py_type(np.dtype(float)))
+        self.assertIs(int, py_type(np.dtype(int)))
+        self.assertIs(str, py_type(np.dtype(str)))
+        self.assertIs(object, py_type(np.dtype(object)))
+        self.assertIs(float, py_type(np.dtype(float)))
 
-        self.assertEqual(int, py_type(np.int))
-        self.assertEqual(int, py_type(np.int16))
-        self.assertEqual(int, py_type(np.int32))
-        self.assertEqual(int, py_type(np.int64))
+        self.assertIs(int, py_type(np.int))
+        self.assertIs(int, py_type(np.int16))
+        self.assertIs(int, py_type(np.int32))
+        self.assertIs(int, py_type(np.int64))
 
-        self.assertEqual(float, py_type(np.float))
-        self.assertEqual(float, py_type(np.float16))
-        self.assertEqual(float, py_type(np.float32))
-        self.assertEqual(float, py_type(np.float64))
+        self.assertIs(float, py_type(np.float))
+        self.assertIs(float, py_type(np.float16))
+        self.assertIs(float, py_type(np.float32))
+        self.assertIs(float, py_type(np.float64))

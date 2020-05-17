@@ -63,7 +63,8 @@ class _NDArrayMeta(SubscriptableType):  # type: ignore
         :param instance: the instance that is checked.
         :return: True if instance is an instance of cls.
         """
-        return cls.__subclasscheck__(_NDArray[instance.shape, instance.dtype])
+        return _NDArrayMeta.__subclasscheck__(
+            cls, _NDArray[instance.shape, instance.dtype])
 
     def __subclasscheck__(cls, subclass: type) -> bool:
         """

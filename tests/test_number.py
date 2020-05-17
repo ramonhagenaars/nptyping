@@ -41,6 +41,9 @@ class TestNumber(TestCase):
             Int[128]
 
     def test_isinstance(self):
+        self.assertIsInstance(42, Int32)
+        self.assertIsInstance(42, Number)
+
         self.assertIsInstance(numpy.int64(42), Int[64])
         self.assertIsInstance(numpy.int64(42), Int64)
         self.assertNotIsInstance(numpy.int32(42), Int64)

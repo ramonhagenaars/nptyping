@@ -2,7 +2,7 @@ from typing import Type
 
 import numpy as np
 
-from nptyping._ndarray_meta import _NDArray
+from nptyping.types._ndarray_meta import _NDArray
 
 
 class NDArray(np.ndarray, _NDArray):  # type: ignore
@@ -39,6 +39,10 @@ class NDArray(np.ndarray, _NDArray):  # type: ignore
     NDArray[(3, 3, 5), int]
 
     """
+
+    # These variables are to let typish know to use the custom checks.
+    __instancecheck__ = None
+    __subclasscheck__ = None
 
     @staticmethod
     def type_of(arr: np.ndarray) -> Type['NDArray']:
