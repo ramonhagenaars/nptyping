@@ -1,5 +1,6 @@
 from nptyping._meta import __version__
-from nptyping.py_type import py_type
+from nptyping.functions._get_type import get_type
+from nptyping.functions._py_type import py_type
 from nptyping.types._number import (
     Number,
     Int,

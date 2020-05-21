@@ -20,6 +20,9 @@ from nptyping import (
     Number,
 )
 
+_default_int_bytes = numpy.dtype(int).itemsize * 8
+_default_float_bytes = numpy.dtype(float).itemsize * 8
+
 
 class TestNumber(TestCase):
 
@@ -41,7 +44,10 @@ class TestNumber(TestCase):
             Int[128]
 
     def test_isinstance(self):
+        self.assertIsInstance(42, Int)
         self.assertIsInstance(42, Int32)
+        self.assertIsInstance(42.0, Float)
+        self.assertIsInstance(42.0, Float32)
         self.assertIsInstance(42, Number)
 
         self.assertIsInstance(numpy.int64(42), Int[64])
@@ -66,11 +72,42 @@ class TestNumber(TestCase):
         self.assertTrue(not issubclass(Int64, Float))
         self.assertTrue(not issubclass(Float32, Float64))
 
+        self.assertTrue(issubclass(numpy.float64, Number))
+        self.assertTrue(issubclass(numpy.int32, Number))
+        self.assertTrue(issubclass(numpy.int32, Int32))
+        self.assertTrue(not issubclass(numpy.int32, Int64))
+        self.assertTrue(not issubclass(numpy.float32, Int32))
+
+        self.assertTrue(issubclass(int, Number))
+        self.assertTrue(issubclass(float, Number))
+        self.assertTrue(issubclass(int, Int[_default_int_bytes]))
+        self.assertTrue(issubclass(float, Float[_default_float_bytes]))
+
     def test_int_of(self):
-        default_numpy_int = numpy.dtype(int).type
-        self.assertEqual(default_numpy_int, Int.of(1).npbase)
-        self.assertEqual(default_numpy_int, Int.of(1_000_000_000).npbase)
-        self.assertEqual(default_numpy_int, Int.of(-1_000_000_000).npbase)
+        self.assertEqual(Int[_default_int_bytes], Int.type_of(1))
+        self.assertEqual(Int[_default_int_bytes], Int.type_of(1_000_000_000))
+        self.assertEqual(Int[_default_int_bytes], Int.type_of(-1_000_000_000))
+
+        self.assertEqual(Int8, Int.type_of(numpy.int8))
+        self.assertEqual(Int16, Int.type_of(numpy.int16))
+        self.assertEqual(Int32, Int.type_of(numpy.int32))
+        self.assertEqual(Int64, Int.type_of(numpy.int64))
+
+    def test_uint_of(self):
+        self.assertEqual(UInt[_default_int_bytes], UInt.type_of(1))
+        self.assertEqual(UInt[_default_int_bytes], UInt.type_of(1_000_000_000))
+        self.assertEqual(UInt[_default_int_bytes], UInt.type_of(1_000_000_000))
+
+        self.assertEqual(UInt8, UInt.type_of(numpy.uint8))
+        self.assertEqual(UInt16, UInt.type_of(numpy.uint16))
+        self.assertEqual(UInt32, UInt.type_of(numpy.uint32))
+        self.assertEqual(UInt64, UInt.type_of(numpy.uint64))
+
+    def test_float_of(self):
+        default_bytes = numpy.dtype(float).itemsize * 8
+        self.assertEqual(Float[default_bytes], Float.type_of(1.0))
+        self.assertEqual(Float[default_bytes], Float.type_of(1_000_000_000.0))
+        self.assertEqual(Float[default_bytes], Float.type_of(-1_000_000_000.0))
 
     def test_int_fitting(self):
         self.assertEqual(Int8, Int.fitting(0))

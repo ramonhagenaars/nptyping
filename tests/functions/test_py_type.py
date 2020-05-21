@@ -2,7 +2,7 @@ from unittest import TestCase
 
 import numpy as np
 
-from nptyping.py_type import py_type
+from nptyping import py_type
 
 
 class TestPyType(TestCase):
