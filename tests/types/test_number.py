@@ -63,6 +63,25 @@ class TestNumber(TestCase):
         self.assertIsInstance(numpy.int8(42), Number)
         self.assertNotIsInstance('I am not a number, I am a free man!', Number)
 
+    def test_eq(self):
+        self.assertTrue(Int8 == Int8)
+        self.assertTrue(Int16 == Int16)
+        self.assertTrue(Int32 == Int32)
+        self.assertTrue(Int64 == Int64)
+
+        self.assertTrue(UInt8 == UInt8)
+        self.assertTrue(UInt16 == UInt16)
+        self.assertTrue(UInt32 == UInt32)
+        self.assertTrue(UInt64 == UInt64)
+
+        self.assertTrue(Float16 == Float16)
+        self.assertTrue(Float32 == Float32)
+        self.assertTrue(Float64 == Float64)
+
+        self.assertTrue(Int8 != Int16)
+        self.assertTrue(Int32 != Float32)
+        self.assertTrue(Int32 != UInt32)
+
     def test_issubclass(self):
         self.assertTrue(issubclass(Float[32], Float32))
         self.assertTrue(issubclass(Int64, Int[64]))

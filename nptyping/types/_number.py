@@ -1,16 +1,13 @@
-from typing import Any, Union, Type
+from typing import Any, Union, Type, Dict
 
 import numpy
-from typish import Literal, get_mro
+from typish import Literal, get_mro, T
 
 from nptyping.functions._py_type import py_type
 from nptyping.types._nptype import NPType, SimpleNPTypeMeta
 
-_default_int_bytes = numpy.dtype(int).itemsize * 8
-
-
-def _is_a(this: Any, that: type) -> bool:
-    return that in get_mro(this)
+_default_int_bits = numpy.dtype(int).itemsize * 8
+_default_float_bits = numpy.dtype(float).itemsize * 8
 
 
 class _NumberMeta(SimpleNPTypeMeta):
@@ -20,15 +17,16 @@ class _NumberMeta(SimpleNPTypeMeta):
     base = None
     npbase = None
     bytes = None
-    _hash = None
+    _hashes = {}
 
     def __eq__(cls, other):
         return hash(cls) == hash(other)
 
     def __hash__(cls):
-        if not cls._hash:
-            cls._hash = hash(cls.base) * hash(cls.npbase) * hash(cls.bytes)
-        return cls._hash
+        key = (cls.base, cls.npbase, cls.bytes)
+        if key not in cls._hashes:
+            cls._hashes[key] = int(numpy.prod([hash(elem) for elem in key]))
+        return cls._hashes[key]
 
     def __instancecheck__(cls, instance: Any) -> bool:
         py_number_types = (int, float)
@@ -51,6 +49,8 @@ class _NumberMeta(SimpleNPTypeMeta):
                 and issubclass(instance.dtype.type, cls.npbase))
 
     def __subclasscheck__(cls, subclass: type) -> bool:
+        if cls == subclass:
+            return True
 
         if _is_a(subclass, Number):
             # Cover nptyping number types.
@@ -60,7 +60,15 @@ class _NumberMeta(SimpleNPTypeMeta):
         if (issubclass(subclass, numpy.number)
                 or issubclass(subclass, int)
                 or issubclass(subclass, float)):
-            return not cls.npbase or cls.__subclasscheck__(cls.type_of(subclass))
+            if not cls.npbase:
+                # cls is Number.
+                return True
+            try:
+                nptype = cls.type_of(subclass)
+            except TypeError:
+                return False
+            else:
+                return cls.__subclasscheck__(nptype)
 
         return False
 
@@ -96,6 +104,7 @@ class Number(NPType, metaclass=_NumberMeta):
         Return the number of bits of this Number type.
         :return: the number of bits or Any.
         """
+        # FIXME: use cls.bytes
         return cls.__args__ or Any
 
 
@@ -107,27 +116,15 @@ class Int(Number[int, numpy.signedinteger]):
     Int[32]
     """
 
-    @staticmethod
-    def type_of(number: int) -> Type['Int']:
-        """
-        Return the Int type that corresponds to the given number.
-        :param number: the number of which an Int type is to be returned.
-        :return: an Int type.
-        """
-        result = {
-            numpy.int8: Int8,
-            numpy.int16: Int16,
-            numpy.int32: Int32,
-            numpy.int64: Int64,
-            int: Int[_default_int_bytes],
-        }.get(number)
-
-        if not result:
-            dtype_ = numpy.dtype(type(number))
-            bits = dtype_.itemsize * 8  # Convert bytes to bits.
-            result = Int[bits]
-
-        return result
+    @classmethod
+    def type_of(cls, obj: Any) -> Type['Int']:
+        return _type_of_number(Int, obj, {
+            numpy.int8: 8,
+            numpy.int16: 16,
+            numpy.int32: 32,
+            numpy.int64: 64,
+            int: _default_int_bits,
+        })
 
     @staticmethod
     def fitting(number: int) -> Type['Int']:
@@ -150,30 +147,15 @@ class UInt(Number[int, numpy.unsignedinteger]):
     UInt[32]
     """
 
-    @staticmethod
-    def type_of(number: Any) -> Type['UInt']:
-        """
-        Return the UInt type that corresponds to the given number.
-        :param number: the number of which a UInt type is to be returned.
-        :return: a UInt type.
-        """
-        if _is_a(number, Int):
-            return number
-
-        result = {
-            numpy.uint8: UInt8,
-            numpy.uint16: UInt16,
-            numpy.uint32: UInt32,
-            numpy.uint64: UInt64,
-            int: UInt[_default_int_bytes],
-        }.get(number)
-
-        if not result:
-            dtype_ = numpy.dtype(type(number))
-            bits = dtype_.itemsize * 8  # Convert bytes to bits.
-            result = UInt[bits]
-
-        return result
+    @classmethod
+    def type_of(cls, obj: Any) -> Type['UInt']:
+        return _type_of_number(UInt, obj, {
+            numpy.uint8: 8,
+            numpy.uint16: 16,
+            numpy.uint32: 32,
+            numpy.uint64: 64,
+            int: _default_int_bits,
+        })
 
     @staticmethod
     def fitting(number: int) -> Type['UInt']:
@@ -197,15 +179,33 @@ class Float(Number[float, numpy.floating]):
     """
 
     @staticmethod
-    def type_of(number: float) -> Type['Float']:
-        """
-        Return the Float type that corresponds to the given number.
-        :param number: the number of which an Float type is to be returned.
-        :return: an Int type.
-        """
-        dtype_ = numpy.dtype(type(number))
-        bits = dtype_.itemsize * 8  # Convert bytes to bits.
-        return Float[bits]
+    def type_of(obj: Any) -> Type['Float']:
+        return _type_of_number(Float, obj, {
+            numpy.float16: 16,
+            numpy.float32: 32,
+            numpy.float64: 64,
+            float: _default_float_bits,
+        })
+
+
+def _is_a(this: Any, that: type) -> bool:
+    # Return whether this is a subclass of that, considering the mro.
+    return that in get_mro(this)
+
+
+def _type_of_number(
+        cls: T,
+        obj: Any,
+        bits_per_type: Dict[type, int]) -> T:
+    # Return the nptyping Number type of the given obj using cls and
+    # bits_per_type.
+    bits = bits_per_type.get(obj) or bits_per_type.get(type(obj))
+
+    if not bits:
+        raise TypeError('Unsupported type {} for {}'
+                        .format(type(obj).__name__, cls))
+
+    return cls[bits]
 
 
 Int8 = Int[8]
