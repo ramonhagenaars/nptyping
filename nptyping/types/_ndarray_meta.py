@@ -45,8 +45,8 @@ class _NDArrayMeta(SubscriptableType):  # type: ignore
         if len(cls._shape) == 2 and cls._shape[1] is ...:
             shape_ = (cls._shape[0], '...')
 
-        type_ = getattr(cls._type, '__name__', cls._type)
-        return 'NDArray[{}, {}]'.format(shape_, type_).replace('\'', '')
+        # type_ = getattr(cls._type, '__name__', cls._type)
+        return 'NDArray[{}, {}]'.format(shape_, cls._type).replace('\'', '')
 
     def __str__(cls) -> str:
         return repr(cls)
@@ -130,14 +130,15 @@ class _NDArray(NPType, metaclass=_NDArrayMeta):
     def _only_type(cls, item: type) -> None:
         # E.g. NDArray[int]
         # The given item is the type of the single dimension.
-        cls._type = item
+        from nptyping import get_type  # Put here to prevent cyclic import.
+        cls._type = Any if item is Any else get_type(item)
 
     @classmethod
     def _size_and_type(cls, item: Tuple[_Size, _Type]) -> None:
         # E.g. NDArray[3, int]
         # The given item is the size of the single dimension and its type.
         cls._shape = (item[0],)
-        cls._type = item[1]
+        cls._only_type(item[1])
 
     @classmethod
     def _only_sizes(cls, item: Tuple[_Size, ...]) -> None:

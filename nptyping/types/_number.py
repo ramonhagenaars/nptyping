@@ -1,7 +1,7 @@
-from typing import Any, Union, Type, Dict
+from typing import Any, Union, Type
 
 import numpy
-from typish import Literal, get_mro, T
+from typish import Literal, get_mro
 
 from nptyping.functions._py_type import py_type
 from nptyping.types._nptype import NPType, SimpleNPTypeMeta
@@ -118,13 +118,8 @@ class Int(Number[int, numpy.signedinteger]):
 
     @classmethod
     def type_of(cls, obj: Any) -> Type['Int']:
-        return _type_of_number(Int, obj, {
-            numpy.int8: 8,
-            numpy.int16: 16,
-            numpy.int32: 32,
-            numpy.int64: 64,
-            int: _default_int_bits,
-        })
+        from nptyping.functions._get_type import get_type_int
+        return get_type_int(obj)
 
     @staticmethod
     def fitting(number: int) -> Type['Int']:
@@ -149,13 +144,8 @@ class UInt(Number[int, numpy.unsignedinteger]):
 
     @classmethod
     def type_of(cls, obj: Any) -> Type['UInt']:
-        return _type_of_number(UInt, obj, {
-            numpy.uint8: 8,
-            numpy.uint16: 16,
-            numpy.uint32: 32,
-            numpy.uint64: 64,
-            int: _default_int_bits,
-        })
+        from nptyping.functions._get_type import get_type_uint
+        return get_type_uint(obj)
 
     @staticmethod
     def fitting(number: int) -> Type['UInt']:
@@ -180,32 +170,13 @@ class Float(Number[float, numpy.floating]):
 
     @staticmethod
     def type_of(obj: Any) -> Type['Float']:
-        return _type_of_number(Float, obj, {
-            numpy.float16: 16,
-            numpy.float32: 32,
-            numpy.float64: 64,
-            float: _default_float_bits,
-        })
+        from nptyping.functions._get_type import get_type_float
+        return get_type_float(obj)
 
 
 def _is_a(this: Any, that: type) -> bool:
     # Return whether this is a subclass of that, considering the mro.
     return that in get_mro(this)
-
-
-def _type_of_number(
-        cls: T,
-        obj: Any,
-        bits_per_type: Dict[type, int]) -> T:
-    # Return the nptyping Number type of the given obj using cls and
-    # bits_per_type.
-    bits = bits_per_type.get(obj) or bits_per_type.get(type(obj))
-
-    if not bits:
-        raise TypeError('Unsupported type {} for {}'
-                        .format(type(obj).__name__, cls))
-
-    return cls[bits]
 
 
 Int8 = Int[8]

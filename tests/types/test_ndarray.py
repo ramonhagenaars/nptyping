@@ -140,7 +140,9 @@ class TestNDArray(TestCase):
         self.assertTrue(not issubclass(NDArray[(2, 2, 2), int], NDArray[(2, 2, 3), int]))
 
     def test_repr_and_str(self):
-        import typing  # This import is need for the evals to work.
+        # These imports are needed for the evals to work.
+        import typing
+        from nptyping import Int
 
         arr_1a = NDArray[(2, 2), int]
         arr_1b = eval(repr(arr_1a))

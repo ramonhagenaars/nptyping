@@ -18,4 +18,4 @@ from nptyping.types._number import (
     Float32,
     Float64,
 )
-from nptyping.types.ndarray import NDArray
+from nptyping.types._ndarray import NDArray
