@@ -16,6 +16,7 @@ from nptyping import (
     Float16,
     Float32,
 )
+from nptyping.types._unicode import Unicode
 
 
 class TestGetType(TestCase):
@@ -25,6 +26,9 @@ class TestGetType(TestCase):
 
     def test_get_type_float(self):
         self.assertEqual(Float64, get_type(42.0))
+
+    def test_get_type_str(self):
+        self.assertEqual(Unicode[4], get_type('Test'))
 
     def test_get_type_numpy_dtype(self):
         self.assertEqual(Int8, get_type(np.int8(42)))
@@ -40,6 +44,9 @@ class TestGetType(TestCase):
         self.assertEqual(Float16, get_type(np.float16(42.0)))
         self.assertEqual(Float32, get_type(np.float32(42.0)))
         self.assertEqual(Float64, get_type(np.float64(42.0)))
+
+        self.assertEqual(Unicode, get_type(np.unicode))
+        self.assertEqual(Unicode[40], get_type(np.dtype(('U', 40))))
 
     def test_get_type_numpy_type(self):
         self.assertEqual(Int8, get_type(np.int8))

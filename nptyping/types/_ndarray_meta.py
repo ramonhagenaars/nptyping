@@ -74,7 +74,7 @@ class _NDArrayMeta(SubscriptableType):  # type: ignore
         """
         return (subclass == cls
                 or (isinstance(subclass, _NDArrayMeta)
-                    and cls._is_dtype_eq(subclass.dtype)
+                    and cls._is_dtype_eq(subclass._type)
                     and cls._is_shape_eq(subclass.shape)))
 
     def __hash__(cls) -> int:
@@ -95,8 +95,8 @@ class _NDArrayMeta(SubscriptableType):  # type: ignore
         zipped = zip(shape, cls._shape)
         return all([_is_eq_to(a, b) for a, b in zipped])
 
-    def _is_dtype_eq(cls, dtype: np.dtype) -> bool:
-        return cls._type is Any or bool(cls.dtype == dtype)
+    def _is_dtype_eq(cls, nptype: NPType) -> bool:
+        return cls._type is Any or issubclass(nptype, cls._type)
 
 
 class _NDArray(NPType, metaclass=_NDArrayMeta):

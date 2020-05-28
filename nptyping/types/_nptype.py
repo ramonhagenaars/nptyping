@@ -1,5 +1,3 @@
-from typing import Any
-
 from typish import SubscriptableType
 
 
@@ -14,8 +12,9 @@ class SimpleNPTypeMeta(SubscriptableType):
     A metaclass for all simple NPTypes (e.g. float, int, etc.).
     """
     def __repr__(cls):
-        if not cls.__args__ or cls.__args__ == Any:
+        repr_args = getattr(cls, '_repr_args', None)
+        if not repr_args:
             return cls.__name__
-        return '{}[{}]'.format(cls.__name__, cls.__args__)
+        return '{}[{}]'.format(cls.__name__, repr_args)
 
     __str__ = __repr__

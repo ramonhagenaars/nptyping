@@ -18,10 +18,7 @@ from nptyping import (
     UInt16,
     UInt64,
     Number,
-)
-
-_default_int_bytes = numpy.dtype(int).itemsize * 8
-_default_float_bytes = numpy.dtype(float).itemsize * 8
+    DEFAULT_INT_BITS, DEFAULT_FLOAT_BITS)
 
 
 class TestNumber(TestCase):
@@ -99,13 +96,13 @@ class TestNumber(TestCase):
 
         self.assertTrue(issubclass(int, Number))
         self.assertTrue(issubclass(float, Number))
-        self.assertTrue(issubclass(int, Int[_default_int_bytes]))
-        self.assertTrue(issubclass(float, Float[_default_float_bytes]))
+        self.assertTrue(issubclass(int, Int[DEFAULT_INT_BITS]))
+        self.assertTrue(issubclass(float, Float[DEFAULT_FLOAT_BITS]))
 
     def test_int_of(self):
-        self.assertEqual(Int[_default_int_bytes], Int.type_of(1))
-        self.assertEqual(Int[_default_int_bytes], Int.type_of(1_000_000_000))
-        self.assertEqual(Int[_default_int_bytes], Int.type_of(-1_000_000_000))
+        self.assertEqual(Int[DEFAULT_INT_BITS], Int.type_of(1))
+        self.assertEqual(Int[DEFAULT_INT_BITS], Int.type_of(1_000_000_000))
+        self.assertEqual(Int[DEFAULT_INT_BITS], Int.type_of(-1_000_000_000))
 
         self.assertEqual(Int8, Int.type_of(numpy.int8))
         self.assertEqual(Int16, Int.type_of(numpy.int16))
@@ -113,9 +110,9 @@ class TestNumber(TestCase):
         self.assertEqual(Int64, Int.type_of(numpy.int64))
 
     def test_uint_of(self):
-        self.assertEqual(UInt[_default_int_bytes], UInt.type_of(1))
-        self.assertEqual(UInt[_default_int_bytes], UInt.type_of(1_000_000_000))
-        self.assertEqual(UInt[_default_int_bytes], UInt.type_of(1_000_000_000))
+        self.assertEqual(UInt[DEFAULT_INT_BITS], UInt.type_of(1))
+        self.assertEqual(UInt[DEFAULT_INT_BITS], UInt.type_of(1_000_000_000))
+        self.assertEqual(UInt[DEFAULT_INT_BITS], UInt.type_of(1_000_000_000))
 
         self.assertEqual(UInt8, UInt.type_of(numpy.uint8))
         self.assertEqual(UInt16, UInt.type_of(numpy.uint16))

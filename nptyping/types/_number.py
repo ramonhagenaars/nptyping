@@ -6,8 +6,8 @@ from typish import Literal, get_mro
 from nptyping.functions._py_type import py_type
 from nptyping.types._nptype import NPType, SimpleNPTypeMeta
 
-_default_int_bits = numpy.dtype(int).itemsize * 8
-_default_float_bits = numpy.dtype(float).itemsize * 8
+DEFAULT_INT_BITS = numpy.dtype(int).itemsize * 8
+DEFAULT_FLOAT_BITS = numpy.dtype(float).itemsize * 8
 
 
 class _NumberMeta(SimpleNPTypeMeta):
@@ -16,14 +16,15 @@ class _NumberMeta(SimpleNPTypeMeta):
     """
     base = None
     npbase = None
-    bytes = None
+    _bits = None
     _hashes = {}
+    _repr_args = None
 
     def __eq__(cls, other):
         return hash(cls) == hash(other)
 
     def __hash__(cls):
-        key = (cls.base, cls.npbase, cls.bytes)
+        key = (cls.base, cls.npbase, cls._bits)
         if key not in cls._hashes:
             cls._hashes[key] = int(numpy.prod([hash(elem) for elem in key]))
         return cls._hashes[key]
@@ -45,7 +46,7 @@ class _NumberMeta(SimpleNPTypeMeta):
             except ValueError:
                 return False
 
-        return (instance.itemsize * 8 == cls.bytes
+        return (instance.itemsize * 8 == cls._bits
                 and issubclass(instance.dtype.type, cls.npbase))
 
     def __subclasscheck__(cls, subclass: type) -> bool:
@@ -55,7 +56,7 @@ class _NumberMeta(SimpleNPTypeMeta):
         if _is_a(subclass, Number):
             # Cover nptyping number types.
             return ((not cls.npbase or issubclass(subclass.npbase, cls.npbase))
-                    and (not cls.bytes or subclass.bytes == cls.bytes))
+                    and (not cls._bits or subclass._bits == cls._bits))
 
         if (issubclass(subclass, numpy.number)
                 or issubclass(subclass, int)
@@ -80,7 +81,8 @@ class Number(NPType, metaclass=_NumberMeta):
     """
     base = None
     npbase = None
-    bytes = None
+    _bits = None
+    _repr_args = None
 
     @classmethod
     def _after_subscription(cls, args: Any) -> None:
@@ -93,9 +95,10 @@ class Number(NPType, metaclass=_NumberMeta):
             raise TypeError('Number takes only an int as generic type. '
                             'Given: {}'.format(type(args).__name__))
 
-        cls.bytes = args
+        cls._bits = args
+        cls._repr_args = args
 
-        if not hasattr(numpy, '{}{}'.format(cls.base.__name__, cls.bytes)):
+        if not hasattr(numpy, '{}{}'.format(cls.base.__name__, cls._bits)):
             raise TypeError('Unsupported number of bits: {}'.format(args))
 
     @classmethod
@@ -104,8 +107,7 @@ class Number(NPType, metaclass=_NumberMeta):
         Return the number of bits of this Number type.
         :return: the number of bits or Any.
         """
-        # FIXME: use cls.bytes
-        return cls.__args__ or Any
+        return cls._bits
 
 
 class Int(Number[int, numpy.signedinteger]):
