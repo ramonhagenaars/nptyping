@@ -1,7 +1,7 @@
 from typing import Any, Type, Dict
 
 import numpy
-from typish import ClsFunction, T
+from typish import ClsFunction
 
 from nptyping.functions._py_type import py_type
 from nptyping.types._ndarray import NDArray
@@ -48,13 +48,13 @@ def _get_type_type(type_: type) -> Type['NPType']:
         (numpy.signedinteger, get_type_int),
         (numpy.unsignedinteger, get_type_uint),
         (numpy.floating, get_type_float),
+        (object, lambda _: Object),
     ]
 
     for super_type, delegate in delegates:
         if issubclass(type_, super_type):
-            return delegate(type_)
-
-    raise TypeError('Type "{}" not understood.'.format(type_.__name__))
+            break
+    return delegate(type_)
 
 
 def _get_type_dtype(dtype: numpy.dtype) -> Type['NPType']:
@@ -78,7 +78,7 @@ def _get_type_arrary(arr: numpy.ndarray) -> Type['NPType']:
 def _get_type_of_number(
         cls: Type['Number'],
         obj: Any,
-        bits_per_type: Dict[type, int]) -> T:
+        bits_per_type: Dict[type, int]) -> Type[Number]:
     # Return the nptyping Number type of the given obj using cls and
     # bits_per_type.
     bits = (bits_per_type.get(obj)
@@ -93,7 +93,12 @@ def _get_type_of_number(
 
 
 # Library private.
-def get_type_str(obj: Any):
+def get_type_str(obj: Any) -> Type[Unicode]:
+    """
+    Return the NPType that corresponds to obj.
+    :param obj: a string compatible object.
+    :return: a Unicode type.
+    """
     if isinstance(obj, numpy.dtype):
         return Unicode[obj.itemsize / 4]
     if obj == str:
@@ -104,7 +109,12 @@ def get_type_str(obj: Any):
 
 
 # Library private.
-def get_type_int(obj: Any):
+def get_type_int(obj: Any) -> Type[Int]:
+    """
+    Return the NPType that corresponds to obj.
+    :param obj: an int compatible object.
+    :return: a Int type.
+    """
     return _get_type_of_number(Int, obj, {
         numpy.int8: 8,
         numpy.int16: 16,
@@ -115,7 +125,12 @@ def get_type_int(obj: Any):
 
 
 # Library private.
-def get_type_uint(obj: Any):
+def get_type_uint(obj: Any) -> Type[UInt]:
+    """
+    Return the NPType that corresponds to obj.
+    :param obj: an uint compatible object.
+    :return: an UInt type.
+    """
     return _get_type_of_number(UInt, obj, {
         numpy.uint8: 8,
         numpy.uint16: 16,
@@ -126,7 +141,12 @@ def get_type_uint(obj: Any):
 
 
 # Library private.
-def get_type_float(obj: Any):
+def get_type_float(obj: Any) -> Type[Float]:
+    """
+    Return the NPType that corresponds to obj.
+    :param obj: a float compatible object.
+    :return: a Float type.
+    """
     return _get_type_of_number(Float, obj, {
         numpy.float16: 16,
         numpy.float32: 32,

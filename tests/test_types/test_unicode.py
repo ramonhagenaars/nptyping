@@ -17,3 +17,6 @@ class TestUnicode(TestCase):
     def test_repr(self):
         self.assertEqual('Unicode', repr(Unicode))
         self.assertEqual('Unicode[50]', repr(Unicode[50]))
+
+    def test_type_of(self):
+        self.assertEqual(Unicode[4], Unicode.type_of('test'))

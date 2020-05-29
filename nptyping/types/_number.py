@@ -30,13 +30,17 @@ class _NumberMeta(SimpleNPTypeMeta):
         return cls._hashes[key]
 
     def __instancecheck__(cls, instance: Any) -> bool:
+        if cls == instance:
+            return True
+
         py_number_types = (int, float)
         if type(instance) in py_number_types:
             # Covers Python types.
             return True
-        if getattr(instance, 'base', None) in py_number_types:
+        if isinstance(instance, type) and issubclass(instance, NPType):
             # Covers nptyping types.
-            return True
+            return (instance.base == cls.base
+                    and (not cls._bits or instance._bits == cls._bits))
 
         npbase = getattr(cls, 'npbase', None)
         if not npbase:
@@ -51,27 +55,25 @@ class _NumberMeta(SimpleNPTypeMeta):
 
     def __subclasscheck__(cls, subclass: type) -> bool:
         if cls == subclass:
-            return True
-
-        if _is_a(subclass, Number):
+            result = True
+        elif _is_a(subclass, Number):
             # Cover nptyping number types.
-            return ((not cls.npbase or issubclass(subclass.npbase, cls.npbase))
-                    and (not cls._bits or subclass._bits == cls._bits))
-
-        if (issubclass(subclass, numpy.number)
-                or issubclass(subclass, int)
-                or issubclass(subclass, float)):
+            result = ((not cls.npbase or issubclass(subclass.npbase, cls.npbase))
+                      and (not cls._bits or subclass._bits == cls._bits))
+        elif (issubclass(subclass, numpy.number)
+              or issubclass(subclass, int)
+              or issubclass(subclass, float)):
             if not cls.npbase:
                 # cls is Number.
-                return True
-            try:
-                nptype = cls.type_of(subclass)
-            except TypeError:
-                return False
+                result = True
             else:
-                return cls.__subclasscheck__(nptype)
-
-        return False
+                try:
+                    nptype = cls.type_of(subclass)
+                except TypeError:
+                    result = False
+                else:
+                    result = issubclass(nptype, cls)
+        return result
 
 
 class Number(NPType, metaclass=_NumberMeta):
@@ -120,6 +122,11 @@ class Int(Number[int, numpy.signedinteger]):
 
     @classmethod
     def type_of(cls, obj: Any) -> Type['Int']:
+        """
+        Return the NPType that corresponds to obj.
+        :param obj: an int compatible object.
+        :return: a Int type.
+        """
         from nptyping.functions._get_type import get_type_int
         return get_type_int(obj)
 
@@ -133,7 +140,8 @@ class Int(Number[int, numpy.signedinteger]):
         bitlen = number.bit_length()
         for bits in [8, 16, 32, 64]:
             if bitlen <= bits - 1:  # subtract sign bit.
-                return Int[bits]
+                break
+        return Int[bits]
 
 
 class UInt(Number[int, numpy.unsignedinteger]):
@@ -146,6 +154,11 @@ class UInt(Number[int, numpy.unsignedinteger]):
 
     @classmethod
     def type_of(cls, obj: Any) -> Type['UInt']:
+        """
+        Return the NPType that corresponds to obj.
+        :param obj: an uint compatible object.
+        :return: an UInt type.
+        """
         from nptyping.functions._get_type import get_type_uint
         return get_type_uint(obj)
 
@@ -159,7 +172,8 @@ class UInt(Number[int, numpy.unsignedinteger]):
         bitlen = number.bit_length()
         for bits in [8, 16, 32, 64]:
             if bitlen <= bits:
-                return UInt[bits]
+                break
+        return UInt[bits]
 
 
 class Float(Number[float, numpy.floating]):
@@ -172,6 +186,11 @@ class Float(Number[float, numpy.floating]):
 
     @staticmethod
     def type_of(obj: Any) -> Type['Float']:
+        """
+        Return the NPType that corresponds to obj.
+        :param obj: a float compatible object.
+        :return: a Float type.
+        """
         from nptyping.functions._get_type import get_type_float
         return get_type_float(obj)
 

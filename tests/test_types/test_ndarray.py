@@ -123,16 +123,6 @@ class TestNDArray(TestCase):
         self.assertTrue(isinstance(arr2x2x2, NDArray[(2, ...), int]))
         self.assertTrue(not isinstance(arr3x2x2, NDArray[(2, ...), int]))
 
-    # def test_(self):
-    #     arr2x2 = np.array([[1, 2], [3, 4]])
-    #
-    #     self.assertIsInstance(arr2x2, NDArray[(2, 2), Int32])
-    #
-    #
-    #
-
-
-
     def test_subclass_check(self):
         self.assertTrue(issubclass(NDArray[(2, 2, 2), int], NDArray[(2, 2, 2), int]))
         self.assertTrue(issubclass(NDArray[(2, 2, 2), int], NDArray))

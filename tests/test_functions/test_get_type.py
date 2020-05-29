@@ -15,7 +15,8 @@ from nptyping import (
     UInt64,
     Float16,
     Float32,
-)
+    NDArray, Int, DEFAULT_INT_BITS)
+from nptyping.types._object import Object
 from nptyping.types._unicode import Unicode
 
 
@@ -63,6 +64,12 @@ class TestGetType(TestCase):
         self.assertEqual(Float32, get_type(np.float32))
         self.assertEqual(Float64, get_type(np.float64))
 
+    def test_get_type_object(self):
+        self.assertEqual(Object, get_type(np.object))
+
+    def test_get_type_array(self):
+        self.assertEqual(NDArray[3, Int[DEFAULT_INT_BITS]], get_type(np.array([1, 2, 3])))
+
     def test_get_type_not_understood(self):
         class SomeRandomClass:
             ...
@@ -70,9 +77,4 @@ class TestGetType(TestCase):
         # Test invalid instances.
         with self.assertRaises(TypeError) as err:
             get_type(SomeRandomClass())
-        self.assertIn(SomeRandomClass.__name__, str(err.exception))
-
-        # Test invalid types.
-        with self.assertRaises(TypeError) as err:
-            get_type(SomeRandomClass)
         self.assertIn(SomeRandomClass.__name__, str(err.exception))

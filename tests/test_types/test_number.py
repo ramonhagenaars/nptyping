@@ -40,12 +40,23 @@ class TestNumber(TestCase):
         with self.assertRaises(TypeError):
             Int[128]
 
+    def test_raise_when_invalid_args(self):
+        with self.assertRaises(TypeError):
+            Float['wrong']
+
     def test_isinstance(self):
         self.assertIsInstance(42, Int)
         self.assertIsInstance(42, Int32)
         self.assertIsInstance(42.0, Float)
-        self.assertIsInstance(42.0, Float32)
+        self.assertIsInstance(42.0, Float64)
         self.assertIsInstance(42, Number)
+
+        self.assertIsInstance(Int64, Int[64])
+        self.assertIsInstance(Float64, Float[64])
+        self.assertIsInstance(Int64, Int)
+        self.assertIsInstance(Float64, Float)
+        self.assertNotIsInstance(Int, Float)
+        self.assertNotIsInstance(Float, Int)
 
         self.assertIsInstance(numpy.int64(42), Int[64])
         self.assertIsInstance(numpy.int64(42), Int64)

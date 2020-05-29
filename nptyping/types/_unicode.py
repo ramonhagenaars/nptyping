@@ -43,5 +43,10 @@ class Unicode(NPType, metaclass=_UnicodeMeta):
 
     @classmethod
     def type_of(cls, obj: Any) -> Type['Unicode']:
+        """
+        Return the NPType that corresponds to obj.
+        :param obj: a string compatible object.
+        :return: a Unicode type.
+        """
         from nptyping.functions._get_type import get_type_str
         return get_type_str(obj)

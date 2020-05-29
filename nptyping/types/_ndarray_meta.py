@@ -25,14 +25,6 @@ class _NDArrayMeta(SubscriptableType):  # type: ignore
     _type = ...  # type: Union[type, Literal[Any]]
 
     @property
-    def dtype(cls) -> np.dtype:
-        """
-        Return the numpy dtype.
-        :return: the numpy dtype.
-        """
-        return np.dtype(cls._type)  # TODO if type is Any, this wont work
-
-    @property
     def shape(cls) -> Tuple[int, ...]:
         """
         Return the shape as a tuple of ints.
@@ -74,8 +66,8 @@ class _NDArrayMeta(SubscriptableType):  # type: ignore
         """
         return (subclass == cls
                 or (isinstance(subclass, _NDArrayMeta)
-                    and cls._is_dtype_eq(subclass._type)
-                    and cls._is_shape_eq(subclass.shape)))
+                    and cls._is_dtype_eq(subclass._type)  # pylint: disable=no-value-for-parameter
+                    and cls._is_shape_eq(subclass.shape)))  # pylint: disable=no-value-for-parameter
 
     def __hash__(cls) -> int:
         """
