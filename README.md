@@ -94,34 +94,34 @@ NDArray[(3, 3, typing.Any), typing.Any]
 An array with any dimensions of any size and type int:
 ```python
 >>> NDArray[int]
-NDArray[(typing.Any, ...), int]
+NDArray[(typing.Any, ...), Int[32]]
 
 >>> NDArray[(Any, ...), int]
-NDArray[(typing.Any, ...), int]
+NDArray[(typing.Any, ...), Int[32]]
 
 ```
 
 An array with 1 dimension of size 3 and type int:
 ```python
 >>> NDArray[3, int]
-NDArray[(3,), int]
+NDArray[(3,), Int[32]]
 
 >>> NDArray[(3,), int]
-NDArray[(3,), int]
+NDArray[(3,), Int[32]]
 
 ```
 
 An array with any dimensions of size 3 and type int:
 ```python
 >>> NDArray[(3, ...), int]
-NDArray[(3, ...), int]
+NDArray[(3, ...), Int[32]]
 
 ```
 
 An array with 3 dimensions of sizes 3, 3, 5 and type int:
 ```python
 >>> NDArray[(3, 3, 5), int]
-NDArray[(3, 3, 5), int]
+NDArray[(3, 3, 5), Int[32]]
 
 ```
 
@@ -148,7 +148,7 @@ You can use `NDArray` to find the type of a numpy array for you using `NDArray.t
 
 ```python
 >>> NDArray.type_of(np.array([[1, 2], [3, 4.0]]))
-NDArray[(2, 2), float64]
+NDArray[(2, 2), Float[64]]
 
 ```
 
