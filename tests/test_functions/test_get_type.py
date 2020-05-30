@@ -18,7 +18,8 @@ from nptyping import (
     NDArray,
     Int,
     DEFAULT_INT_BITS,
-    DEFAULT_FLOAT_BITS
+    DEFAULT_FLOAT_BITS,
+    Float,
 )
 from nptyping.types._object import Object
 from nptyping.types._unicode import Unicode
