@@ -20,7 +20,7 @@ def _is_eq_to(this: Any, that: Any) -> bool:
     return that is Any or this == that
 
 
-class _NDArrayMeta(SubscriptableType):  # type: ignore
+class _NDArrayMeta(SubscriptableType):
     _shape = tuple()  # type: Union[Tuple[int, ...], Tuple[int, EllipsisType]]
     _type = ...  # type: Union[type, Literal[Any]]
 
@@ -66,8 +66,8 @@ class _NDArrayMeta(SubscriptableType):  # type: ignore
         """
         return (subclass == cls
                 or (isinstance(subclass, _NDArrayMeta)
-                    and cls._is_dtype_eq(subclass._type)  # pylint: disable=no-value-for-parameter
-                    and cls._is_shape_eq(subclass.shape)))  # pylint: disable=no-value-for-parameter
+                    and cls._is_dtype_eq(subclass._type)  # pylint: disable=no-value-for-parameter # noqa
+                    and cls._is_shape_eq(subclass.shape)))  # pylint: disable=no-value-for-parameter # noqa
 
     def __hash__(cls) -> int:
         """
@@ -92,20 +92,20 @@ class _NDArrayMeta(SubscriptableType):  # type: ignore
 
 
 class _NDArray(NPType, metaclass=_NDArrayMeta):
-    _shape = (Any, ...)  # type: Union[Tuple[int, ...], Tuple[Any, EllipsisType]]
+    _shape = (Any, ...)  # type: Union[Tuple[int, ...], Tuple[Any, EllipsisType]]  # noqa
     _type = Any
 
     @classmethod
     def _after_subscription(cls, item: Any) -> None:
         method = ClsFunction(OrderedDict([
-            (_Size, cls._only_size),  # type: ignore
-            (_Type, cls._only_type),  # type: ignore
-            (_NSizes, lambda _: ...),  # type: ignore
-            (_SizeAndType, cls._size_and_type),  # type: ignore
+            (_Size, cls._only_size),
+            (_Type, cls._only_type),
+            (_NSizes, lambda _: ...),
+            (_SizeAndType, cls._size_and_type),
             (_Sizes, cls._only_sizes),
-            (_SizesAndType, cls._sizes_and_type),  # type: ignore
-            (_NSizesAndType, cls._sizes_and_type),  # type: ignore
-            (_Default, lambda _: ...),  # type: ignore
+            (_SizesAndType, cls._sizes_and_type),
+            (_NSizesAndType, cls._sizes_and_type),
+            (_Default, lambda _: ...),
         ]))
 
         if not method.understands(item):

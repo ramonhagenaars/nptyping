@@ -58,8 +58,10 @@ class _NumberMeta(SimpleNPTypeMeta):
             result = True
         elif _is_a(subclass, Number):
             # Cover nptyping number types.
-            result = ((not cls.npbase or issubclass(subclass.npbase, cls.npbase))
-                      and (not cls._bits or subclass._bits == cls._bits))
+            base_is_eq = (not cls.npbase
+                          or issubclass(subclass.npbase, cls.npbase))
+            bits_is_eq = not cls._bits or subclass._bits == cls._bits
+            result = base_is_eq and bits_is_eq
         elif (issubclass(subclass, numpy.number)
               or issubclass(subclass, int)
               or issubclass(subclass, float)):

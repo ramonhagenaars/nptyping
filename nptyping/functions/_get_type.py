@@ -6,7 +6,14 @@ from typish import ClsFunction
 from nptyping.functions._py_type import py_type
 from nptyping.types._ndarray import NDArray
 from nptyping.types._nptype import NPType
-from nptyping.types._number import Int, Float, UInt, Number, DEFAULT_INT_BITS, DEFAULT_FLOAT_BITS
+from nptyping.types._number import (
+    Int,
+    Float,
+    UInt,
+    Number,
+    DEFAULT_INT_BITS,
+    DEFAULT_FLOAT_BITS
+)
 from nptyping.types._object import Object
 from nptyping.types._unicode import Unicode
 

@@ -19,12 +19,13 @@ def py_type(np_type: Union[np.dtype, type, Literal[Any]]) -> type:
     :param np_type: a numpy type (dtype).
     :return: a Python builtin type.
     """
-    np_type = np.dtype(np_type) if not isinstance(np_type, np.dtype) else np_type
+    np_type = (np.dtype(np_type) if not isinstance(np_type, np.dtype)
+               else np_type)
     function = ClsFunction({
         np.dtype: lambda x: _TYPE_PER_KIND[x.kind],
         type: lambda x: py_type(np.dtype(x)),
     })
-    return function(np_type)  # type: ignore
+    return function(np_type)
 
 
 _TYPE_PER_KIND = {

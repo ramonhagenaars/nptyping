@@ -5,7 +5,7 @@ import numpy as np
 from nptyping.types._ndarray_meta import _NDArray
 
 
-class NDArray(np.ndarray, _NDArray):  # type: ignore
+class NDArray(np.ndarray, _NDArray):
     """
     NDArray is a representation of numpy.ndarray.
 
@@ -24,19 +24,19 @@ class NDArray(np.ndarray, _NDArray):  # type: ignore
 
     An array with any dimensions of any size and type int:
     >>> NDArray[int]
-    NDArray[(typing.Any, ...), int]
+    NDArray[(typing.Any, ...), Int[32]]
 
     An array with 1 dimension of size 3 and type int:
     >>> NDArray[3, int]
-    NDArray[(3,), int]
+    NDArray[(3,), Int[32]]
 
     An array with any dimensions of size 3 and type int:
     >>> NDArray[(3, ...), int]
-    NDArray[(3, ...), int]
+    NDArray[(3, ...), Int[32]]
 
     An array with 3 dimensions of sizes 3, 3, 5 and type int:
     >>> NDArray[(3, 3, 5), int]
-    NDArray[(3, 3, 5), int]
+    NDArray[(3, 3, 5), Int[32]]
 
     """
 
@@ -50,9 +50,9 @@ class NDArray(np.ndarray, _NDArray):  # type: ignore
         Return an nptyping.NDArray type T such that isinstance(arr, T).
 
         >>> NDArray.type_of(np.array([[1, 2], [3, 4.0]]))
-        NDArray[(2, 2), float64]
+        NDArray[(2, 2), Float[64]]
 
         :param arr: any numpy.ndarray.
         :return: a nptyping.NDArray.
         """
-        return NDArray[arr.shape, arr.dtype]  # type: ignore
+        return NDArray[arr.shape, arr.dtype]
