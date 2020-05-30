@@ -15,7 +15,11 @@ from nptyping import (
     UInt64,
     Float16,
     Float32,
-    NDArray, Int, DEFAULT_INT_BITS)
+    NDArray,
+    Int,
+    DEFAULT_INT_BITS,
+    DEFAULT_FLOAT_BITS
+)
 from nptyping.types._object import Object
 from nptyping.types._unicode import Unicode
 
@@ -23,10 +27,10 @@ from nptyping.types._unicode import Unicode
 class TestGetType(TestCase):
 
     def test_get_type_int(self):
-        self.assertEqual(Int32, get_type(42))
+        self.assertEqual(Int[DEFAULT_INT_BITS], get_type(42))
 
     def test_get_type_float(self):
-        self.assertEqual(Float64, get_type(42.0))
+        self.assertEqual(Float[DEFAULT_FLOAT_BITS], get_type(42.0))
 
     def test_get_type_str(self):
         self.assertEqual(Unicode[4], get_type('Test'))

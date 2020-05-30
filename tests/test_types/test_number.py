@@ -112,8 +112,8 @@ class TestNumber(TestCase):
 
     def test_int_of(self):
         self.assertEqual(Int[DEFAULT_INT_BITS], Int.type_of(1))
-        self.assertEqual(Int[DEFAULT_INT_BITS], Int.type_of(1_000_000_000))
-        self.assertEqual(Int[DEFAULT_INT_BITS], Int.type_of(-1_000_000_000))
+        self.assertEqual(Int[DEFAULT_INT_BITS], Int.type_of(1000000000))
+        self.assertEqual(Int[DEFAULT_INT_BITS], Int.type_of(-1000000000))
 
         self.assertEqual(Int8, Int.type_of(numpy.int8))
         self.assertEqual(Int16, Int.type_of(numpy.int16))
@@ -122,8 +122,8 @@ class TestNumber(TestCase):
 
     def test_uint_of(self):
         self.assertEqual(UInt[DEFAULT_INT_BITS], UInt.type_of(1))
-        self.assertEqual(UInt[DEFAULT_INT_BITS], UInt.type_of(1_000_000_000))
-        self.assertEqual(UInt[DEFAULT_INT_BITS], UInt.type_of(1_000_000_000))
+        self.assertEqual(UInt[DEFAULT_INT_BITS], UInt.type_of(1000000000))
+        self.assertEqual(UInt[DEFAULT_INT_BITS], UInt.type_of(1000000000))
 
         self.assertEqual(UInt8, UInt.type_of(numpy.uint8))
         self.assertEqual(UInt16, UInt.type_of(numpy.uint16))
@@ -133,8 +133,8 @@ class TestNumber(TestCase):
     def test_float_of(self):
         default_bytes = numpy.dtype(float).itemsize * 8
         self.assertEqual(Float[default_bytes], Float.type_of(1.0))
-        self.assertEqual(Float[default_bytes], Float.type_of(1_000_000_000.0))
-        self.assertEqual(Float[default_bytes], Float.type_of(-1_000_000_000.0))
+        self.assertEqual(Float[default_bytes], Float.type_of(1000000000.0))
+        self.assertEqual(Float[default_bytes], Float.type_of(-1000000000.0))
 
     def test_int_fitting(self):
         self.assertEqual(Int8, Int.fitting(0))
