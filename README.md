@@ -100,6 +100,8 @@ NDArray[(typing.Any, ...), Int[32]]
 NDArray[(typing.Any, ...), Int[32]]
 
 ```
+Note that provided types are translated to nptyping types. 
+You can also provide them yourself: `NDArray[(Any, ...), Int[64]]`.
 
 An array with 1 dimension of size 3 and type int:
 ```python
@@ -149,6 +151,91 @@ You can use `NDArray` to find the type of a numpy array for you using `NDArray.t
 ```python
 >>> NDArray.type_of(np.array([[1, 2], [3, 4.0]]))
 NDArray[(2, 2), Float[64]]
+
+```
+
+See also `nptyping.get_type` (documented below).
+
+### Int
+An nptyping equivalent of numpy signed integers.
+
+```python
+>>> from nptyping import Int
+
+>>> Int[32]
+Int[32]
+
+```
+You can also use one of these:
+```python
+>>> from nptyping import Int8, Int16, Int32, Int64
+
+```
+
+### UInt
+An nptyping equivalent of numpy unsigned integers.
+
+```python
+>>> from nptyping import UInt
+
+>>> UInt[64]
+UInt[64]
+
+```
+You can also use one of these:
+```python
+>>> from nptyping import UInt8, UInt16, UInt32, UInt64
+
+```
+
+### Float
+An nptyping equivalent of numpy floats.
+
+```python
+>>> from nptyping import Float
+
+>>> Float[64]
+Float[64]
+
+```
+You can also use one of these:
+```python
+>>> from nptyping import Float16, Float32, Float64
+
+```
+
+### Unicode
+An nptyping equivalent of numpy unicodes.
+
+```python
+>>> from nptyping import Unicode
+
+>>> Unicode[100]
+Unicode[100]
+
+```
+
+### Object
+An nptyping equivalent of numpy objects.
+
+```python
+>>> from nptyping import Object
+
+>>> Object
+Object
+
+```
+
+### get_type
+With `get_type` you can get `np.typing` equivalent types for your arguments:
+
+```python
+>>> from nptyping import get_type
+
+>>> get_type(np.int32)
+Int[32]
+>>> get_type('some string')
+Unicode[11]
 
 ```
 

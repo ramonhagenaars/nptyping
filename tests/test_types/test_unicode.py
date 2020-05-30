@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from nptyping.types._unicode import Unicode
+from nptyping import Unicode
 
 
 class TestUnicode(TestCase):
