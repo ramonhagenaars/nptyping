@@ -230,7 +230,7 @@ Object
 ```
 
 ### get_type
-With `get_type` you can get `np.typing` equivalent types for your arguments:
+With `get_type` you can get `nptyping` equivalent types for your arguments:
 
 ```python
 >>> from nptyping import get_type
