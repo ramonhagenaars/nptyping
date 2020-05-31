@@ -54,27 +54,16 @@ class _NumberMeta(SimpleNPTypeMeta):
                 and issubclass(instance.dtype.type, cls.npbase))
 
     def __subclasscheck__(cls, subclass: type) -> bool:
+        result = False
         if cls == subclass:
             result = True
         elif _is_a(subclass, Number):
             # Cover nptyping number types.
-            base_is_eq = (not cls.npbase
-                          or issubclass(subclass.npbase, cls.npbase))
-            bits_is_eq = not cls._bits or subclass._bits == cls._bits
-            result = base_is_eq and bits_is_eq
+            result = _is_number_subclass_of(subclass, cls)
         elif (issubclass(subclass, numpy.number)
               or issubclass(subclass, int)
               or issubclass(subclass, float)):
-            if not cls.npbase:
-                # cls is Number.
-                result = True
-            else:
-                try:
-                    nptype = cls.type_of(subclass)
-                except TypeError:
-                    result = False
-                else:
-                    result = issubclass(nptype, cls)
+            result = _is_numpy_or_python_type_subclass_of(subclass, cls)
         return result
 
 
@@ -200,6 +189,33 @@ class Float(Number[float, numpy.floating]):
 def _is_a(this: Any, that: type) -> bool:
     # Return whether this is a subclass of that, considering the mro.
     return that in get_mro(this)
+
+
+def _is_number_subclass_of(subclass: Type[Number], superclass: Type[Number]) -> bool:
+    # Return whether subclass (which must be a type of Number) subclasses
+    # superclass.
+    base_is_eq = (not superclass.npbase
+                  or issubclass(subclass.npbase, superclass.npbase))
+    bits_is_eq = not superclass._bits or subclass._bits == superclass._bits
+    return base_is_eq and bits_is_eq
+
+
+def _is_numpy_or_python_type_subclass_of(
+        subclass: Any,
+        superclass: Type[Number]) -> bool:
+    # Return whether subclass (which must be a numpy type or a Python type)
+    # subclasses superclass.
+    if not superclass.npbase:
+        # superclass is Number.
+        result = True
+    else:
+        try:
+            nptype = superclass.type_of(subclass)
+        except TypeError:
+            result = False
+        else:
+            result = issubclass(nptype, superclass)
+    return result
 
 
 Int8 = Int[8]
