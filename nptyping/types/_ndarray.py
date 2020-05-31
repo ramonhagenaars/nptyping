@@ -15,6 +15,7 @@ class NDArray(np.ndarray, _NDArray):
 
     An array with 1 dimension of any size and any type:
     >>> from typing import Any
+    >>> from nptyping import Int64
     >>> NDArray[Any]
     NDArray[(typing.Any,), typing.Any]
 
@@ -23,19 +24,19 @@ class NDArray(np.ndarray, _NDArray):
     NDArray[(3,), typing.Any]
 
     An array with any dimensions of any size and type int:
-    >>> NDArray[int]
+    >>> NDArray[Int64]
     NDArray[(typing.Any, ...), Int[64]]
 
     An array with 1 dimension of size 3 and type int:
-    >>> NDArray[3, int]
+    >>> NDArray[3, Int64]
     NDArray[(3,), Int[64]]
 
     An array with any dimensions of size 3 and type int:
-    >>> NDArray[(3, ...), int]
+    >>> NDArray[(3, ...), Int64]
     NDArray[(3, ...), Int[64]]
 
     An array with 3 dimensions of sizes 3, 3, 5 and type int:
-    >>> NDArray[(3, 3, 5), int]
+    >>> NDArray[(3, 3, 5), Int64]
     NDArray[(3, 3, 5), Int[64]]
 
     """

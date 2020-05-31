@@ -93,37 +93,40 @@ NDArray[(3, 3, typing.Any), typing.Any]
 
 An array with any dimensions of any size and type int:
 ```python
->>> NDArray[int]
-NDArray[(typing.Any, ...), Int[64]]
+>>> import numpy as np
 
->>> NDArray[(Any, ...), int]
-NDArray[(typing.Any, ...), Int[64]]
+>>> NDArray[np.int32]
+NDArray[(typing.Any, ...), Int[32]]
+
+>>> NDArray[(Any, ...), np.int32]
+NDArray[(typing.Any, ...), Int[32]]
 
 ```
 Note that provided types are translated to nptyping types. 
-You can also provide them yourself: `NDArray[(Any, ...), Int[64]]`.
+Pure Python types (.e.g `int` or `float` are supported as well).
+You can also provide nptyping types yourself: `NDArray[(Any, ...), Int[64]]`.
 
 An array with 1 dimension of size 3 and type int:
 ```python
->>> NDArray[3, int]
-NDArray[(3,), Int[64]]
+>>> NDArray[3, np.int32]
+NDArray[(3,), Int[32]]
 
->>> NDArray[(3,), int]
-NDArray[(3,), Int[64]]
+>>> NDArray[(3,), np.int32]
+NDArray[(3,), Int[32]]
 
 ```
 
 An array with any dimensions of size 3 and type int:
 ```python
->>> NDArray[(3, ...), int]
-NDArray[(3, ...), Int[64]]
+>>> NDArray[(3, ...), np.int32]
+NDArray[(3, ...), Int[32]]
 
 ```
 
 An array with 3 dimensions of sizes 3, 3, 5 and type int:
 ```python
->>> NDArray[(3, 3, 5), int]
-NDArray[(3, 3, 5), Int[64]]
+>>> NDArray[(3, 3, 5), np.int32]
+NDArray[(3, 3, 5), Int[32]]
 
 ```
 
