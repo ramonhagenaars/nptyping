@@ -15,6 +15,12 @@ _SizesAndType = Tuple[Tuple[_Size, ...], _Type]
 _NSizesAndType = Tuple[_NSizes, _Type]
 _Default = Tuple[Tuple[Literal[Any], EllipsisType], Literal[Any]]
 
+# The types below are for Python 3.5 compatibility. Union[Literal[Any], type]
+# is translated to Union[type], because of Literal inheriting from type.
+_SizeAndTypeAny = Tuple[_Size, Literal[Any]]
+_SizesAndTypeAny = Tuple[Tuple[_Size, ...], Literal[Any]]
+_NSizesAndTypeAny = Tuple[_NSizes, Literal[Any]]
+
 
 def _is_eq_to(this: Any, that: Any) -> bool:
     return that is Any or this == that
@@ -106,6 +112,11 @@ class _NDArray(NPType, metaclass=_NDArrayMeta):
             (_SizesAndType, cls._sizes_and_type),
             (_NSizesAndType, cls._sizes_and_type),
             (_Default, lambda _: ...),
+
+            # Added for Python 3.5 compatibility:
+            (_SizeAndTypeAny, cls._size_and_type),
+            (_SizesAndTypeAny, cls._sizes_and_type),
+            (_NSizesAndTypeAny, cls._sizes_and_type),
         ]))
 
         if not method.understands(item):
