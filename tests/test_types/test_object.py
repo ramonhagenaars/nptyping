@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from nptyping.types._object import Object
+from nptyping import Object
 
 
 class TestObject(TestCase):

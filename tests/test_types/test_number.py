@@ -18,7 +18,8 @@ from nptyping import (
     UInt16,
     UInt64,
     Number,
-    DEFAULT_INT_BITS, DEFAULT_FLOAT_BITS)
+    DEFAULT_INT_BITS, DEFAULT_FLOAT_BITS,
+)
 
 
 class TestNumber(TestCase):

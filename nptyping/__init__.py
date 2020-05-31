@@ -22,4 +22,5 @@ from nptyping.types._number import (
     Float32,
     Float64,
 )
+from nptyping.types._object import Object
 from nptyping.types._unicode import Unicode
