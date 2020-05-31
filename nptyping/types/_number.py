@@ -191,12 +191,14 @@ def _is_a(this: Any, that: type) -> bool:
     return that in get_mro(this)
 
 
-def _is_number_subclass_of(subclass: Type[Number], superclass: Type[Number]) -> bool:
+def _is_number_subclass_of(
+        subclass: Type[Number],
+        superclass: Type[Number]) -> bool:
     # Return whether subclass (which must be a type of Number) subclasses
     # superclass.
     base_is_eq = (not superclass.npbase
                   or issubclass(subclass.npbase, superclass.npbase))
-    bits_is_eq = not superclass._bits or subclass._bits == superclass._bits
+    bits_is_eq = not superclass.bits() or subclass.bits() == superclass.bits()
     return base_is_eq and bits_is_eq
 
 
