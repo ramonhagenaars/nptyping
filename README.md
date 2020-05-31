@@ -9,7 +9,7 @@
 Type hints for `Numpy`!
 
 <p align='center'>
-  <a href='https://jsons.readthedocs.io/en/latest/'>
+  <a href='https://https://pypi.org/project/nptyping/'>
     <img width='216' src='https://github.com/ramonhagenaars/nptyping/raw/master/resources/nptyping_logo.png' />
   </a> 
 </p>
