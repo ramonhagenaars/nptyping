@@ -30,28 +30,13 @@ class _NumberMeta(SimpleNPTypeMeta):
         return cls._hashes[key]
 
     def __instancecheck__(cls, instance: Any) -> bool:
-        if cls == instance:
-            return True
+        from nptyping.functions._get_type import get_type
 
-        py_number_types = (int, float)
-        if type(instance) in py_number_types:
+        if cls == instance or type(instance) in (int, float):
             # Covers Python types.
             return True
-        if isinstance(instance, type) and issubclass(instance, NPType):
-            # Covers nptyping types.
-            return (instance.base == cls.base
-                    and (not cls._bits or instance._bits == cls._bits))
 
-        npbase = getattr(cls, 'npbase', None)
-        if not npbase:
-            # Raw nptyping.Number.
-            try:
-                return py_type(instance) in py_number_types
-            except ValueError:
-                return False
-
-        return (instance.itemsize * 8 == cls._bits
-                and issubclass(instance.dtype.type, cls.npbase))
+        return issubclass(get_type(instance), cls)
 
     def __subclasscheck__(cls, subclass: type) -> bool:
         result = False

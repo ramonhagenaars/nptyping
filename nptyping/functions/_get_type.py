@@ -27,6 +27,7 @@ def get_type(obj: Any) -> Type['NPType']:
     :return: a subclass of NPType.
     """
     function = ClsFunction([
+        (NPType, lambda x: x),
         (type, _get_type_type),
         (int, get_type_int),
         (float, get_type_float),

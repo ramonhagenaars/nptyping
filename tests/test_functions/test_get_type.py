@@ -36,6 +36,11 @@ class TestGetType(TestCase):
     def test_get_type_str(self):
         self.assertEqual(Unicode[4], get_type('Test'))
 
+    def test_get_type_nptype(self):
+        self.assertEqual(Int32, get_type(Int32))
+        self.assertEqual(Float64, get_type(Float64))
+        self.assertEqual(Unicode[100], get_type(Unicode[100]))
+
     def test_get_type_numpy_dtype(self):
         self.assertEqual(Int8, get_type(np.int8(42)))
         self.assertEqual(Int16, get_type(np.int16(42)))
