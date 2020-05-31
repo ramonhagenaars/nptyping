@@ -43,7 +43,6 @@ class _NDArrayMeta(SubscriptableType):
         if len(cls._shape) == 2 and cls._shape[1] is ...:
             shape_ = (cls._shape[0], '...')
 
-        # type_ = getattr(cls._type, '__name__', cls._type)
         return 'NDArray[{}, {}]'.format(shape_, cls._type).replace('\'', '')
 
     def __str__(cls) -> str:
