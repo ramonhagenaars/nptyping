@@ -14,15 +14,15 @@ Type hints for `Numpy`!
 
 
 
-## Installation
+## (❒) Installation
 
 ```
 pip install nptyping
 ```
 
-## Usage
+## (❒) Usage
 
-### NDArray
+### (❒) NDArray
 
 `nptyping.NDArray` lets you define the shape and type of your `numpy.ndarray`.
 
@@ -32,7 +32,7 @@ You can:
   * specify the type of the array;
   * instance check your array with your nptying type.
 
-#### Examples
+#### (❒) Examples
 
 An Array with any dimensions of any size and any type:
 ```python
@@ -132,7 +132,7 @@ NDArray[(3, 3, 5), Int[32]]
 
 ```
 
-#### Checking your instances
+#### (❒) Checking your instances
 You can use `NDArray` with `isinstance` to dynamically check your arrays.
 
 ```python
@@ -150,7 +150,7 @@ False
 
 ```
 
-#### Finding the right annotation
+#### (❒) Finding the right annotation
 You can use `NDArray` to find the type of a numpy array for you using `NDArray.type_of`:
 
 ```python
@@ -161,7 +161,7 @@ NDArray[(2, 2), Float[64]]
 
 See also `nptyping.get_type` (documented below).
 
-### Int
+### (❒) Int
 An nptyping equivalent of numpy signed integers.
 
 ```python
@@ -177,7 +177,7 @@ You can also use one of these:
 
 ```
 
-### UInt
+### (❒) UInt
 An nptyping equivalent of numpy unsigned integers.
 
 ```python
@@ -193,7 +193,7 @@ You can also use one of these:
 
 ```
 
-### Float
+### (❒) Float
 An nptyping equivalent of numpy floats.
 
 ```python
@@ -209,7 +209,7 @@ You can also use one of these:
 
 ```
 
-### Unicode
+### (❒) Unicode
 An nptyping equivalent of numpy unicodes.
 
 ```python
@@ -220,7 +220,7 @@ Unicode[100]
 
 ```
 
-### Object
+### (❒) Object
 An nptyping equivalent of numpy objects.
 
 ```python
@@ -231,7 +231,7 @@ Object
 
 ```
 
-### get_type
+### (❒) get_type
 With `get_type` you can get `nptyping` equivalent types for your arguments:
 
 ```python
@@ -244,7 +244,7 @@ Unicode[11]
 
 ```
 
-### py_type
+### (❒) py_type
 With `py_type` you can get the Python builtin type that corresponds to a Numpy `dtype`:
 
 ```python
