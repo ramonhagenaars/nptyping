@@ -3,6 +3,18 @@
 History
 -------
 
+1.1.0 (2020-30-05)
+++++++++++++++++++
+
+- Removed ``Array``
+- Added ``get_type``
+- Added ``Int``
+- Added ``UInt``
+- Added ``Float``
+- Added ``Unicode``
+- Added ``Number``
+- Added ``NPType``
+
 1.0.1 (2020-04-05)
 ++++++++++++++++++
 

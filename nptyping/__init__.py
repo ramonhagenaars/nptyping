@@ -1,4 +1,26 @@
 from nptyping._meta import __version__
-from nptyping.array import Array
-from nptyping.ndarray import NDArray
-from nptyping.py_type import py_type
+from nptyping.functions._get_type import get_type
+from nptyping.functions._py_type import py_type
+from nptyping.types._ndarray import NDArray
+from nptyping.types._nptype import NPType
+from nptyping.types._number import (
+    DEFAULT_INT_BITS,
+    DEFAULT_FLOAT_BITS,
+    Number,
+    Int,
+    Float,
+    Int8,
+    Int16,
+    Int32,
+    Int64,
+    UInt,
+    UInt8,
+    UInt16,
+    UInt32,
+    UInt64,
+    Float16,
+    Float32,
+    Float64,
+)
+from nptyping.types._object import Object
+from nptyping.types._unicode import Unicode

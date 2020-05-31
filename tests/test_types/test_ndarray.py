@@ -3,7 +3,7 @@ from unittest import TestCase
 
 import numpy as np
 
-from nptyping.ndarray import NDArray
+from nptyping import NDArray, DEFAULT_INT_BITS, Int
 
 
 class TestNDArray(TestCase):
@@ -30,12 +30,12 @@ class TestNDArray(TestCase):
 
     def test_initialize_with_type(self):
         self.assertEqual((Any, ...), NDArray[int].shape)
-        self.assertEqual(int, NDArray[int]._type)
+        self.assertEqual(Int[DEFAULT_INT_BITS], NDArray[int]._type)
 
     def test_initialize_with_size_and_type(self):
         self.assertEqual(1, len(NDArray[3, int].shape))
         self.assertEqual(3, NDArray[3, int].shape[0])
-        self.assertEqual(int, NDArray[3, int]._type)
+        self.assertEqual(Int[DEFAULT_INT_BITS], NDArray[3, int]._type)
 
     def test_initialize_with_only_sizes(self):
         self.assertEqual(3, len(NDArray[(2, 4, Any)].shape))
@@ -50,7 +50,7 @@ class TestNDArray(TestCase):
         self.assertEqual(2, NDArray[(2, 4, Any), int].shape[0])
         self.assertEqual(4, NDArray[(2, 4, Any), int].shape[1])
         self.assertEqual(Any, NDArray[(2, 4, Any), int].shape[2])
-        self.assertEqual(int, NDArray[(2, 4, Any), int]._type)
+        self.assertEqual(Int[DEFAULT_INT_BITS], NDArray[(2, 4, Any), int]._type)
 
     def test_initialize_with_sizes_and_dtype(self):
         arr = NDArray[(2, 4, Any), np.dtype(int)]
@@ -59,10 +59,15 @@ class TestNDArray(TestCase):
         self.assertEqual(2, arr.shape[0])
         self.assertEqual(4, arr.shape[1])
         self.assertEqual(Any, arr.shape[2])
-        self.assertEqual(np.dtype(int), arr._type)
+        self.assertEqual(Int[DEFAULT_INT_BITS], arr._type)
 
     def test_initialize_with_ndims(self):
         self.assertEqual((2, ...), NDArray[(2, ...), int].shape)
+
+    def test_with_any_and_any(self):
+        array_str = repr(NDArray[Any, Any])
+        expected = 'NDArray[(typing.Any,), typing.Any]'
+        self.assertEqual(expected, array_str)
 
     def test_invalid_initialization(self):
         with self.assertRaises(TypeError):
@@ -123,10 +128,18 @@ class TestNDArray(TestCase):
         self.assertTrue(isinstance(arr2x2x2, NDArray[(2, ...), int]))
         self.assertTrue(not isinstance(arr3x2x2, NDArray[(2, ...), int]))
 
-    def test_repr_and_str(self):
-        import typing  # This import is need for the evals to work.
+    def test_subclass_check(self):
+        self.assertTrue(issubclass(NDArray[(2, 2, 2), int], NDArray[(2, 2, 2), int]))
+        self.assertTrue(issubclass(NDArray[(2, 2, 2), int], NDArray))
+        self.assertTrue(issubclass(NDArray[(2, 2, 2), int], NDArray[int]))
+        self.assertTrue(not issubclass(NDArray[(2, 2, 2), int], NDArray[(2, 2, 3), int]))
 
-        arr_1a = NDArray[(2, 2), int]
+    def test_repr_and_str(self):
+        # These imports are needed for the evals to work.
+        import typing
+        from nptyping import Int
+
+        arr_1a = NDArray[(2, 2), Int]
         arr_1b = eval(repr(arr_1a))
 
         arr_2a = NDArray[(typing.Any, ...), int]
@@ -168,6 +181,6 @@ class TestNDArray(TestCase):
         # Hashing should not raise.
         hash(NDArray[(3,), int])
 
-        # You now be able to wrap an NDArray in an optional.
+        # You should now be able to wrap an NDArray in an optional.
         Optional[NDArray[(3,), int]]
         Optional[NDArray]
