@@ -3,7 +3,6 @@ from typing import Any, Union, Type
 import numpy
 from typish import Literal, get_mro
 
-from nptyping.functions._py_type import py_type
 from nptyping.types._nptype import NPType, SimpleNPTypeMeta
 
 DEFAULT_INT_BITS = numpy.dtype(int).itemsize * 8
