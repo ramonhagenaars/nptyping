@@ -64,6 +64,11 @@ class TestNDArray(TestCase):
     def test_initialize_with_ndims(self):
         self.assertEqual((2, ...), NDArray[(2, ...), int].shape)
 
+    def test_with_any_and_any(self):
+        array_str = repr(NDArray[Any, Any])
+        expected = 'NDArray[(typing.Any,), typing.Any]'
+        self.assertEqual(expected, array_str)
+
     def test_invalid_initialization(self):
         with self.assertRaises(TypeError):
             NDArray['test']

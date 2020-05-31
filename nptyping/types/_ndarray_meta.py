@@ -108,15 +108,13 @@ class _NDArray(NPType, metaclass=_NDArrayMeta):
             (_Type, cls._only_type),
             (_NSizes, lambda _: ...),
             (_SizeAndType, cls._size_and_type),
+            (_SizeAndTypeAny, cls._size_and_type),  # For Python 3.5.
             (_Sizes, cls._only_sizes),
             (_SizesAndType, cls._sizes_and_type),
+            (_SizesAndTypeAny, cls._sizes_and_type),  # For Python 3.5.
             (_NSizesAndType, cls._sizes_and_type),
+            (_NSizesAndTypeAny, cls._sizes_and_type),  # For Python 3.5.
             (_Default, lambda _: ...),
-
-            # Added for Python 3.5 compatibility:
-            (_SizeAndTypeAny, cls._size_and_type),
-            (_SizesAndTypeAny, cls._sizes_and_type),
-            (_NSizesAndTypeAny, cls._sizes_and_type),
         ]))
 
         if not method.understands(item):
