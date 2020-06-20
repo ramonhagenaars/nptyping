@@ -1,5 +1,5 @@
 __title__ = 'nptyping'
-__version__ = '1.1.0'
+__version__ = '1.2.0'
 __author__ = 'Ramon Hagenaars'
 __author_email__ = 'ramon.hagenaars@gmail.com'
 __description__ = 'Type hints for Numpy.'

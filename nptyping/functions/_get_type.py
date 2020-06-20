@@ -1,9 +1,12 @@
+from datetime import datetime, timedelta
 from typing import Any, Type, Dict
 
 import numpy
 from typish import ClsFunction
 
 from nptyping.functions._py_type import py_type
+from nptyping.types._bool import Bool
+from nptyping.types._datetime64 import Datetime64
 from nptyping.types._ndarray import NDArray
 from nptyping.types._nptype import NPType
 from nptyping.types._number import (
@@ -15,6 +18,7 @@ from nptyping.types._number import (
     DEFAULT_FLOAT_BITS
 )
 from nptyping.types._object import Object
+from nptyping.types._timedelta64 import Timedelta64
 from nptyping.types._unicode import Unicode
 
 
@@ -26,40 +30,12 @@ def get_type(obj: Any) -> Type['NPType']:
     :param obj: the object for which an nptyping type is to be returned.
     :return: a subclass of NPType.
     """
-    function = ClsFunction([
-        (NPType, lambda x: x),
-        (type, _get_type_type),
-        (int, get_type_int),
-        (float, get_type_float),
-        (str, get_type_str),
-        (numpy.dtype, _get_type_dtype),
-        (numpy.ndarray, _get_type_arrary),
-        (numpy.signedinteger, get_type_int),
-        (numpy.unsignedinteger, get_type_uint),
-        (numpy.floating, get_type_float),
-    ])
-
-    if not function.understands(obj):
-        raise TypeError('Type "{}" not understood.'.format(type(obj).__name__))
-
-    return function(obj)
+    return ClsFunction(_delegates)(obj)
 
 
 def _get_type_type(type_: type) -> Type['NPType']:
     # Return the nptyping type of a type.
-
-    delegates = [
-        (NPType, lambda x: x),
-        (str, get_type_str),
-        (int, get_type_int),
-        (float, get_type_float),
-        (numpy.signedinteger, get_type_int),
-        (numpy.unsignedinteger, get_type_uint),
-        (numpy.floating, get_type_float),
-        (object, lambda _: Object),
-    ]
-
-    for super_type, delegate in delegates:
+    for super_type, delegate in _delegates:
         if issubclass(type_, super_type):
             break
     return delegate(type_)
@@ -69,9 +45,12 @@ def _get_type_dtype(dtype: numpy.dtype) -> Type['NPType']:
     # Return the nptyping type of a numpy dtype.
     np_type_per_py_type = {
         type: _get_type_type,
+        bool: get_type_bool,
         int: get_type_int,
         float: get_type_float,
         str: get_type_str,
+        datetime: get_type_datetime64,
+        timedelta: get_type_timedelta64,
         object: lambda _: Object,
     }
     return np_type_per_py_type[(py_type(dtype))](dtype)
@@ -98,6 +77,16 @@ def _get_type_of_number(
                         .format(type(obj).__name__, cls))
 
     return cls[bits]
+
+
+# Library private.
+def get_type_bool(_: Any) -> Type[Bool]:
+    """
+    Return the NPType that corresponds to obj.
+    :param _: a bool compatible object.
+    :return: a Bool type.
+    """
+    return Bool
 
 
 # Library private.
@@ -161,3 +150,44 @@ def get_type_float(obj: Any) -> Type[Float]:
         numpy.float64: 64,
         float: DEFAULT_FLOAT_BITS,
     })
+
+
+# Library private.
+def get_type_datetime64(_: Any) -> Type[Datetime64]:
+    """
+    Return the NPType that corresponds to obj.
+    :param _: a datetime compatible object.
+    :return: a Datetime64 type.
+    """
+    return Datetime64
+
+
+# Library private.
+def get_type_timedelta64(_: Any) -> Type[Timedelta64]:
+    """
+    Return the NPType that corresponds to obj.
+    :param _: a timedelta compatible object.
+    :return: a Timedelta64 type.
+    """
+    return Timedelta64
+
+
+_delegates = [
+    (NPType, lambda x: x),
+    (type, _get_type_type),
+    (bool, get_type_bool),
+    (int, get_type_int),
+    (float, get_type_float),
+    (str, get_type_str),
+    (datetime, get_type_datetime64),
+    (timedelta, get_type_timedelta64),
+    (numpy.datetime64, get_type_datetime64),
+    (numpy.timedelta64, get_type_timedelta64),
+    (numpy.signedinteger, get_type_int),
+    (numpy.unsignedinteger, get_type_uint),
+    (numpy.floating, get_type_float),
+    (numpy.bool_, get_type_bool),
+    (numpy.dtype, _get_type_dtype),
+    (numpy.ndarray, _get_type_arrary),
+    (object, lambda _: Object),
+]

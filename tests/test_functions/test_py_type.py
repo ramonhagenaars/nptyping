@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from unittest import TestCase
 
 import numpy as np
@@ -22,3 +23,6 @@ class TestPyType(TestCase):
         self.assertIs(float, py_type(np.float16))
         self.assertIs(float, py_type(np.float32))
         self.assertIs(float, py_type(np.float64))
+
+        self.assertIs(datetime, py_type(np.datetime64))
+        self.assertIs(timedelta, py_type(np.timedelta64))

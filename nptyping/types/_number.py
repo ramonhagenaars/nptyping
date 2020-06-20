@@ -44,9 +44,7 @@ class _NumberMeta(SimpleNPTypeMeta):
         elif _is_a(subclass, Number):
             # Cover nptyping number types.
             result = _is_number_subclass_of(subclass, cls)
-        elif (issubclass(subclass, numpy.number)
-              or issubclass(subclass, int)
-              or issubclass(subclass, float)):
+        elif _is_number_type(subclass):
             result = _is_numpy_or_python_type_subclass_of(subclass, cls)
         return result
 
@@ -202,6 +200,13 @@ def _is_numpy_or_python_type_subclass_of(
         else:
             result = issubclass(nptype, superclass)
     return result
+
+
+def _is_number_type(type_: type) -> bool:
+    # Return whether type_ is a numpy/Python number type.
+    return (issubclass(type_, numpy.number)
+            or issubclass(type_, int)
+            or issubclass(type_, float))
 
 
 Int8 = Int[8]

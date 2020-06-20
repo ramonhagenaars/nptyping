@@ -5,7 +5,7 @@ import numpy as np
 from nptyping.types._ndarray_meta import _NDArray
 
 
-class NDArray(np.ndarray, _NDArray):
+class NDArray(_NDArray, np.ndarray):
     """
     NDArray is a representation of numpy.ndarray.
 
