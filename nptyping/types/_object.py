@@ -1,3 +1,5 @@
+import numpy
+
 from nptyping.types._nptype import NPType
 
 
@@ -8,7 +10,7 @@ class _ObjectMeta(type):
     __str__ = __repr__
 
 
-class Object(NPType, metaclass=_ObjectMeta):
+class Object(NPType, numpy.generic, metaclass=_ObjectMeta):
     """
     Corresponds to numpy.object.
     """

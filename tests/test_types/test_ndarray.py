@@ -3,7 +3,7 @@ from unittest import TestCase
 
 import numpy as np
 
-from nptyping import NDArray, DEFAULT_INT_BITS, Int
+from nptyping import NDArray, DEFAULT_INT_BITS, Int, Bool
 
 
 class TestNDArray(TestCase):
@@ -31,6 +31,8 @@ class TestNDArray(TestCase):
     def test_initialize_with_type(self):
         self.assertEqual((Any, ...), NDArray[int].shape)
         self.assertEqual(Int[DEFAULT_INT_BITS], NDArray[int]._type)
+        self.assertEqual(Int, NDArray[Int]._type)
+        self.assertEqual(Bool, NDArray[Bool]._type)
 
     def test_initialize_with_size_and_type(self):
         self.assertEqual(1, len(NDArray[3, int].shape))
@@ -166,16 +168,19 @@ class TestNDArray(TestCase):
         arr2 = np.array([1, 2, '3'])
         arr3 = np.array([1, 2, 3.0])
         arr4 = np.array([1, 2, {}])
+        arr5 = np.array([True, True, True])
 
         t1 = NDArray.type_of(arr1)
         t2 = NDArray.type_of(arr2)
         t3 = NDArray.type_of(arr3)
         t4 = NDArray.type_of(arr4)
+        t5 = NDArray.type_of(arr5)
 
         self.assertIsInstance(arr1, t1)
         self.assertIsInstance(arr2, t2)
         self.assertIsInstance(arr3, t3)
         self.assertIsInstance(arr4, t4)
+        self.assertIsInstance(arr5, t5)
 
     def test_hash_ndarray(self):
         # Hashing should not raise.
@@ -184,3 +189,13 @@ class TestNDArray(TestCase):
         # You should now be able to wrap an NDArray in an optional.
         Optional[NDArray[(3,), int]]
         Optional[NDArray]
+
+    def test_instantiate(self):
+        with self.assertRaises(TypeError) as err:
+            NDArray([1, 2, 3])
+
+        self.assertIn('NDArray', str(err.exception))
+
+    def test_instance_check_with_np_types(self):
+        self.assertIsInstance(np.array([[True, False], [True, False]]), NDArray[(2, 2), Bool])
+        self.assertNotIsInstance(np.array([[True, False], [True, 42]]), NDArray[(2, 2), Bool])

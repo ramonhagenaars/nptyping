@@ -4,6 +4,7 @@ import numpy
 from typish import ClsFunction
 
 from nptyping.functions._py_type import py_type
+from nptyping.types._bool import Bool
 from nptyping.types._ndarray import NDArray
 from nptyping.types._nptype import NPType
 from nptyping.types._number import (
@@ -29,11 +30,13 @@ def get_type(obj: Any) -> Type['NPType']:
     function = ClsFunction([
         (NPType, lambda x: x),
         (type, _get_type_type),
+        (bool, get_type_bool),
         (int, get_type_int),
         (float, get_type_float),
         (str, get_type_str),
         (numpy.dtype, _get_type_dtype),
         (numpy.ndarray, _get_type_arrary),
+        (numpy.bool_, get_type_bool),
         (numpy.signedinteger, get_type_int),
         (numpy.unsignedinteger, get_type_uint),
         (numpy.floating, get_type_float),
@@ -51,11 +54,13 @@ def _get_type_type(type_: type) -> Type['NPType']:
     delegates = [
         (NPType, lambda x: x),
         (str, get_type_str),
+        (bool, get_type_bool),
         (int, get_type_int),
         (float, get_type_float),
         (numpy.signedinteger, get_type_int),
         (numpy.unsignedinteger, get_type_uint),
         (numpy.floating, get_type_float),
+        (numpy.bool_, get_type_bool),
         (object, lambda _: Object),
     ]
 
@@ -69,6 +74,7 @@ def _get_type_dtype(dtype: numpy.dtype) -> Type['NPType']:
     # Return the nptyping type of a numpy dtype.
     np_type_per_py_type = {
         type: _get_type_type,
+        bool: get_type_bool,
         int: get_type_int,
         float: get_type_float,
         str: get_type_str,
@@ -98,6 +104,16 @@ def _get_type_of_number(
                         .format(type(obj).__name__, cls))
 
     return cls[bits]
+
+
+# Library private.
+def get_type_bool(obj: Any) -> Type[Bool]:
+    """
+    Return the NPType that corresponds to obj.
+    :param obj: a bool compatible object.
+    :return: a Bool type.
+    """
+    return Bool
 
 
 # Library private.

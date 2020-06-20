@@ -1,5 +1,6 @@
 from typing import Any, Type
 
+import numpy
 from typish import get_mro
 
 from nptyping.types._nptype import NPType, SimpleNPTypeMeta
@@ -26,7 +27,7 @@ class _UnicodeMeta(SimpleNPTypeMeta):
         return False
 
 
-class Unicode(NPType, metaclass=_UnicodeMeta):
+class Unicode(NPType, numpy.unicode, metaclass=_UnicodeMeta):
     """
     A numpy unicode. Can be given the number of characters optionally.
 

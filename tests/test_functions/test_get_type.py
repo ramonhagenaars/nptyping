@@ -20,6 +20,7 @@ from nptyping import (
     DEFAULT_INT_BITS,
     DEFAULT_FLOAT_BITS,
     Float,
+    Bool,
 )
 from nptyping.types._object import Object
 from nptyping.types._unicode import Unicode
@@ -36,10 +37,14 @@ class TestGetType(TestCase):
     def test_get_type_str(self):
         self.assertEqual(Unicode[4], get_type('Test'))
 
+    def test_get_type_bool(self):
+        self.assertEqual(Bool, get_type(True))
+
     def test_get_type_nptype(self):
         self.assertEqual(Int32, get_type(Int32))
         self.assertEqual(Float64, get_type(Float64))
         self.assertEqual(Unicode[100], get_type(Unicode[100]))
+        self.assertEqual(Bool, get_type(Bool))
 
     def test_get_type_numpy_dtype(self):
         self.assertEqual(Int8, get_type(np.int8(42)))
@@ -59,6 +64,9 @@ class TestGetType(TestCase):
         self.assertEqual(Unicode, get_type(np.unicode))
         self.assertEqual(Unicode[40], get_type(np.dtype(('U', 40))))
 
+        self.assertEqual(Bool, get_type(np.bool_(True)))
+        self.assertEqual(Bool, get_type(np.bool_(False)))
+
     def test_get_type_numpy_type(self):
         self.assertEqual(Int8, get_type(np.int8))
         self.assertEqual(Int16, get_type(np.int16))
@@ -73,6 +81,8 @@ class TestGetType(TestCase):
         self.assertEqual(Float16, get_type(np.float16))
         self.assertEqual(Float32, get_type(np.float32))
         self.assertEqual(Float64, get_type(np.float64))
+
+        self.assertEqual(Bool, get_type(np.bool_))
 
     def test_get_type_object(self):
         self.assertEqual(Object, get_type(np.object))

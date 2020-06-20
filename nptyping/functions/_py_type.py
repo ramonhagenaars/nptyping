@@ -33,4 +33,5 @@ _TYPE_PER_KIND = {
     'f': float,
     'U': str,
     'O': object,
+    'b': bool,
 }
