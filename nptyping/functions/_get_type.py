@@ -30,52 +30,12 @@ def get_type(obj: Any) -> Type['NPType']:
     :param obj: the object for which an nptyping type is to be returned.
     :return: a subclass of NPType.
     """
-    function = ClsFunction([
-        (NPType, lambda x: x),
-        (type, _get_type_type),
-        (bool, get_type_bool),
-        (int, get_type_int),
-        (float, get_type_float),
-        (str, get_type_str),
-        (datetime, get_type_datetime64),
-        (timedelta, get_type_timedelta64),
-        (numpy.datetime64, get_type_datetime64),
-        (numpy.timedelta64, get_type_timedelta64),
-        (numpy.dtype, _get_type_dtype),
-        (numpy.ndarray, _get_type_arrary),
-        (numpy.bool_, get_type_bool),
-        (numpy.signedinteger, get_type_int),
-        (numpy.unsignedinteger, get_type_uint),
-        (numpy.floating, get_type_float),
-    ])
-
-    if not function.understands(obj):
-        raise TypeError('Type "{}" not understood.'.format(type(obj).__name__))
-
-    return function(obj)
+    return ClsFunction(_delegates)(obj)
 
 
 def _get_type_type(type_: type) -> Type['NPType']:
     # Return the nptyping type of a type.
-
-    delegates = [
-        (NPType, lambda x: x),
-        (str, get_type_str),
-        (bool, get_type_bool),
-        (int, get_type_int),
-        (float, get_type_float),
-        (datetime, get_type_datetime64),
-        (timedelta, get_type_timedelta64),
-        (numpy.datetime64, get_type_datetime64),
-        (numpy.timedelta64, get_type_timedelta64),
-        (numpy.signedinteger, get_type_int),
-        (numpy.unsignedinteger, get_type_uint),
-        (numpy.floating, get_type_float),
-        (numpy.bool_, get_type_bool),
-        (object, lambda _: Object),
-    ]
-
-    for super_type, delegate in delegates:
+    for super_type, delegate in _delegates:
         if issubclass(type_, super_type):
             break
     return delegate(type_)
@@ -210,3 +170,24 @@ def get_type_timedelta64(_: Any) -> Type[Timedelta64]:
     :return: a Timedelta64 type.
     """
     return Timedelta64
+
+
+_delegates = [
+    (NPType, lambda x: x),
+    (type, _get_type_type),
+    (bool, get_type_bool),
+    (int, get_type_int),
+    (float, get_type_float),
+    (str, get_type_str),
+    (datetime, get_type_datetime64),
+    (timedelta, get_type_timedelta64),
+    (numpy.datetime64, get_type_datetime64),
+    (numpy.timedelta64, get_type_timedelta64),
+    (numpy.signedinteger, get_type_int),
+    (numpy.unsignedinteger, get_type_uint),
+    (numpy.floating, get_type_float),
+    (numpy.bool_, get_type_bool),
+    (numpy.dtype, _get_type_dtype),
+    (numpy.ndarray, _get_type_arrary),
+    (object, lambda _: Object),
+]

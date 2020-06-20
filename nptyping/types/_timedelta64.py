@@ -14,10 +14,7 @@ class _Timedelta64Meta(type):
 
     def __instancecheck__(cls, instance: Any) -> bool:
         from nptyping.functions._get_type import get_type_timedelta64
-        try:
-            timedelta_ = get_type_timedelta64(instance)
-        except TypeError:
-            return False
+        timedelta_ = get_type_timedelta64(instance)
         return issubclass(timedelta_, cls)
 
     def __subclasscheck__(cls, subclass: type) -> bool:

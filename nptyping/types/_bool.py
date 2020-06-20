@@ -14,10 +14,7 @@ class _BoolMeta(type):
 
     def __instancecheck__(cls, instance: Any) -> bool:
         from nptyping.functions._get_type import get_type_bool
-        try:
-            bool_ = get_type_bool(instance)
-        except TypeError:
-            return False
+        bool_ = get_type_bool(instance)
         return issubclass(bool_, cls)
 
     def __subclasscheck__(cls, subclass: type) -> bool:

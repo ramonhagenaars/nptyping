@@ -104,11 +104,8 @@ class TestGetType(TestCase):
     def test_get_type_array(self):
         self.assertEqual(NDArray[3, Int[DEFAULT_INT_BITS]], get_type(np.array([1, 2, 3])))
 
-    def test_get_type_not_understood(self):
+    def test_get_type_some_random_class(self):
         class SomeRandomClass:
             ...
 
-        # Test invalid instances.
-        with self.assertRaises(TypeError) as err:
-            get_type(SomeRandomClass())
-        self.assertIn(SomeRandomClass.__name__, str(err.exception))
+        self.assertEqual(Object, get_type(SomeRandomClass()))
