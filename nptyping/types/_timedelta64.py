@@ -6,27 +6,27 @@ from typish import get_mro
 from nptyping.types._nptype import NPType
 
 
-class _BoolMeta(type):
+class _Timedelta64Meta(type):
     def __repr__(cls):
-        return 'Bool'
+        return 'Timedelta64'
 
     __str__ = __repr__
 
     def __instancecheck__(cls, instance: Any) -> bool:
-        from nptyping.functions._get_type import get_type_bool
+        from nptyping.functions._get_type import get_type_timedelta64
         try:
-            bool_ = get_type_bool(instance)
+            timedelta_ = get_type_timedelta64(instance)
         except TypeError:
             return False
-        return issubclass(bool_, cls)
+        return issubclass(timedelta_, cls)
 
     def __subclasscheck__(cls, subclass: type) -> bool:
-        return Bool in get_mro(subclass)
+        return Timedelta64 in get_mro(subclass)
 
 
-class Bool(NPType, numpy.bool_, metaclass=_BoolMeta):
+class Timedelta64(NPType, numpy.timedelta64, metaclass=_Timedelta64Meta):
     """
-    Corresponds to numpy.bool_.
+    Corresponds to numpy.timedelta64.
     """
 
     @classmethod
@@ -34,7 +34,7 @@ class Bool(NPType, numpy.bool_, metaclass=_BoolMeta):
         """
         Return the NPType that corresponds to obj.
         :param obj: a string compatible object.
-        :return: a Unicode type.
+        :return: a Timedelta64 type.
         """
-        from nptyping.functions._get_type import get_type_bool
-        return get_type_bool(obj)
+        from nptyping.functions._get_type import get_type_timedelta64
+        return get_type_timedelta64(obj)

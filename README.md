@@ -220,6 +220,39 @@ Unicode[100]
 
 ```
 
+### (❒) Bool
+An nptyping equivalent of numpy bool.
+
+```python
+>>> from nptyping import Bool
+
+>>> Bool
+Bool
+
+```
+
+### (❒) Datetime64
+An nptyping equivalent of numpy datetime64.
+
+```python
+>>> from nptyping import Datetime64
+
+>>> Datetime64
+Datetime64
+
+```
+
+### (❒) Timedelta64
+An nptyping equivalent of numpy timedelta64.
+
+```python
+>>> from nptyping import Timedelta64
+
+>>> Timedelta64
+Timedelta64
+
+```
+
 ### (❒) Object
 An nptyping equivalent of numpy objects.
 

@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from typing import Union, Any
 
 import numpy as np
@@ -34,4 +35,6 @@ _TYPE_PER_KIND = {
     'U': str,
     'O': object,
     'b': bool,
+    'M': datetime,
+    'm': timedelta,
 }

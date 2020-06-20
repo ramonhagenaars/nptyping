@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from unittest import TestCase
 
 import numpy as np
@@ -21,8 +22,9 @@ from nptyping import (
     DEFAULT_FLOAT_BITS,
     Float,
     Bool,
-)
+    Datetime64)
 from nptyping.types._object import Object
+from nptyping.types._timedelta64 import Timedelta64
 from nptyping.types._unicode import Unicode
 
 
@@ -66,6 +68,18 @@ class TestGetType(TestCase):
 
         self.assertEqual(Bool, get_type(np.bool_(True)))
         self.assertEqual(Bool, get_type(np.bool_(False)))
+
+    def test_get_type_datatime(self):
+        self.assertEqual(Datetime64, get_type(datetime.now()))
+        self.assertEqual(Datetime64, get_type(datetime))
+        self.assertEqual(Datetime64, get_type(np.datetime64))
+        self.assertEqual(Datetime64, get_type(np.datetime64()))
+
+    def test_get_type_timedelta(self):
+        self.assertEqual(Timedelta64, get_type(timedelta(days=42)))
+        self.assertEqual(Timedelta64, get_type(timedelta))
+        self.assertEqual(Timedelta64, get_type(np.timedelta64))
+        self.assertEqual(Timedelta64, get_type(np.timedelta64()))
 
     def test_get_type_numpy_type(self):
         self.assertEqual(Int8, get_type(np.int8))

@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from typing import Any, Type, Dict
 
 import numpy
@@ -5,6 +6,7 @@ from typish import ClsFunction
 
 from nptyping.functions._py_type import py_type
 from nptyping.types._bool import Bool
+from nptyping.types._datetime64 import Datetime64
 from nptyping.types._ndarray import NDArray
 from nptyping.types._nptype import NPType
 from nptyping.types._number import (
@@ -16,6 +18,7 @@ from nptyping.types._number import (
     DEFAULT_FLOAT_BITS
 )
 from nptyping.types._object import Object
+from nptyping.types._timedelta64 import Timedelta64
 from nptyping.types._unicode import Unicode
 
 
@@ -34,6 +37,10 @@ def get_type(obj: Any) -> Type['NPType']:
         (int, get_type_int),
         (float, get_type_float),
         (str, get_type_str),
+        (datetime, get_type_datetime64),
+        (timedelta, get_type_timedelta64),
+        (numpy.datetime64, get_type_datetime64),
+        (numpy.timedelta64, get_type_timedelta64),
         (numpy.dtype, _get_type_dtype),
         (numpy.ndarray, _get_type_arrary),
         (numpy.bool_, get_type_bool),
@@ -57,6 +64,10 @@ def _get_type_type(type_: type) -> Type['NPType']:
         (bool, get_type_bool),
         (int, get_type_int),
         (float, get_type_float),
+        (datetime, get_type_datetime64),
+        (timedelta, get_type_timedelta64),
+        (numpy.datetime64, get_type_datetime64),
+        (numpy.timedelta64, get_type_timedelta64),
         (numpy.signedinteger, get_type_int),
         (numpy.unsignedinteger, get_type_uint),
         (numpy.floating, get_type_float),
@@ -78,6 +89,8 @@ def _get_type_dtype(dtype: numpy.dtype) -> Type['NPType']:
         int: get_type_int,
         float: get_type_float,
         str: get_type_str,
+        datetime: get_type_datetime64,
+        timedelta: get_type_timedelta64,
         object: lambda _: Object,
     }
     return np_type_per_py_type[(py_type(dtype))](dtype)
@@ -177,3 +190,23 @@ def get_type_float(obj: Any) -> Type[Float]:
         numpy.float64: 64,
         float: DEFAULT_FLOAT_BITS,
     })
+
+
+# Library private.
+def get_type_datetime64(obj: Any) -> Type[Datetime64]:
+    """
+    Return the NPType that corresponds to obj.
+    :param obj: a datetime compatible object.
+    :return: a Datetime64 type.
+    """
+    return Datetime64
+
+
+# Library private.
+def get_type_timedelta64(obj: Any) -> Type[Timedelta64]:
+    """
+    Return the NPType that corresponds to obj.
+    :param obj: a timedelta compatible object.
+    :return: a Timedelta64 type.
+    """
+    return Timedelta64
