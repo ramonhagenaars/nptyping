@@ -120,10 +120,10 @@ def _get_type_of_number(
 
 
 # Library private.
-def get_type_bool(obj: Any) -> Type[Bool]:
+def get_type_bool(_: Any) -> Type[Bool]:
     """
     Return the NPType that corresponds to obj.
-    :param obj: a bool compatible object.
+    :param _: a bool compatible object.
     :return: a Bool type.
     """
     return Bool
@@ -193,20 +193,20 @@ def get_type_float(obj: Any) -> Type[Float]:
 
 
 # Library private.
-def get_type_datetime64(obj: Any) -> Type[Datetime64]:
+def get_type_datetime64(_: Any) -> Type[Datetime64]:
     """
     Return the NPType that corresponds to obj.
-    :param obj: a datetime compatible object.
+    :param _: a datetime compatible object.
     :return: a Datetime64 type.
     """
     return Datetime64
 
 
 # Library private.
-def get_type_timedelta64(obj: Any) -> Type[Timedelta64]:
+def get_type_timedelta64(_: Any) -> Type[Timedelta64]:
     """
     Return the NPType that corresponds to obj.
-    :param obj: a timedelta compatible object.
+    :param _: a timedelta compatible object.
     :return: a Timedelta64 type.
     """
     return Timedelta64
