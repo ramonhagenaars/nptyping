@@ -37,4 +37,5 @@ _TYPE_PER_KIND = {
     'b': bool,
     'M': datetime,
     'm': timedelta,
+    'c': complex,
 }

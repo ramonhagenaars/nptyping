@@ -6,6 +6,7 @@ from typish import ClsFunction
 
 from nptyping.functions._py_type import py_type
 from nptyping.types._bool import Bool
+from nptyping.types._complex import Complex128
 from nptyping.types._datetime64 import Datetime64
 from nptyping.types._ndarray import NDArray
 from nptyping.types._nptype import NPType
@@ -15,7 +16,7 @@ from nptyping.types._number import (
     UInt,
     Number,
     DEFAULT_INT_BITS,
-    DEFAULT_FLOAT_BITS
+    DEFAULT_FLOAT_BITS,
 )
 from nptyping.types._object import Object
 from nptyping.types._timedelta64 import Timedelta64
@@ -49,6 +50,7 @@ def _get_type_dtype(dtype: numpy.dtype) -> Type['NPType']:
         int: get_type_int,
         float: get_type_float,
         str: get_type_str,
+        complex: get_type_complex,
         datetime: get_type_datetime64,
         timedelta: get_type_timedelta64,
         object: lambda _: Object,
@@ -172,6 +174,16 @@ def get_type_timedelta64(_: Any) -> Type[Timedelta64]:
     return Timedelta64
 
 
+# Library private.
+def get_type_complex(_: Any) -> Type[Complex128]:
+    """
+    Return the NPType that corresponds to obj.
+    :param _: a complex128 compatible object.
+    :return: a Complex128 type.
+    """
+    return Complex128
+
+
 _delegates = [
     (NPType, lambda x: x),
     (type, _get_type_type),
@@ -179,6 +191,7 @@ _delegates = [
     (int, get_type_int),
     (float, get_type_float),
     (str, get_type_str),
+    (complex, get_type_complex),
     (datetime, get_type_datetime64),
     (timedelta, get_type_timedelta64),
     (numpy.datetime64, get_type_datetime64),

@@ -22,7 +22,9 @@ from nptyping import (
     DEFAULT_FLOAT_BITS,
     Float,
     Bool,
-    Datetime64)
+    Datetime64,
+    Complex128,
+)
 from nptyping.types._object import Object
 from nptyping.types._timedelta64 import Timedelta64
 from nptyping.types._unicode import Unicode
@@ -68,6 +70,13 @@ class TestGetType(TestCase):
 
         self.assertEqual(Bool, get_type(np.bool_(True)))
         self.assertEqual(Bool, get_type(np.bool_(False)))
+
+    def test_get_type_complex(self):
+        self.assertEqual(Complex128, get_type(1 + 1j))
+        self.assertEqual(Complex128, get_type(np.complex128(1 + 1j)))
+
+        self.assertEqual(Complex128, get_type(complex))
+        self.assertEqual(Complex128, get_type(np.complex128))
 
     def test_get_type_datatime(self):
         self.assertEqual(Datetime64, get_type(datetime.now()))
