@@ -231,6 +231,17 @@ Bool
 
 ```
 
+### (❒) Complex128
+An nptyping equivalent of numpy complex128.
+
+```python
+>>> from nptyping import Complex128
+
+>>> Complex128
+Complex128
+
+```
+
 ### (❒) Datetime64
 An nptyping equivalent of numpy datetime64.
 
