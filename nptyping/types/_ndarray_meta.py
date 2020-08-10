@@ -6,7 +6,25 @@ from typish import SubscriptableType, Literal, ClsFunction, EllipsisType
 
 from nptyping.types._nptype import NPType
 
-_Size = Union[int, Literal[Any]]  # TODO add type vars as well
+
+class Dimension:
+    def __init__(self, name, value=Any):
+        assert len(name) > 0
+        self._name = name
+        self._value = value
+
+    def __repr__(self):
+        return self._name
+
+    def __eq__(self, other):
+        # Value-only comparison.
+        if isinstance(other, Dimension):
+            return self._value == other._value
+        else:
+            return self._value == other
+
+
+_Size = Union[int, Literal[Any], Dimension]  # TODO add type vars as well
 _Type = Union[type, Literal[Any], np.dtype]
 _NSizes = Tuple[_Size, EllipsisType]
 _SizeAndType = Tuple[_Size, _Type]
@@ -23,7 +41,7 @@ _NSizesAndTypeAny = Tuple[_NSizes, Literal[Any]]
 
 
 def _is_eq_to(this: Any, that: Any) -> bool:
-    return that is Any or this == that
+    return that == Any or this == that
 
 
 class _NDArrayMeta(SubscriptableType):
@@ -34,7 +52,7 @@ class _NDArrayMeta(SubscriptableType):
     def shape(cls) -> Tuple[int, ...]:
         """
         Return the shape as a tuple of ints.
-        :return: the shape as a tuple of ints.
+        :return: the shape as a tuple of ints. -1 implies a dynamic size.
         """
         return cls._shape
 

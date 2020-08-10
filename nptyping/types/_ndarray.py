@@ -2,7 +2,7 @@ from typing import Type
 
 import numpy as np
 
-from nptyping.types._ndarray_meta import _NDArray
+from nptyping.types._ndarray_meta import _NDArray, Dimension
 
 
 class NDArray(_NDArray, np.ndarray):

@@ -3,7 +3,7 @@ from unittest import TestCase
 
 import numpy as np
 
-from nptyping import NDArray, DEFAULT_INT_BITS, Int, Bool, Datetime64
+from nptyping import NDArray, DEFAULT_INT_BITS, Int, Bool, Datetime64, Dimension
 from nptyping.types._timedelta64 import Timedelta64
 
 
@@ -202,3 +202,18 @@ class TestNDArray(TestCase):
         self.assertNotIsInstance(np.array([[True, False], [True, 42]]), NDArray[(Any, ...), Bool])
         self.assertIsInstance(np.array([np.datetime64()]), NDArray[(Any, ...), Datetime64])
         self.assertIsInstance(np.array([np.timedelta64()]), NDArray[(Any, ...), Timedelta64])
+
+    def test_instance_check_dimension(self):
+        arr2x2x2_float = np.array([[[1.0, 2.0], [3.0, 4.0]],
+                                  [[5.0, 6.0], [7.0, 8.0]]])
+        arr2_float = np.array([1.0, 2.0])
+        arr2x2x2 = np.array([[[1, 2], [3, 4]], [[5, 6], [7, 8]]])
+
+        D = Dimension("D")
+        self.assertEqual(str(D), "D")
+
+        hint = NDArray[(D, D, 2), float]
+        self.assertEqual(str(hint), "NDArray[(D, D, 2), Float[64]]")
+        self.assertIsInstance(arr2x2x2_float, hint)
+        self.assertNotIsInstance(arr2_float, hint)
+        self.assertNotIsInstance(arr2x2x2, hint)

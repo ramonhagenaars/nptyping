@@ -4,7 +4,7 @@ from nptyping.functions._py_type import py_type
 from nptyping.types._bool import Bool
 from nptyping.types._complex import Complex128
 from nptyping.types._datetime64 import Datetime64
-from nptyping.types._ndarray import NDArray
+from nptyping.types._ndarray import Dimension, NDArray
 from nptyping.types._nptype import NPType
 from nptyping.types._number import (
     DEFAULT_INT_BITS,
