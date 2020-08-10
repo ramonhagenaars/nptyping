@@ -6,9 +6,11 @@ from typish import SubscriptableType, Literal, ClsFunction, EllipsisType
 
 from nptyping.types._nptype import NPType
 
+_RawSize = Union[int, Literal[Any]]
+
 
 class Dimension:
-    def __init__(self, name, value=Any):
+    def __init__(self, name: str, value: _RawSize=Any):
         assert len(name) > 0
         self._name = name
         self._value = value
@@ -16,15 +18,13 @@ class Dimension:
     def __repr__(self):
         return self._name
 
-    def __eq__(self, other):
+    def __eq__(self, other: _RawSize):
         # Value-only comparison.
-        if isinstance(other, Dimension):
-            return self._value == other._value
-        else:
-            return self._value == other
+        assert not isinstance(other, Dimension)
+        return self._value == other
 
 
-_Size = Union[int, Literal[Any], Dimension]  # TODO add type vars as well
+_Size = Union[_RawSize, Dimension]  # TODO add type vars as well
 _Type = Union[type, Literal[Any], np.dtype]
 _NSizes = Tuple[_Size, EllipsisType]
 _SizeAndType = Tuple[_Size, _Type]
