@@ -18,10 +18,12 @@ class Dimension:
     def __repr__(self):
         return self._name
 
-    def __eq__(self, other: _RawSize):
+    def __eq__(self, other: Union[_RawSize, "Dimension"]):
         # Value-only comparison.
-        assert not isinstance(other, Dimension)
-        return self._value == other
+        if isinstance(other, Dimension):
+            return self._value == other._value
+        else:
+            return self._value == other
 
 
 _Size = Union[_RawSize, Dimension]  # TODO add type vars as well

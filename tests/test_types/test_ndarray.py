@@ -209,11 +209,21 @@ class TestNDArray(TestCase):
         arr2_float = np.array([1.0, 2.0])
         arr2x2x2 = np.array([[[1, 2], [3, 4]], [[5, 6], [7, 8]]])
 
+        # Value is implicity Any.
         D = Dimension("D")
         self.assertEqual(str(D), "D")
-
         hint = NDArray[(D, D, 2), float]
         self.assertEqual(str(hint), "NDArray[(D, D, 2), Float[64]]")
+        self.assertEqual(hint.shape, (Any, Any, 2))
+        self.assertEqual(hint.shape, (D, D, 2))
         self.assertIsInstance(arr2x2x2_float, hint)
         self.assertNotIsInstance(arr2_float, hint)
         self.assertNotIsInstance(arr2x2x2, hint)
+
+        # Concrete value.
+        D2 = Dimension("D2", value=2)
+        self.assertEqual(str(D2), "D2")
+        self.assertEqual(D2, 2)
+        hint2 = NDArray[(D, D, D2), float]
+        self.assertEqual(str(hint2), "NDArray[(D, D, D2), Float[64]]")
+        self.assertEqual(hint2, hint)
