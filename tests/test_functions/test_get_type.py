@@ -24,6 +24,8 @@ from nptyping import (
     Bool,
     Datetime64,
     Complex128,
+    StructuredType,
+    SubArrayType,
 )
 from nptyping.types._object import Object
 from nptyping.types._timedelta64 import Timedelta64
@@ -118,3 +120,9 @@ class TestGetType(TestCase):
             ...
 
         self.assertEqual(Object, get_type(SomeRandomClass()))
+
+    def test_get_type_structured_type(self):
+        self.assertEqual(StructuredType[Int[32]], get_type(np.dtype([('x', np.int32)])))
+
+    def test_get_type_subarray_type(self):
+        self.assertEqual(SubArrayType[Int[32], (3,)], get_type(np.dtype((np.int32, 3))))
