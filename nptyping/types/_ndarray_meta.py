@@ -99,6 +99,7 @@ class _NDArrayMeta(SubscriptableType):
 class _NDArray(NPType, metaclass=_NDArrayMeta):
     _shape = (Any, ...)  # type: Union[Tuple[int, ...], Tuple[Any, EllipsisType]]  # noqa
     _type = Any
+    _special = True  # Added to be able to compile types with sphinx.
 
     @classmethod
     def _after_subscription(cls, item: Any) -> None:

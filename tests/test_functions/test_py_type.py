@@ -19,6 +19,11 @@ class TestPyType(TestCase):
         self.assertIs(int, py_type(np.int32))
         self.assertIs(int, py_type(np.int64))
 
+        self.assertIs(int, py_type(np.uint))
+        self.assertIs(int, py_type(np.uint16))
+        self.assertIs(int, py_type(np.uint32))
+        self.assertIs(int, py_type(np.uint64))
+
         self.assertIs(float, py_type(np.float))
         self.assertIs(float, py_type(np.float16))
         self.assertIs(float, py_type(np.float32))

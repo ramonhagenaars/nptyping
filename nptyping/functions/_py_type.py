@@ -31,6 +31,7 @@ def py_type(np_type: Union[np.dtype, type, Literal[Any]]) -> type:
 
 _TYPE_PER_KIND = {
     'i': int,
+    'u': int,
     'f': float,
     'U': str,
     'O': object,

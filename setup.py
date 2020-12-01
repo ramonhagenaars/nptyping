@@ -13,7 +13,7 @@ with open('README.md', mode='r', encoding='utf-8') as f:
 
 requirements = [
     'numpy',
-    'typish>=1.5.2',
+    'typish>=1.7.0',
 ],
 
 test_requirements = [
@@ -55,6 +55,7 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8'
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
     ]
 )
