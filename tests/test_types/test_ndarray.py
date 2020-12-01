@@ -2,8 +2,9 @@ from typing import Any, Optional
 from unittest import TestCase
 
 import numpy as np
+from numpy.core.arrayprint import SubArrayFormat
 
-from nptyping import NDArray, DEFAULT_INT_BITS, Int, Bool, Datetime64
+from nptyping import NDArray, DEFAULT_INT_BITS, Int, Bool, Datetime64, StructuredType, SubArrayType
 from nptyping.types._timedelta64 import Timedelta64
 
 
@@ -104,7 +105,7 @@ class TestNDArray(TestCase):
 
     def test_instance_check_types(self):
         arr2x2x2_float = np.array([[[1.0, 2.0], [3.0, 4.0]],
-                                  [[5.0, 6.0], [7.0, 8.0]]])
+                                   [[5.0, 6.0], [7.0, 8.0]]])
         arr2x2x2 = np.array([[[1, 2], [3, 4]], [[5, 6], [7, 8]]])
 
         self.assertTrue(isinstance(arr2x2x2_float, NDArray[(2, 2, 2), float]))
@@ -112,7 +113,7 @@ class TestNDArray(TestCase):
 
     def test_instance_check_types_any(self):
         arr2x2x2_float = np.array([[[1.0, 2.0], [3.0, 4.0]],
-                                  [[5.0, 6.0], [7.0, 8.0]]])
+                                   [[5.0, 6.0], [7.0, 8.0]]])
         arr2x2x2 = np.array([[[1, 2], [3, 4]], [[5, 6], [7, 8]]])
         arr2x2 = np.array([[1, 2], [3, 4]])
 
@@ -202,3 +203,10 @@ class TestNDArray(TestCase):
         self.assertNotIsInstance(np.array([[True, False], [True, 42]]), NDArray[(Any, ...), Bool])
         self.assertIsInstance(np.array([np.datetime64()]), NDArray[(Any, ...), Datetime64])
         self.assertIsInstance(np.array([np.timedelta64()]), NDArray[(Any, ...), Timedelta64])
+
+    def test_instance_check_with_structured_types(self):
+        some_dtype = np.dtype([('x', np.int32), ('y', np.int32, 4)])
+        some_other_dtype = np.dtype([('x', np.int32), ('y', np.int32, 3)])
+        self.assertIsInstance(np.zeros((1,), dtype=some_dtype), NDArray[(Any, ...), some_dtype])
+        self.assertNotIsInstance(np.zeros((1,), dtype=some_dtype), NDArray[(Any, ...), some_other_dtype])
+        self.assertIsInstance(np.zeros((1,), dtype=some_dtype), NDArray[(Any, ...), StructuredType[Int[32], SubArrayType[Int[32], (4,)]]])
