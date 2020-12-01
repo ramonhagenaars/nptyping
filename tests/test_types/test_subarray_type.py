@@ -23,10 +23,10 @@ class TestSubArrayType(TestCase):
         self.assertEqual(SubArrayType[Int[32], (4,)], SubArrayType[np.dtype((np.int32, 4))])
 
     def test_subarray_type_constructed_by_hand_is_not_equal_to_constructed_from_dtype_if_shape_doesnt_match(self):
-        self.assertNotEquals(SubArrayType[np.int32, (4,)], SubArrayType[np.dtype((np.int32, (4, 1)))])
+        self.assertNotEqual(SubArrayType[np.int32, (4,)], SubArrayType[np.dtype((np.int32, (4, 1)))])
 
     def test_subarray_type_constructed_by_hand_is_not_equal_to_constructed_from_dtype_if_base_doesnt_match(self):
-        self.assertNotEquals(SubArrayType[np.int16, (4,)], SubArrayType[np.dtype((np.int32, 4))])
+        self.assertNotEqual(SubArrayType[np.int16, (4,)], SubArrayType[np.dtype((np.int32, 4))])
 
     def test_subarray_dtype_is_an_instance_of_subarray_type(self):
         self.assertIsInstance(np.dtype((np.int32, 4)), SubArrayType[np.int32, (4,)])

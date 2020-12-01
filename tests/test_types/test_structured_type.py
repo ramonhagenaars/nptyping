@@ -14,7 +14,7 @@ class TestStructuredType(TestCase):
         self.assertEqual(StructuredType[Int[32], Unicode[8]], StructuredType[Int[32], Unicode[8]])
 
     def test_inequality_of_two_structured_types(self):
-        self.assertNotEquals(StructuredType[Int[32], Unicode[8], Int[16]], StructuredType[Int[32], Unicode[8]])
+        self.assertNotEqual(StructuredType[Int[32], Unicode[8], Int[16]], StructuredType[Int[32], Unicode[8]])
 
     def test_dtype_constructed_by_hand_is_an_instance_of_structured_type(self):
         self.assertIsInstance(np.dtype([('x', np.int32), ('y', np.int32)]), StructuredType[Int[32], Int[32]])
