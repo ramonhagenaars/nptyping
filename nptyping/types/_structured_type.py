@@ -30,11 +30,8 @@ class _StructuredTypeMeta(SubscriptableType):
     def __instancecheck__(cls, instance: Any) -> bool:
         from nptyping.functions._get_type import get_type
 
-        if is_structured_type(instance):
-            if cls == instance:
-                return True
-            return cls == get_type(instance)
-        return False
+        return (is_structured_type(instance)
+                and (cls == instance or cls == get_type(instance)))
 
     __str__ = __repr__
     __subclasscheck__ = __eq__
