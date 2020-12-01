@@ -45,11 +45,11 @@ def _get_type_type(type_: type) -> Type['NPType']:
 
 
 def _get_type_dtype(dtype: numpy.dtype) -> Type['NPType']:
+    # Return the nptyping type of a numpy dtype.
     if is_subarray_type(dtype):
         return get_subarray_type(dtype)
     if is_structured_type(dtype):
         return get_structured_type(dtype)
-    # Return the nptyping type of a numpy dtype.
     np_type_per_py_type = {
         type: _get_type_type,
         bool: get_type_bool,
