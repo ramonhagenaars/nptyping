@@ -6,6 +6,8 @@ History
 1.4.0 ()
 ++++++++++++++++++
 
+- Added ``SubArrayType``
+- Added ``StructuredType``
 - Added support for unsigned integers with ``py_type``.
 
 1.3.0 (2020-07-21)
