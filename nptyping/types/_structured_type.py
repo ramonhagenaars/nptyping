@@ -17,7 +17,7 @@ class _StructuredTypeMeta(SubscriptableType):
 
     def __repr__(cls) -> str:
         if cls.fields is not None:
-            field_strs = ','.join([str(f) for f in cls.fields])
+            field_strs = ', '.join([str(f) for f in cls.fields])
             return 'StructuredType[{}]'.format(field_strs)
         return 'StructuredType'
 

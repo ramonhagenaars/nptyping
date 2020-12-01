@@ -137,7 +137,7 @@ A structured array:
 >>> import numpy as np
 
 >>> NDArray[(Any,...), np.dtype([('x',np.int32), ('y',np.int32)])]
-NDArray[(typing.Any, ...), StructuredType[Int[32],Int[32]]]
+NDArray[(typing.Any, ...), StructuredType[Int[32], Int[32]]]
 
 ```
 
@@ -291,7 +291,7 @@ An nptyping equivalent of numpy structured dtypes.
 >>> from nptyping import StructuredType, Int
 
 >>> StructuredType[Int[32], Int[32]]
-StructuredType[Int[32],Int[32]]
+StructuredType[Int[32], Int[32]]
 
 ```
 
@@ -316,8 +316,8 @@ With `get_type` you can get `nptyping` equivalent types for your arguments:
 Int[32]
 >>> get_type('some string')
 Unicode[11]
->>> get_type(np.dtype([('x',np.int32), ('y',np.int32)]))
-StructuredType[Int[32],Int[32]]
+>>> get_type(np.dtype([('x', np.int32), ('y', np.int32)]))
+StructuredType[Int[32], Int[32]]
 
 ```
 
