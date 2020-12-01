@@ -39,7 +39,8 @@ class TestStructuredType(TestCase):
         self.assertEqual(str(StructuredType), 'StructuredType')
 
     def test_structured_type_repr_with_parameters(self):
-        self.assertEqual(str(StructuredType[Int[16], SubArrayType[Int[32], (4,)]]), 'StructuredType[Int[16],SubArrayType[Int[32], (4,)]]')
+        self.assertEqual(str(StructuredType[Int[16], SubArrayType[Int[32], (4,)]]),
+                         'StructuredType[Int[16], SubArrayType[Int[32], (4,)]]')
 
     def test_structured_type_single_field(self):
         self.assertIsInstance(np.dtype([('x', np.int32)]), StructuredType[Int[32]])
