@@ -132,6 +132,15 @@ NDArray[(3, 3, 5), Int[32]]
 
 ```
 
+A structured array:
+```python
+>>> import numpy as np
+
+>>> NDArray[(Any,...), np.dtype([('x',np.int32), ('y',np.int32)])]
+NDArray[(typing.Any, ...), StructuredType[Int[32], Int[32]]]
+
+```
+
 #### (❒) Checking your instances
 You can use `NDArray` with `isinstance` to dynamically check your arrays.
 
@@ -275,6 +284,28 @@ Object
 
 ```
 
+### (❒) StructuredType
+An nptyping equivalent of numpy structured dtypes.
+
+```python
+>>> from nptyping import StructuredType, Int
+
+>>> StructuredType[Int[32], Int[32]]
+StructuredType[Int[32], Int[32]]
+
+```
+
+### (❒) SubArrayType
+An nptyping equivalent of numpy subarray dtypes.
+
+```python
+>>> from nptyping import SubArrayType, Int
+
+>>> SubArrayType[Int[16], (4,2)]
+SubArrayType[Int[16], (4, 2)]
+
+```
+
 ### (❒) get_type
 With `get_type` you can get `nptyping` equivalent types for your arguments:
 
@@ -285,6 +316,8 @@ With `get_type` you can get `nptyping` equivalent types for your arguments:
 Int[32]
 >>> get_type('some string')
 Unicode[11]
+>>> get_type(np.dtype([('x', np.int32), ('y', np.int32)]))
+StructuredType[Int[32], Int[32]]
 
 ```
 

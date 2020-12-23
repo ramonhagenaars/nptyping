@@ -19,6 +19,8 @@ from nptyping.types._number import (
     DEFAULT_FLOAT_BITS,
 )
 from nptyping.types._object import Object
+from nptyping.types._subarray_type import SubArrayType, is_subarray_type
+from nptyping.types._structured_type import StructuredType, is_structured_type
 from nptyping.types._timedelta64 import Timedelta64
 from nptyping.types._unicode import Unicode
 
@@ -44,6 +46,10 @@ def _get_type_type(type_: type) -> Type['NPType']:
 
 def _get_type_dtype(dtype: numpy.dtype) -> Type['NPType']:
     # Return the nptyping type of a numpy dtype.
+    if is_subarray_type(dtype):
+        return get_subarray_type(dtype)
+    if is_structured_type(dtype):
+        return get_structured_type(dtype)
     np_type_per_py_type = {
         type: _get_type_type,
         bool: get_type_bool,
@@ -182,6 +188,26 @@ def get_type_complex(_: Any) -> Type[Complex128]:
     :return: a Complex128 type.
     """
     return Complex128
+
+
+# Library private.
+def get_structured_type(dtype: numpy.dtype) -> Type[StructuredType]:
+    """
+    Return the NPType that corresponds to dtype of a structured array.
+    :param dtype: a dtype of a structured NumPy array
+    :return: a StructuredType type.
+    """
+    return StructuredType[dtype]
+
+
+# Library private.
+def get_subarray_type(dtype: numpy.dtype) -> Type[SubArrayType]:
+    """
+    Return the NPType that corresponds to dtype of a subarray.
+    :param dtype: a dtype of a NumPy subarray
+    :return: a SubArrayType type.
+    """
+    return SubArrayType[dtype]
 
 
 _delegates = [

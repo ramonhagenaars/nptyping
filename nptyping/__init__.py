@@ -26,5 +26,7 @@ from nptyping.types._number import (
     Float64,
 )
 from nptyping.types._object import Object
+from nptyping.types._subarray_type import SubArrayType
+from nptyping.types._structured_type import StructuredType
 from nptyping.types._timedelta64 import Timedelta64
 from nptyping.types._unicode import Unicode
