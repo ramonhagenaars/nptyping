@@ -63,7 +63,7 @@ class _NDArrayMeta(HashedSubscriptableType):
         """
         from nptyping.functions._get_type import get_type
         np_type = get_type(instance)
-        return (np_type.__name__ == 'NDArray'
+        return (np_type.__name__ == cls.__name__
                 and _NDArrayMeta.__subclasscheck__(
                     cls, _NDArray[instance.shape, instance.dtype]))
 

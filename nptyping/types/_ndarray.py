@@ -1,4 +1,4 @@
-from typing import Type
+from typing import Type, Any, Callable
 
 import numpy as np
 
@@ -42,8 +42,8 @@ class NDArray(_NDArray, np.ndarray):
     """
 
     # These variables are to let typish know to use the custom checks.
-    __instancecheck__ = None
-    __subclasscheck__ = None
+    __instancecheck__: Callable[[Any], bool] = None
+    __subclasscheck__: Callable[[Any], bool] = None
 
     @staticmethod
     def type_of(arr: np.ndarray) -> Type['NDArray']:

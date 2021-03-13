@@ -224,3 +224,8 @@ class TestNDArray(TestCase):
         self.assertIsInstance(np.zeros((1,), dtype=some_dtype), NDArray[(Any, ...), some_dtype])
         self.assertNotIsInstance(np.zeros((1,), dtype=some_dtype), NDArray[(Any, ...), some_other_dtype])
         self.assertIsInstance(np.zeros((1,), dtype=some_dtype), NDArray[(Any, ...), StructuredType[Int[32], SubArrayType[Int[32], (4,)]]])
+
+    def test_instance_check_with_object(self):
+        obj_arr = NDArray[(Any,), object]
+        ones = np.ones(shape=(5,))
+        self.assertIsInstance(ones, obj_arr)
