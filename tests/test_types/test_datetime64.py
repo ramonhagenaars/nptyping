@@ -12,6 +12,9 @@ class TestDatetime64(TestCase):
         self.assertIsInstance(datetime.now(), Datetime64)
         self.assertIsInstance(numpy.datetime64(datetime.now()), Datetime64)
 
+        self.assertNotIsInstance('NotAChance', Datetime64)
+        self.assertNotIsInstance(123, Datetime64)
+
     def test_repr(self):
         self.assertEqual('Datetime64', repr(Datetime64))
 

@@ -2,7 +2,6 @@ from typing import Any, Optional
 from unittest import TestCase
 
 import numpy as np
-from numpy.core.arrayprint import SubArrayFormat
 
 from nptyping import NDArray, DEFAULT_INT_BITS, Int, Bool, Datetime64, StructuredType, SubArrayType
 from nptyping.types._timedelta64 import Timedelta64
@@ -137,6 +136,10 @@ class TestNDArray(TestCase):
         self.assertTrue(issubclass(NDArray[(2, 2, 2), int], NDArray))
         self.assertTrue(issubclass(NDArray[(2, 2, 2), int], NDArray[int]))
         self.assertTrue(not issubclass(NDArray[(2, 2, 2), int], NDArray[(2, 2, 3), int]))
+
+    def test_instance_check_false(self):
+        self.assertNotIsInstance("NotAChance", NDArray[(2, 2, 2), int])
+        self.assertNotIsInstance(123, NDArray[(2, 2, 2), int])
 
     def test_repr_and_str(self):
         # These imports are needed for the evals to work.

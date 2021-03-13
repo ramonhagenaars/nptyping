@@ -13,9 +13,9 @@ class _Datetime64Meta(type):
     __str__ = __repr__
 
     def __instancecheck__(cls, instance: Any) -> bool:
-        from nptyping.functions._get_type import get_type_datetime64
-        datetime_ = get_type_datetime64(instance)
-        return issubclass(datetime_, cls)
+        from nptyping.functions._get_type import get_type
+        np_type = get_type(instance)
+        return np_type == Datetime64 and issubclass(np_type, cls)
 
     def __subclasscheck__(cls, subclass: type) -> bool:
         return Datetime64 in get_mro(subclass)
