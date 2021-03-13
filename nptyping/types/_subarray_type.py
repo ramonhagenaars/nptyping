@@ -1,8 +1,8 @@
 from typing import Any
 
 import numpy as np
-from typish import SubscriptableType
 
+from nptyping._hashed_subscriptable_type import HashedSubscriptableType
 from nptyping.types._nptype import NPType
 
 
@@ -13,7 +13,7 @@ def is_subarray_type(dtype: np.dtype) -> bool:
             and len(dtype.shape) != 0)
 
 
-class _SubArrayTypeMeta(SubscriptableType):
+class _SubArrayTypeMeta(HashedSubscriptableType):
     def __hash__(cls) -> int:
         return hash((cls.base, cls.shape))
 
@@ -29,12 +29,22 @@ class _SubArrayTypeMeta(SubscriptableType):
 
     def __instancecheck__(cls, instance: Any) -> bool:
         from nptyping.functions._get_type import get_type
+        return (is_subarray_type(instance)
+                and (cls == instance or cls == get_type(instance)))
 
-        if is_subarray_type(instance):
-            if cls == instance:
-                return True
-            return cls == get_type(instance)
-        return False
+    def __getitem__(cls, args: Any) -> None:
+        from nptyping.functions._get_type import get_type
+
+        if isinstance(args, np.dtype):
+            base = get_type(args.base)
+            shape = args.shape
+        elif isinstance(args, tuple):
+            base_raw, shape = args
+            base = get_type(base_raw)
+        else:
+            raise Exception(
+                'Incompatible arguments to SubArrayType: {}'.format(args))
+        return HashedSubscriptableType.__getitem__(cls, (base, shape))
 
     __str__ = __repr__
     __subclasscheck__ = __eq__
@@ -49,13 +59,4 @@ class SubArrayType(NPType, metaclass=_SubArrayTypeMeta):
 
     @classmethod
     def _after_subscription(cls, args: Any) -> None:
-        from nptyping.functions._get_type import get_type
-
-        if isinstance(args, np.dtype):
-            cls.base = get_type(args.base)
-            cls.shape = args.shape
-        elif isinstance(args, tuple):
-            cls.base, cls.shape = args
-        else:
-            raise Exception(
-                'Incompatible arguments to SubArrayType: {}'.format(args))
+        cls.base, cls.shape = args

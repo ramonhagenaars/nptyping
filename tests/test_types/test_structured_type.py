@@ -57,3 +57,8 @@ class TestStructuredType(TestCase):
     def test_incompatible_parameters_to_structured_type_raise_exception(self):
         with self.assertRaises(Exception):
             StructuredType['bad arg']
+
+    def test_identity(self):
+        self.assertIs(StructuredType[Int[32], Unicode[8]], StructuredType[Int[32], Unicode[8]])
+        self.assertIs(StructuredType[Int[32], Unicode[8]], StructuredType[np.int32, Unicode[8]])
+        self.assertIsNot(StructuredType[Int[32], Unicode[8]], StructuredType[Int[64], Unicode[8]])

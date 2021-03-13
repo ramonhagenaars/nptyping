@@ -54,3 +54,8 @@ class TestSubArrayType(TestCase):
             SubArrayType[Int[32]]
         with self.assertRaises(Exception):
             SubArrayType['bad arg']
+
+    def test_identity(self):
+        self.assertIs(SubArrayType[np.int32, (4, 1)], SubArrayType[np.int32, (4, 1)])
+        self.assertIs(SubArrayType[np.int32, (4, 1)], SubArrayType[Int[32], (4, 1)])
+        self.assertIsNot(SubArrayType[np.int32, (4, 1)], SubArrayType[np.int32, (4, 2)])

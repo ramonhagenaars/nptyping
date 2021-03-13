@@ -1,18 +1,20 @@
-from typish import SubscriptableType
+from nptyping._hashed_subscriptable_type import HashedSubscriptableType
 
 
 class NPType:
     """
     The baseclass of all nptyping types.
     """
+
     def __new__(cls, *args, **kwargs) -> None:
         raise TypeError('Type {} cannot be instantiated'.format(cls.__name__))
 
 
-class SimpleNPTypeMeta(SubscriptableType):
+class SimpleNPTypeMeta(HashedSubscriptableType):
     """
     A metaclass for all simple NPTypes (e.g. float, int, etc.).
     """
+
     def __repr__(cls):
         repr_args = getattr(cls, '_repr_args', None)
         if not repr_args:

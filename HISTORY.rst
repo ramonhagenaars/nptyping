@@ -3,6 +3,12 @@
 History
 -------
 
+1.4.1 (2021-03-13)
+++++++++++++++++++
+
+- Fixed instance checks of some types that did not properly respond to non-numpy types.
+- Fixed identities of NPTyping instances: ``NDArray[(3,), int] is NDArray[(3,), int]``.
+
 1.4.0 (2020-12-23)
 ++++++++++++++++++
 

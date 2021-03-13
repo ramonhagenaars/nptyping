@@ -3,7 +3,7 @@ from unittest import TestCase
 
 import numpy as np
 
-from nptyping import NDArray, DEFAULT_INT_BITS, Int, Bool, Datetime64, StructuredType, SubArrayType
+from nptyping import NDArray, DEFAULT_INT_BITS, Int, Bool, Datetime64, StructuredType, SubArrayType, Int32
 from nptyping.types._timedelta64 import Timedelta64
 
 
@@ -194,6 +194,17 @@ class TestNDArray(TestCase):
         # You should now be able to wrap an NDArray in an optional.
         Optional[NDArray[(3,), int]]
         Optional[NDArray]
+
+    def test_identity(self):
+        self.assertIs(NDArray[(3,), int], NDArray[(3,), int])
+
+        self.assertIs(NDArray[(3,), Int32], NDArray[(3,), Int32])
+        self.assertIs(NDArray[(3,), Int32], NDArray[(3,), Int32[32]])
+        self.assertIs(NDArray[(3,), Int32], NDArray[(3,), np.int32])
+
+        self.assertIsNot(NDArray[(3,), int], NDArray[(3,), float])
+        self.assertIsNot(NDArray[(3,), int], NDArray[(4,), int])
+        self.assertIsNot(NDArray[(3,), int], NDArray[(3, 3), int])
 
     def test_instantiate(self):
         with self.assertRaises(TypeError) as err:
