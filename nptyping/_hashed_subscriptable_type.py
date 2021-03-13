@@ -4,7 +4,7 @@ from typish import SubscriptableType
 
 
 class HashedSubscriptableType(SubscriptableType):
-    _cache: Dict[int, Any] = {}
+    _cache = {}
 
     def __getitem__(cls, item: Any) -> Any:
         # Take the item's class name into account to distinguish between
