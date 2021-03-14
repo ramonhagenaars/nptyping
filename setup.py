@@ -22,6 +22,11 @@ test_requirements = [
     'pytest',
     'coverage',
     'codecov',
+    'scons',
+    'radon',
+    'xenon',
+    'autoflake',
+    'isort',
 ]
 
 extras = {

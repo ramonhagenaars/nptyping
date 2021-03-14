@@ -1,4 +1,4 @@
-from typing import Type, Any
+from typing import Any, Type
 
 import numpy
 from typish import get_mro

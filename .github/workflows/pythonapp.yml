@@ -17,24 +17,34 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           architecture: x64
-      - name: Install dependencies
+
+      - name: Install Dependencies
         run: |
-            python -m pip install --upgrade pip
-            pip install .[test]
+          python -m pip install --upgrade pip
+          pip install .[test,evaluate] -c constraints.txt
+
       - name: Test
-        run: |
-            python setup.py test
-            coverage run setup.py test
-            codecov
-      - name: Coverage
-        uses: codecov/codecov-action@v1
+        run: scons test
+
       - name: Doctest
+        run: scons doctest
+
+      - name: Coverage
         run: |
-            pytest --doctest-modules --ignore=tests
-            python -m doctest README.md
+            scons coverage
+            codecov
+
+      - name: Coverage Report
+        uses: codecov/codecov-action@v1
+
       - name: Pycodestyle
-        run: |
-            pycodestyle nptyping -v
+        run: scons pycodestyle
+
       - name: Pylint
-        run: |
-            pylint --rcfile=setup.cfg nptyping
+        run: scons pylint
+
+      - name: Imports
+        run: scons check format
+
+      - name: Code Complexity
+        run: scons complexity

@@ -1,9 +1,13 @@
-from typing import Any, Dict
+from typing import Any
 
 from typish import SubscriptableType
 
 
 class HashedSubscriptableType(SubscriptableType):
+    """
+    An extension of SubscriptableType that caches the __getitem__ to ensure an
+    identical result per set of parameters.
+    """
     _cache = {}
 
     def __getitem__(cls, item: Any) -> Any:

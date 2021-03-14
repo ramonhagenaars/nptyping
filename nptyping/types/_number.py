@@ -1,4 +1,8 @@
-from typing import Any, Union, Type
+from typing import (
+    Any,
+    Type,
+    Union,
+)
 
 import numpy
 from typish import Literal, get_mro

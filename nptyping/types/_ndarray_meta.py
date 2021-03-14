@@ -1,8 +1,17 @@
+# pylint: disable=no-value-for-parameter
 from collections import OrderedDict
-from typing import Any, Tuple, Union
+from typing import (
+    Any,
+    Tuple,
+    Union,
+)
 
 import numpy as np
-from typish import Literal, ClsFunction, EllipsisType
+from typish import (
+    ClsFunction,
+    EllipsisType,
+    Literal,
+)
 
 from nptyping._hashed_subscriptable_type import HashedSubscriptableType
 from nptyping.types._nptype import NPType
@@ -131,18 +140,27 @@ class _NDArrayMeta(HashedSubscriptableType):
         type_ = Any if item is Any else get_type(item)
         return None, type_
 
-    def _size_and_type(cls, item: Tuple[_Size, _Type]) -> Tuple[Tuple[_Size, ...], _Type]:
+    def _size_and_type(
+            cls,
+            item: Tuple[_Size, _Type]
+    ) -> Tuple[Tuple[_Size, ...], _Type]:
         # E.g. NDArray[3, int]
         # The given item is the size of the single dimension and its type.
         _, type_ = cls._only_type(item[1])
         return (item[0],), type_
 
-    def _only_sizes(cls, item: Tuple[_Size, ...]) -> Tuple[Tuple[_Size, ...], None]:
+    def _only_sizes(
+            cls,
+            item: Tuple[_Size, ...]
+    ) -> Tuple[Tuple[_Size, ...], None]:
         # E.g. NDArray[(2, Any, 2)]
         # The given item is a tuple with just sizes of the dimensions.
         return item, None
 
-    def _sizes_and_type(cls, item: Tuple[Tuple[_Size, ...], _Type]) -> Tuple[Tuple[_Size, ...], _Type]:
+    def _sizes_and_type(
+            cls,
+            item: Tuple[Tuple[_Size, ...], _Type]
+    ) -> Tuple[Tuple[_Size, ...], _Type]:
         # E.g. NDArray[(2, Any, 2), int]
         # The given item is a tuple with sizes of the dimensions and the type.
         # Or e.g. NDArray[(3, ...), int]
@@ -153,7 +171,7 @@ class _NDArrayMeta(HashedSubscriptableType):
 
 
 class _NDArray(NPType, metaclass=_NDArrayMeta):
-    _shape = (Any, ...)  # type: Union[Tuple[int, ...], Tuple[Any, EllipsisType]]  # noqa
+    _shape = (Any, ...)  # type: Union[Tuple[int, ...], Tuple[Any, EllipsisType]]  # noqa # pylint: disable=line-too-long
     _type = Any
     _special = True  # Added to be able to compile types with sphinx.
 

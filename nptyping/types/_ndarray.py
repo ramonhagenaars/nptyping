@@ -1,4 +1,8 @@
-from typing import Type, Any, Callable
+from typing import (
+    Any,
+    Callable,
+    Type,
+)
 
 import numpy as np
 
