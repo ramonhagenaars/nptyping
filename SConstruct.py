@@ -6,10 +6,10 @@ _SUBJECT = 'nptyping'
 
 
 def _exec(cmd: str) -> None:
-    print(f'>>> {cmd}')
+    print('>>> {}'.format(cmd))
     exit_code = subprocess.call(cmd, shell=True)
     if exit_code != 0 and not _CONTINUE:
-        print(f'Exiting with {exit_code}')
+        print('Exiting with {}'.format(exit_code))
         Exit(exit_code)
 
 
@@ -38,26 +38,26 @@ if 'coverage' in COMMAND_LINE_TARGETS:
     _exec('coverage report -m --fail-under=100')
 
 if 'pycodestyle' in COMMAND_LINE_TARGETS:
-    _exec(f'pycodestyle {_SUBJECT} -v --config=setup.cfg')
+    _exec('pycodestyle {} -v --config=setup.cfg'.format(_SUBJECT))
 
 if 'pylint' in COMMAND_LINE_TARGETS:
-    _exec(f'pylint --rcfile=setup.cfg {_SUBJECT}')
+    _exec('pylint --rcfile=setup.cfg {}'.format(_SUBJECT))
 
 if 'complexity' in COMMAND_LINE_TARGETS:
-    _exec(f'radon cc {_SUBJECT} -nc --total-average')
-    _exec(f'xenon {_SUBJECT} --max-absolute B --max-modules A --max-average A --exclude nptyping/config.py')
+    _exec('radon cc {} -nc --total-average'.format(_SUBJECT))
+    _exec('xenon {} --max-absolute B --max-modules A --max-average A --exclude {}/config.py'.format(_SUBJECT, _SUBJECT))
 
 
 # FORMAT:
 
 if 'autoflake' in COMMAND_LINE_TARGETS:
-    cmd = f'autoflake {_SUBJECT} --recursive --in-place --remove-unused-variables'
+    cmd = 'autoflake {} --recursive --in-place --remove-unused-variables'.format(_SUBJECT)
     if _CHECK_ONLY:
         cmd += ' --check'
     _exec(cmd)
 
 if 'isort' in COMMAND_LINE_TARGETS:
-    cmd = f'isort {_SUBJECT} --recursive --quiet'
+    cmd = 'isort {} --recursive --quiet'.format(_SUBJECT)
     if _CHECK_ONLY:
         cmd += ' --check'
     _exec(cmd)
