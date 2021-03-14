@@ -119,11 +119,11 @@ class _NDArrayMeta(HashedSubscriptableType):
             return True
         if len(cls._shape) == 2 and cls._shape[1] is ...:
             size = cls._shape[0]
-            return all([s == size for s in shape])
+            return all(s == size for s in shape)
         if len(shape) != len(cls._shape):
             return False
         zipped = zip(shape, cls._shape)
-        return all([_is_eq_to(a, b) for a, b in zipped])
+        return all(_is_eq_to(a, b) for a, b in zipped)
 
     def _is_dtype_eq(cls, nptype: NPType) -> bool:
         return cls._type is Any or issubclass(nptype, cls._type)
