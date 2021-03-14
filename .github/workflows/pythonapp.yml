@@ -21,7 +21,7 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install .[test,evaluate] -c constraints.txt
+          pip install .[test]
 
       - name: Test
         run: scons test
