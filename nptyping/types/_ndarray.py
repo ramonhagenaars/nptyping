@@ -42,8 +42,8 @@ class NDArray(_NDArray, np.ndarray):
     """
 
     # These variables are to let typish know to use the custom checks.
-    __instancecheck__: Callable[[Any], bool] = None
-    __subclasscheck__: Callable[[Any], bool] = None
+    __instancecheck__ = None  # type: Callable[[Any], bool]
+    __subclasscheck__ = None  # type: Callable[[Any], bool]
 
     @staticmethod
     def type_of(arr: np.ndarray) -> Type['NDArray']:
