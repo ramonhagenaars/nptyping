@@ -7,26 +7,26 @@ from nptyping.types._datetime64 import Datetime64
 from nptyping.types._ndarray import NDArray
 from nptyping.types._nptype import NPType
 from nptyping.types._number import (
-    DEFAULT_INT_BITS,
     DEFAULT_FLOAT_BITS,
-    Number,
-    Int,
+    DEFAULT_INT_BITS,
     Float,
+    Float16,
+    Float32,
+    Float64,
+    Int,
     Int8,
     Int16,
     Int32,
     Int64,
+    Number,
     UInt,
     UInt8,
     UInt16,
     UInt32,
     UInt64,
-    Float16,
-    Float32,
-    Float64,
 )
 from nptyping.types._object import Object
-from nptyping.types._subarray_type import SubArrayType
 from nptyping.types._structured_type import StructuredType
+from nptyping.types._subarray_type import SubArrayType
 from nptyping.types._timedelta64 import Timedelta64
 from nptyping.types._unicode import Unicode

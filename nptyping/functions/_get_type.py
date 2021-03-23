@@ -1,5 +1,9 @@
 from datetime import datetime, timedelta
-from typing import Any, Type, Dict
+from typing import (
+    Any,
+    Dict,
+    Type,
+)
 
 import numpy
 from typish import ClsFunction
@@ -11,16 +15,16 @@ from nptyping.types._datetime64 import Datetime64
 from nptyping.types._ndarray import NDArray
 from nptyping.types._nptype import NPType
 from nptyping.types._number import (
-    Int,
-    Float,
-    UInt,
-    Number,
-    DEFAULT_INT_BITS,
     DEFAULT_FLOAT_BITS,
+    DEFAULT_INT_BITS,
+    Float,
+    Int,
+    Number,
+    UInt,
 )
 from nptyping.types._object import Object
-from nptyping.types._subarray_type import SubArrayType, is_subarray_type
 from nptyping.types._structured_type import StructuredType, is_structured_type
+from nptyping.types._subarray_type import SubArrayType, is_subarray_type
 from nptyping.types._timedelta64 import Timedelta64
 from nptyping.types._unicode import Unicode
 

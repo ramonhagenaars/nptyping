@@ -1,4 +1,4 @@
-from typing import Type, Any
+from typing import Any, Type
 
 import numpy
 from typish import get_mro
@@ -13,9 +13,9 @@ class _Timedelta64Meta(type):
     __str__ = __repr__
 
     def __instancecheck__(cls, instance: Any) -> bool:
-        from nptyping.functions._get_type import get_type_timedelta64
-        timedelta_ = get_type_timedelta64(instance)
-        return issubclass(timedelta_, cls)
+        from nptyping.functions._get_type import get_type
+        np_type = get_type(instance)
+        return np_type == Timedelta64 and issubclass(np_type, cls)
 
     def __subclasscheck__(cls, subclass: type) -> bool:
         return Timedelta64 in get_mro(subclass)

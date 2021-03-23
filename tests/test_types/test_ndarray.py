@@ -2,9 +2,8 @@ from typing import Any, Optional
 from unittest import TestCase
 
 import numpy as np
-from numpy.core.arrayprint import SubArrayFormat
 
-from nptyping import NDArray, DEFAULT_INT_BITS, Int, Bool, Datetime64, StructuredType, SubArrayType
+from nptyping import NDArray, DEFAULT_INT_BITS, Int, Bool, Datetime64, StructuredType, SubArrayType, Int32
 from nptyping.types._timedelta64 import Timedelta64
 
 
@@ -138,6 +137,10 @@ class TestNDArray(TestCase):
         self.assertTrue(issubclass(NDArray[(2, 2, 2), int], NDArray[int]))
         self.assertTrue(not issubclass(NDArray[(2, 2, 2), int], NDArray[(2, 2, 3), int]))
 
+    def test_instance_check_false(self):
+        self.assertNotIsInstance("NotAChance", NDArray[(2, 2, 2), int])
+        self.assertNotIsInstance(123, NDArray[(2, 2, 2), int])
+
     def test_repr_and_str(self):
         # These imports are needed for the evals to work.
         import typing
@@ -192,6 +195,17 @@ class TestNDArray(TestCase):
         Optional[NDArray[(3,), int]]
         Optional[NDArray]
 
+    def test_identity(self):
+        self.assertIs(NDArray[(3,), int], NDArray[(3,), int])
+
+        self.assertIs(NDArray[(3,), Int32], NDArray[(3,), Int32])
+        self.assertIs(NDArray[(3,), Int32], NDArray[(3,), Int32[32]])
+        self.assertIs(NDArray[(3,), Int32], NDArray[(3,), np.int32])
+
+        self.assertIsNot(NDArray[(3,), int], NDArray[(3,), float])
+        self.assertIsNot(NDArray[(3,), int], NDArray[(4,), int])
+        self.assertIsNot(NDArray[(3,), int], NDArray[(3, 3), int])
+
     def test_instantiate(self):
         with self.assertRaises(TypeError) as err:
             NDArray([1, 2, 3])
@@ -210,3 +224,8 @@ class TestNDArray(TestCase):
         self.assertIsInstance(np.zeros((1,), dtype=some_dtype), NDArray[(Any, ...), some_dtype])
         self.assertNotIsInstance(np.zeros((1,), dtype=some_dtype), NDArray[(Any, ...), some_other_dtype])
         self.assertIsInstance(np.zeros((1,), dtype=some_dtype), NDArray[(Any, ...), StructuredType[Int[32], SubArrayType[Int[32], (4,)]]])
+
+    def test_instance_check_with_object(self):
+        obj_arr = NDArray[(Any,), object]
+        ones = np.ones(shape=(5,))
+        self.assertIsInstance(ones, obj_arr)

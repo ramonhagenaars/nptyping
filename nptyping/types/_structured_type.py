@@ -1,8 +1,8 @@
 from typing import Any
 
 import numpy as np
-from typish import SubscriptableType
 
+from nptyping._hashed_subscriptable_type import HashedSubscriptableType
 from nptyping.types._nptype import NPType
 
 
@@ -11,7 +11,7 @@ def is_structured_type(dtype: np.dtype) -> bool:
     return hasattr(dtype, 'fields') and dtype.fields is not None
 
 
-class _StructuredTypeMeta(SubscriptableType):
+class _StructuredTypeMeta(HashedSubscriptableType):
     def __hash__(cls) -> int:
         return hash(cls.fields)
 
@@ -33,6 +33,20 @@ class _StructuredTypeMeta(SubscriptableType):
         return (is_structured_type(instance)
                 and (cls == instance or cls == get_type(instance)))
 
+    def __getitem__(cls, item: Any) -> Any:
+        from nptyping.functions._get_type import get_type
+
+        if isinstance(item, np.dtype):
+            fields_ = tuple(get_type(item.fields[n][0]) for n in item.names)
+        elif isinstance(item, tuple):
+            fields_ = tuple(get_type(t) for t in item)
+        elif isinstance(item, type):
+            fields_ = (get_type(item),)
+        else:
+            raise Exception(
+                'Incompatible arguments to StructuredType: {}'.format(item))
+        return HashedSubscriptableType.__getitem__(cls, fields_)
+
     __str__ = __repr__
     __subclasscheck__ = __eq__
 
@@ -45,14 +59,4 @@ class StructuredType(NPType, metaclass=_StructuredTypeMeta):
 
     @classmethod
     def _after_subscription(cls, args: Any) -> None:
-        from nptyping.functions._get_type import get_type
-
-        if isinstance(args, np.dtype):
-            cls.fields = tuple(get_type(args.fields[n][0]) for n in args.names)
-        elif isinstance(args, tuple):
-            cls.fields = tuple(get_type(t) for t in args)
-        elif isinstance(args, type):
-            cls.fields = (get_type(args),)
-        else:
-            raise Exception(
-                'Incompatible arguments to StructuredType: {}'.format(args))
+        cls.fields = args

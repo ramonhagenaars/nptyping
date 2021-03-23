@@ -12,6 +12,9 @@ class TestTimedelta64(TestCase):
         self.assertIsInstance(timedelta(days=1), Timedelta64)
         self.assertIsInstance(numpy.timedelta64(1), Timedelta64)
 
+        self.assertNotIsInstance('NotAChance', Timedelta64)
+        self.assertNotIsInstance(123, Timedelta64)
+
     def test_repr(self):
         self.assertEqual('Timedelta64', repr(Timedelta64))
 

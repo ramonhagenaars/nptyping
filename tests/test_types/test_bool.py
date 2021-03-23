@@ -14,6 +14,9 @@ class TestBool(TestCase):
         self.assertIsInstance(numpy.bool_(True), Bool)
         self.assertIsInstance(numpy.bool_(False), Bool)
 
+        self.assertNotIsInstance('NotAChance', Bool)
+        self.assertNotIsInstance(123, Bool)
+
     def test_repr(self):
         self.assertEqual('Bool', repr(Bool))
 

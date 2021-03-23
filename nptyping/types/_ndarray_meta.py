@@ -1,9 +1,19 @@
+# pylint: disable=no-value-for-parameter
 from collections import OrderedDict
-from typing import Any, Tuple, Union
+from typing import (
+    Any,
+    Tuple,
+    Union,
+)
 
 import numpy as np
-from typish import SubscriptableType, Literal, ClsFunction, EllipsisType
+from typish import (
+    ClsFunction,
+    EllipsisType,
+    Literal,
+)
 
+from nptyping._hashed_subscriptable_type import HashedSubscriptableType
 from nptyping.types._nptype import NPType
 
 _Size = Union[int, Literal[Any]]  # TODO add type vars as well
@@ -26,7 +36,7 @@ def _is_eq_to(this: Any, that: Any) -> bool:
     return that is Any or this == that
 
 
-class _NDArrayMeta(SubscriptableType):
+class _NDArrayMeta(HashedSubscriptableType):
     _shape = tuple()  # type: Union[Tuple[int, ...], Tuple[int, EllipsisType]]
     _type = ...  # type: Union[type, Literal[Any]]
 
@@ -60,8 +70,11 @@ class _NDArrayMeta(SubscriptableType):
         :param instance: the instance that is checked.
         :return: True if instance is an instance of cls.
         """
-        return _NDArrayMeta.__subclasscheck__(
-            cls, _NDArray[instance.shape, instance.dtype])
+        from nptyping.functions._get_type import get_type
+        np_type = get_type(instance)
+        return (np_type.__name__ == cls.__name__
+                and _NDArrayMeta.__subclasscheck__(
+                    cls, _NDArray[instance.shape, instance.dtype]))
 
     def __subclasscheck__(cls, subclass: type) -> bool:
         """
@@ -81,32 +94,11 @@ class _NDArrayMeta(SubscriptableType):
         """
         return hash((cls._shape, cls._type))
 
-    def _is_shape_eq(cls, shape: Tuple[int, ...]) -> bool:
-        if cls._shape == (Any, ...):
-            return True
-        if len(cls._shape) == 2 and cls._shape[1] is ...:
-            size = cls._shape[0]
-            return all([s == size for s in shape])
-        if len(shape) != len(cls._shape):
-            return False
-        zipped = zip(shape, cls._shape)
-        return all([_is_eq_to(a, b) for a, b in zipped])
-
-    def _is_dtype_eq(cls, nptype: NPType) -> bool:
-        return cls._type is Any or issubclass(nptype, cls._type)
-
-
-class _NDArray(NPType, metaclass=_NDArrayMeta):
-    _shape = (Any, ...)  # type: Union[Tuple[int, ...], Tuple[Any, EllipsisType]]  # noqa
-    _type = Any
-    _special = True  # Added to be able to compile types with sphinx.
-
-    @classmethod
-    def _after_subscription(cls, item: Any) -> None:
+    def __getitem__(cls, item: Any) -> None:
         method = ClsFunction(OrderedDict([
             (_Size, cls._only_size),
             (_Type, cls._only_type),
-            (_NSizes, lambda _: ...),
+            (_NSizes, lambda _: (None, None)),
             (_SizeAndType, cls._size_and_type),
             (_SizeAndTypeAny, cls._size_and_type),  # For Python 3.5.
             (_Sizes, cls._only_sizes),
@@ -114,44 +106,77 @@ class _NDArray(NPType, metaclass=_NDArrayMeta):
             (_SizesAndTypeAny, cls._sizes_and_type),  # For Python 3.5.
             (_NSizesAndType, cls._sizes_and_type),
             (_NSizesAndTypeAny, cls._sizes_and_type),  # For Python 3.5.
-            (_Default, lambda _: ...),
+            (_Default, lambda _: (None, None)),
         ]))
 
         if not method.understands(item):
             raise TypeError('Invalid parameter for NDArray: "{}"'.format(item))
-        method(item)
+        shape, type_ = method(item)
+        return HashedSubscriptableType.__getitem__(cls, (shape, type_))
 
-    @classmethod
-    def _only_size(cls, item: int) -> None:
+    def _is_shape_eq(cls, shape: Tuple[int, ...]) -> bool:
+        if cls._shape == (Any, ...):
+            return True
+        if len(cls._shape) == 2 and cls._shape[1] is ...:
+            size = cls._shape[0]
+            return all(s == size for s in shape)
+        if len(shape) != len(cls._shape):
+            return False
+        zipped = zip(shape, cls._shape)
+        return all(_is_eq_to(a, b) for a, b in zipped)
+
+    def _is_dtype_eq(cls, nptype: NPType) -> bool:
+        return cls._type is Any or issubclass(nptype, cls._type)
+
+    def _only_size(cls, item: int) -> Tuple[Tuple[_Size, ...], None]:
         # E.g. NDArray[3]
         # The given item is the size of the single dimension.
-        cls._shape = (item,)
+        return (item,), None
 
-    @classmethod
-    def _only_type(cls, item: type) -> None:
+    def _only_type(cls, item: type) -> Tuple[None, _Type]:
         # E.g. NDArray[int]
         # The given item is the type of the single dimension.
         from nptyping import get_type  # Put here to prevent cyclic import.
-        cls._type = Any if item is Any else get_type(item)
+        type_ = Any if item is Any else get_type(item)
+        return None, type_
 
-    @classmethod
-    def _size_and_type(cls, item: Tuple[_Size, _Type]) -> None:
+    def _size_and_type(
+            cls,
+            item: Tuple[_Size, _Type]
+    ) -> Tuple[Tuple[_Size, ...], _Type]:
         # E.g. NDArray[3, int]
         # The given item is the size of the single dimension and its type.
-        cls._shape = (item[0],)
-        cls._only_type(item[1])
+        _, type_ = cls._only_type(item[1])
+        return (item[0],), type_
 
-    @classmethod
-    def _only_sizes(cls, item: Tuple[_Size, ...]) -> None:
+    def _only_sizes(
+            cls,
+            item: Tuple[_Size, ...]
+    ) -> Tuple[Tuple[_Size, ...], None]:
         # E.g. NDArray[(2, Any, 2)]
         # The given item is a tuple with just sizes of the dimensions.
-        cls._shape = item
+        return item, None
 
-    @classmethod
-    def _sizes_and_type(cls, item: Tuple[Tuple[_Size, ...], _Type]) -> None:
+    def _sizes_and_type(
+            cls,
+            item: Tuple[Tuple[_Size, ...], _Type]
+    ) -> Tuple[Tuple[_Size, ...], _Type]:
         # E.g. NDArray[(2, Any, 2), int]
         # The given item is a tuple with sizes of the dimensions and the type.
         # Or e.g. NDArray[(3, ...), int]
         # The given item is a tuple with sizes of n dimensions and the type.
-        cls._only_sizes(item[0])
-        cls._only_type(item[1])
+        shape, _ = cls._only_sizes(item[0])
+        _, type_ = cls._only_type(item[1])
+        return shape, type_
+
+
+class _NDArray(NPType, metaclass=_NDArrayMeta):
+    _shape = (Any, ...)  # type: Union[Tuple[int, ...], Tuple[Any, EllipsisType]]  # noqa # pylint: disable=line-too-long
+    _type = Any
+    _special = True  # Added to be able to compile types with sphinx.
+
+    @classmethod
+    def _after_subscription(cls, item: Any) -> None:
+        shape, type_ = item
+        cls._shape = shape or cls._shape
+        cls._type = type_ or cls._type

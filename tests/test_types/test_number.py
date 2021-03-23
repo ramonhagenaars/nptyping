@@ -137,6 +137,14 @@ class TestNumber(TestCase):
         self.assertEqual(Float[default_bytes], Float.type_of(1000000000.0))
         self.assertEqual(Float[default_bytes], Float.type_of(-1000000000.0))
 
+    def test_identity(self):
+        self.assertIs(Int[64], Int[64])
+        self.assertIs(Int[32], Int[32])
+        self.assertIs(Float64, Float64)
+
+        self.assertIsNot(Float64, Int64)
+        self.assertIsNot(Int64, UInt64)
+
     def test_int_fitting(self):
         self.assertEqual(Int8, Int.fitting(0))
         self.assertEqual(Int8, Int.fitting(2 ** 7 - 1))
