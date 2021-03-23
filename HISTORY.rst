@@ -3,7 +3,7 @@
 History
 -------
 
-1.4.1 (2021-03-13)
+1.4.1 (2021-03-23)
 ++++++++++++++++++
 
 - Fixed instance checks of some types that did not properly respond to non-numpy types.
