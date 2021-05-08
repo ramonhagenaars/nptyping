@@ -3,6 +3,11 @@
 History
 -------
 
+1.4.2 (2021-05-08)
+++++++++++++++++++
+
+- Fixed instance check that was incompatible with `typish==1.9.2`.
+
 1.4.1 (2021-03-23)
 ++++++++++++++++++
 

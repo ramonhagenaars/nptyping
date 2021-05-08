@@ -3,7 +3,7 @@ from unittest import TestCase
 
 import numpy as np
 
-from nptyping import NDArray, DEFAULT_INT_BITS, Int, Bool, Datetime64, StructuredType, SubArrayType, Int32
+from nptyping import NDArray, DEFAULT_INT_BITS, Int, Bool, Datetime64, StructuredType, SubArrayType, Int32, Float
 from nptyping.types._timedelta64 import Timedelta64
 
 
@@ -101,6 +101,7 @@ class TestNDArray(TestCase):
         self.assertTrue(isinstance(arr2x2, NDArray))
         self.assertTrue(isinstance(arr3x2x2, NDArray[int]))
         self.assertTrue(isinstance(arr2x2, NDArray[int]))
+        self.assertTrue(isinstance(arr2x2, NDArray[(Any, 2), Int]))
 
     def test_instance_check_types(self):
         arr2x2x2_float = np.array([[[1.0, 2.0], [3.0, 4.0]],

@@ -67,7 +67,7 @@ class TestGetType(TestCase):
         self.assertEqual(Float32, get_type(np.float32(42.0)))
         self.assertEqual(Float64, get_type(np.float64(42.0)))
 
-        self.assertEqual(Unicode, get_type(np.unicode))
+        self.assertEqual(Unicode, get_type(np.compat.unicode))
         self.assertEqual(Unicode[40], get_type(np.dtype(('U', 40))))
 
         self.assertEqual(Bool, get_type(np.bool_(True)))
