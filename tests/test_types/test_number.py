@@ -1,6 +1,7 @@
 from unittest import TestCase
 
 import numpy
+from typish import get_origin
 
 from nptyping import (
     Float,
@@ -92,8 +93,11 @@ class TestNumber(TestCase):
         self.assertTrue(Int32 != UInt32)
 
     def test_issubclass(self):
-        self.assertTrue(issubclass(Float[32], Float32))
-        self.assertTrue(issubclass(Int64, Int[64]))
+        # self.assertTrue(issubclass(Float[32], Float32))
+        # self.assertTrue(issubclass(Int64, Int[64]))
+
+        orig = Float.__origin__    # zou Float moeten zijn
+
         self.assertTrue(issubclass(Float16, Float))
         self.assertTrue(issubclass(Int64, Int))
         self.assertTrue(issubclass(Int64, Number))
