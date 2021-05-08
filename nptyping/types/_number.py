@@ -1,3 +1,4 @@
+from inspect import getmro
 from typing import (
     Any,
     Type,
@@ -5,7 +6,7 @@ from typing import (
 )
 
 import numpy
-from typish import Literal, get_mro
+from typish import Literal
 
 from nptyping.types._nptype import NPType, SimpleNPTypeMeta
 
@@ -174,7 +175,7 @@ class Float(Number[float, numpy.floating]):
 
 def _is_a(this: Any, that: type) -> bool:
     # Return whether this is a subclass of that, considering the mro.
-    return that in get_mro(this)
+    return that in getmro(this)
 
 
 def _is_number_subclass_of(

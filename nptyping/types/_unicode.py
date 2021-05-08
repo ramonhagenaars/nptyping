@@ -1,7 +1,7 @@
+from inspect import getmro
 from typing import Any, Type
 
 import numpy
-from typish import get_mro
 
 from nptyping.types._nptype import NPType, SimpleNPTypeMeta
 
@@ -22,7 +22,7 @@ class _UnicodeMeta(SimpleNPTypeMeta):
         return issubclass(unicode, cls)
 
     def __subclasscheck__(cls, subclass: type) -> bool:
-        if Unicode in get_mro(subclass):
+        if Unicode in getmro(subclass):
             return cls.chars is Any or subclass.chars <= cls.chars
         return False
 
