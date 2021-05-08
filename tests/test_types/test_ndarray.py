@@ -1,9 +1,10 @@
+from numbers import Number as NumbersNumber
 from typing import Any, Optional
 from unittest import TestCase
 
 import numpy as np
 
-from nptyping import NDArray, DEFAULT_INT_BITS, Int, Bool, Datetime64, StructuredType, SubArrayType, Int32
+from nptyping import NDArray, DEFAULT_INT_BITS, Int, Bool, Datetime64, StructuredType, SubArrayType, Int32, Number
 from nptyping.types._timedelta64 import Timedelta64
 
 
@@ -109,6 +110,8 @@ class TestNDArray(TestCase):
 
         self.assertTrue(isinstance(arr2x2x2_float, NDArray[(2, 2, 2), float]))
         self.assertTrue(not isinstance(arr2x2x2, NDArray[(2, 2, 2), str]))
+        self.assertTrue(isinstance(arr2x2x2, NDArray[NumbersNumber]))
+        self.assertTrue(isinstance(arr2x2x2, NDArray[Number]))
 
     def test_instance_check_types_any(self):
         arr2x2x2_float = np.array([[[1.0, 2.0], [3.0, 4.0]],
