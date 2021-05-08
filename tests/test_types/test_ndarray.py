@@ -4,8 +4,8 @@ from unittest import TestCase
 
 import numpy as np
 
-from nptyping import NDArray, DEFAULT_INT_BITS, Int, Bool, Datetime64, StructuredType, SubArrayType, Int32, Number
-from nptyping import NDArray, DEFAULT_INT_BITS, Int, Bool, Datetime64, StructuredType, SubArrayType, Int32, Float
+from nptyping import NDArray, DEFAULT_INT_BITS, Int, Bool, Datetime64, StructuredType, SubArrayType, Int32
+from nptyping import Number
 from nptyping.types._timedelta64 import Timedelta64
 
 
@@ -228,7 +228,8 @@ class TestNDArray(TestCase):
         some_other_dtype = np.dtype([('x', np.int32), ('y', np.int32, 3)])
         self.assertIsInstance(np.zeros((1,), dtype=some_dtype), NDArray[(Any, ...), some_dtype])
         self.assertNotIsInstance(np.zeros((1,), dtype=some_dtype), NDArray[(Any, ...), some_other_dtype])
-        self.assertIsInstance(np.zeros((1,), dtype=some_dtype), NDArray[(Any, ...), StructuredType[Int[32], SubArrayType[Int[32], (4,)]]])
+        self.assertIsInstance(np.zeros((1,), dtype=some_dtype),
+                              NDArray[(Any, ...), StructuredType[Int[32], SubArrayType[Int[32], (4,)]]])
 
     def test_instance_check_with_object(self):
         obj_arr = NDArray[(Any,), object]
