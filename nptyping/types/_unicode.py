@@ -1,7 +1,7 @@
 from inspect import getmro
 from typing import Any, Type
 
-import numpy
+import numpy as np
 
 from nptyping.types._nptype import NPType, SimpleNPTypeMeta
 
@@ -27,7 +27,7 @@ class _UnicodeMeta(SimpleNPTypeMeta):
         return False
 
 
-class Unicode(NPType, numpy.unicode, metaclass=_UnicodeMeta):
+class Unicode(NPType, np.compat.unicode, metaclass=_UnicodeMeta):
     """
     A numpy unicode. Can be given the number of characters optionally.
 
