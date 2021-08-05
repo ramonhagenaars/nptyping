@@ -3,6 +3,11 @@
 History
 -------
 
+1.4.3 (2021-08-05)
+++++++++++++++++++
+
+- Fixed setup.py to exclude test(-resources) in the wheel.
+
 1.4.2 (2021-05-08)
 ++++++++++++++++++
 
