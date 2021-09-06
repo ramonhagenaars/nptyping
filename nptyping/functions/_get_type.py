@@ -71,7 +71,8 @@ def _get_type_dtype(dtype: numpy.dtype) -> Type['NPType']:
 def _get_type_arrary(arr: numpy.ndarray) -> Type['NPType']:
     # Return the nptyping type of a numpy array.
     type_ = get_type(arr.dtype)
-    return NDArray[arr.shape, type_]
+    shape = arr.shape or (Any, ...)
+    return NDArray[shape, type_]
 
 
 def _get_type_of_number(
