@@ -72,9 +72,13 @@ class _NDArrayMeta(HashedSubscriptableType):
         """
         from nptyping.functions._get_type import get_type
         np_type = get_type(instance)
-        return (np_type.__name__ == cls.__name__
-                and _NDArrayMeta.__subclasscheck__(
-                    cls, _NDArray[instance.shape, instance.dtype]))
+        return (
+                np_type.__name__ == cls.__name__ and
+                _NDArrayMeta.__subclasscheck__(
+                    cls,
+                    _NDArray[instance.shape or (Any, ...), instance.dtype]
+                )
+        )
 
     def __subclasscheck__(cls, subclass: type) -> bool:
         """
@@ -171,7 +175,8 @@ class _NDArrayMeta(HashedSubscriptableType):
 
 
 class _NDArray(NPType, metaclass=_NDArrayMeta):
-    _shape = (Any, ...)  # type: Union[Tuple[int, ...], Tuple[Any, EllipsisType]]  # noqa # pylint: disable=line-too-long
+    _shape = (
+    Any, ...)  # type: Union[Tuple[int, ...], Tuple[Any, EllipsisType]]  # noqa # pylint: disable=line-too-long
     _type = Any
     _special = True  # Added to be able to compile types with sphinx.
 
