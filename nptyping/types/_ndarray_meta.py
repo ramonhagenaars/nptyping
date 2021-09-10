@@ -74,7 +74,7 @@ class _NDArrayMeta(HashedSubscriptableType):
         np_type = get_type(instance)
         return (np_type.__name__ == cls.__name__
                 and _NDArrayMeta.__subclasscheck__(
-                    cls, _NDArray[instance.shape, instance.dtype]))
+                    cls, _NDArray[instance.shape or (Any, ...), instance.dtype]))
 
     def __subclasscheck__(cls, subclass: type) -> bool:
         """
