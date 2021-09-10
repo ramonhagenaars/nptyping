@@ -237,5 +237,6 @@ class TestNDArray(TestCase):
         self.assertIsInstance(ones, obj_arr)
 
     def test_validate_0DArray(self):
-        arr = np.array(1)
-        self.assertIsInstance(arr, NDArray)
+        self.assertIsInstance(np.array(1), NDArray)
+        self.assertIsInstance(np.array(1), NDArray[int])
+        self.assertNotIsInstance(np.array(1), NDArray[str])
