@@ -65,8 +65,8 @@ The place to go if you are using this library. <br/><br/>
 * [Release notes](https://github.com/ramonhagenaars/nptyping/blob/master/HISTORY.md) <br/>
 To see what's new, check out the release notes. <br/><br/>
 
->>> StructuredType[Int[32], Int[32]]
-StructuredType[Int[32], Int[32]]
+* [Contributing](https://github.com/ramonhagenaars/nptyping/blob/master/CONTRIBUTION.md) <br/>
+If you're interested in developing along, find the guidelines here. <br/><br/>
 
 * [Licence](https://github.com/ramonhagenaars/nptyping/blob/master/LICENSE) <br/>
 If you want to check out how open source this library is.
