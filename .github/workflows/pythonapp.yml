@@ -43,11 +43,14 @@ jobs:
           pip install invoke
           invoke venv install
       - name: Doctest
-        run: invoke doctest
+        run: |
+          invoke doctest
       - name: Pylint
-        run: invoke pylint
+        run: |
+          invoke pylint
       - name: Style
-        run: invoke format --check
+        run: |
+          invoke format --check
 
   report:
     needs: test
