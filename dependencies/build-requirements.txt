@@ -1,0 +1,2 @@
+invoke>=1.6.0
+pip-tools>=6.5.0

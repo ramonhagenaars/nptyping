@@ -1,13 +1,13 @@
 name: nptyping
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: [ '3.5', '3.6', '3.7', '3.8', '3.9' ]
+        python-version: [ '3.7', '3.8', '3.9', '3.10' ]
         os: [ ubuntu-latest, macOS-latest, windows-latest ]
     name: Python ${{ matrix.python-version }} on ${{ matrix.os }}
     steps:
@@ -21,30 +21,28 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install .[test]
+          invoke install .[complete]
 
       - name: Test
-        run: scons test
+        run: invoke test
 
       - name: Doctest
-        run: scons doctest
+        run: invoke doctest
 
       - name: Coverage
         run: |
-            scons coverage
+            invoke coverage
             codecov
 
+      - name: Pylint
+        run: invoke pylint
+
+      - name: Style
+        run: invoke format --check
+
+  report:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
       - name: Coverage Report
         uses: codecov/codecov-action@v1
-
-      - name: Pycodestyle
-        run: scons pycodestyle
-
-      - name: Pylint
-        run: scons pylint
-
-      - name: Imports
-        run: scons check format
-
-      - name: Code Complexity
-        run: scons complexity
