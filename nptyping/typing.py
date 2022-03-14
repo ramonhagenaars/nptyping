@@ -28,7 +28,7 @@ try:
         TypeAlias,
         final,
     )
-except ImportError:
+except ImportError:  # pragma: no cover
     from typing_extensions import (
         Literal,
         TypeAlias,
