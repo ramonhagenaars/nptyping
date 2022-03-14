@@ -134,14 +134,8 @@ def doctest(context, py=None):
     context.run(f"{get_py(py)} -m doctest USERDOCS.md")
 
     # And check all the modules.
-    result = 0
     for filename in glob(f"{_ROOT}/*.py", recursive=True):
-        module_name = filename.replace("/", ".").replace("\\", ".").replace(".py", "")
-        module = import_module(module_name)
-        res = testmod(module)
-        result |= res.failed
-    if result:
-        sys.exit(result)
+        context.run(f"{get_py(py)} -m doctest {filename}")
 
 
 @task
