@@ -32,7 +32,7 @@ from typing import (
 )
 
 from nptyping.error import InvalidShapeError
-from nptyping.typing import Literal
+from nptyping.typing_ import Literal
 
 
 @lru_cache()

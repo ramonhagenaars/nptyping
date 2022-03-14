@@ -34,7 +34,7 @@ from nptyping.shape_expression import (
     normalize_shape_expression,
     validate_shape_expression,
 )
-from nptyping.typing import (
+from nptyping.typing_ import (
     DType,
     Literal,
     ShapeExpression,

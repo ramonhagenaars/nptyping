@@ -32,7 +32,7 @@ from nptyping.shape_expression import (
     normalize_shape_expression,
     validate_shape_expression,
 )
-from nptyping.typing import (  # type: ignore[attr-defined]
+from nptyping.typing_ import (  # type: ignore[attr-defined]
     Bool,
     Bool8,
     Byte,
@@ -69,8 +69,8 @@ from nptyping.typing import (  # type: ignore[attr-defined]
     Integer,
     IntP,
 )
-from nptyping.typing import Literal as Shape  # type: ignore[attr-defined]
-from nptyping.typing import (  # type: ignore[attr-defined]
+from nptyping.typing_ import Literal as Shape  # type: ignore[attr-defined]
+from nptyping.typing_ import (  # type: ignore[attr-defined]
     LongComplex,
     LongDouble,
     LongFloat,

@@ -29,7 +29,7 @@ from typing import (
 
 import numpy as np
 
-from nptyping.typing import final  # type: ignore[attr-defined]
+from nptyping.typing_ import final  # type: ignore[attr-defined]
 
 DTYPE = TypeVar("DTYPE", covariant=True, bound=np.generic)
 SHAPE = TypeVar("SHAPE", covariant=True)

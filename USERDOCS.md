@@ -234,7 +234,7 @@ True
 ### DTypes
 The first argument of `NDArray` can be `typing.Any` or any of the following dtypes:
 ```python
->>> from nptyping.typing import dtypes
+>>> from nptyping.typing_ import dtypes
 >>> for _, dtype_name in dtypes:
 ...     print(dtype_name)
 Number

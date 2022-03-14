@@ -14,7 +14,7 @@ from nptyping import (
     UInt8,
 )
 from nptyping.error import InvalidDTypeError
-from nptyping.typing import Literal
+from nptyping.typing_ import Literal
 
 
 class NDArrayTest(TestCase):
