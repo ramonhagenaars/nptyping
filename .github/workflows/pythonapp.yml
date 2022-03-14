@@ -25,7 +25,7 @@ jobs:
       - name: Coverage
         run: |
             invoke coverage
-            codecov
+            invoke run --command="-m codecov"
 
   qa:
     needs: build

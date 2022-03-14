@@ -56,6 +56,12 @@ def print_header(version, function):
 
 
 @task
+def run(context, command, py=None):
+    """Run the given command using the venv."""
+    context.run(f"{get_py(py)} {command}")
+
+
+@task
 def destroy(context, py=None):
     """Destroy the generated virtual environment."""
     print(f"Destroying {_DEFAULT_VENV}")
