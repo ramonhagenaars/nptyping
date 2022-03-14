@@ -22,7 +22,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install invoke
-          invoke install
+          invoke venv install
 
       - name: Test
         run: invoke test
