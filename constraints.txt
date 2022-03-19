@@ -76,7 +76,9 @@ typing-extensions==4.1.1
 urllib3==1.26.8
     # via requests
 wheel==0.37.1
-    # via pip-tools
+    # via
+    #   -r ./dependencies\dev-requirements.txt
+    #   pip-tools
 wrapt==1.13.3
     # via astroid
 

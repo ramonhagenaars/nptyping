@@ -4,3 +4,4 @@ coverage
 isort
 mypy
 pylint
+wheel
