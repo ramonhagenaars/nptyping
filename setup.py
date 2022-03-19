@@ -56,12 +56,10 @@ setup(
     license=package_info["__license__"],
     package_data={
         "nptyping": [
-            "py.typed",
-            "check_shape.pyi",
-            "shape_expression.pyi",
-        ],
-        "nptyping.classes": [
             "ndarray.pyi",
+            "shape_expression.pyi",
+            "typing_.pyi",
+            "py.typed",
         ],
     },
     packages=find_packages(
