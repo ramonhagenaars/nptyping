@@ -11,6 +11,11 @@
 
 <br/>
 
+<br/><br/>
+<p align='center'>⚠ This describes the 2.0.0 <i>alpha</i> release.</p>
+<p align='center'>For the latest stable release, pick <a href='https://pypi.org/project/nptyping/1.4.4/'>1.4.4</a></p>
+<br/><br/>
+
 💡 *Type hints for `NumPy`* <br/>
 💡 *Extensive dynamic type checks for dtypes and shapes of arrays* <br/>
 💡 *Limited static type checks with `MyPy`* <br/>

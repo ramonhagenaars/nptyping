@@ -1,13 +1,13 @@
 # History
 
-## 2.0.0a1 (2022-03-14)
+## 2.0.0a1 (2022-03-19)
 
 - Changed the interface of `NDArray`
 - Added MyPy-acceptance (limited static type checking)
 - Added support for variables
 - Added support for labels and named dimensions
 - Added support for all numpy dtypes with `NDArray`
-- Removed support for Python 3.5
+- Removed support for Python 3.5 and Python 3.6
 
 ## 1.4.4 (2021-09-10)
 
