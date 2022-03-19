@@ -116,6 +116,13 @@ def init(context, py=None):
     """Initialize a new dev setup."""
 
 
+@task
+def wheel(context, py=None):
+    """Build a wheel."""
+    print(f"Installing dependencies into: {_DEFAULT_VENV}")
+    context.run(f"{get_py(py)} setup.py bdist_wheel")
+
+
 # QA TOOLS
 
 
