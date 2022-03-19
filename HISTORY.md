@@ -1,51 +1,49 @@
-.. :changelog:
+# History
 
-History
--------
+## 2.0.0a1 (2022-03-19)
 
-1.4.4 (2021-09-10)
-++++++++++++++++++
+- Changed the interface of `NDArray`
+- Added MyPy-acceptance (limited static type checking)
+- Added support for variables
+- Added support for labels and named dimensions
+- Added support for all numpy dtypes with `NDArray`
+- Removed support for Python 3.5 and Python 3.6
+
+## 1.4.4 (2021-09-10)
 
 - Fixed instance checks with 0d arrays.
 
-1.4.3 (2021-08-05)
-++++++++++++++++++
+## 1.4.3 (2021-08-05)
 
 - Fixed setup.py to exclude test(-resources) in the wheel.
 
-1.4.2 (2021-05-08)
-++++++++++++++++++
+## 1.4.2 (2021-05-08)
 
 - Fixed instance check that was incompatible with `typish==1.9.2`.
 
-1.4.1 (2021-03-23)
-++++++++++++++++++
+## 1.4.1 (2021-03-23)
 
 - Fixed instance checks of some types that did not properly respond to non-numpy types.
 - Fixed instance checks with ``nptyping.Object``.
 - Fixed identities of NPTyping instances: ``NDArray[(3,), int] is NDArray[(3,), int]``.
 
-1.4.0 (2020-12-23)
-++++++++++++++++++
+## 1.4.0 (2020-12-23)
 
 - Added ``SubArrayType``
 - Added ``StructuredType``
 - Added support for unsigned integers with ``py_type``.
 
-1.3.0 (2020-07-21)
-++++++++++++++++++
+## 1.3.0 (2020-07-21)
 
 - Added ``Complex128``
 
-1.2.0 (2020-06-20)
-++++++++++++++++++
+## 1.2.0 (2020-06-20)
 
 - Added ``Bool``
 - Added ``Datetime64``
 - Added ``Timedelta64``
 
-1.1.0 (2020-05-30)
-++++++++++++++++++
+## 1.1.0 (2020-05-30)
 
 - Removed ``Array``
 - Added ``get_type``
@@ -56,30 +54,25 @@ History
 - Added ``Number``
 - Added ``NPType``
 
-1.0.1 (2020-04-05)
-++++++++++++++++++
+## 1.0.1 (2020-04-05)
 
 - Added a hash function to ``_NDArrayMeta``.
 
-1.0.0 (2020-03-22)
-++++++++++++++++++
+## 1.0.0 (2020-03-22)
 
 - Added ``NDArray``
 - Deprecated ``Array``
 
-0.3.0 (2019-09-11)
-++++++++++++++++++
+## 0.3.0 (2019-09-11)
 
 - Forbidden instantiation of ``Array``
 - Added support for hinting ndarray methods
 
-0.2.0 (2019-02-09)
-++++++++++++++++++
+## 0.2.0 (2019-02-09)
 
 - Added support for heterogeneous arrays
 - Added HISTORY.rst
 
-0.1.0 (2019-02-05)
-++++++++++++++++++
+## 0.1.0 (2019-02-05)
 
 - Initial release

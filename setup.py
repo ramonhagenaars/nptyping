@@ -1,66 +1,82 @@
-import os
+import sys
+from pathlib import Path
 
 from setuptools import find_packages, setup
 
-here = os.path.abspath(os.path.dirname(__file__))
-meta_info = {}
-with open(os.path.join(here, 'nptyping', '_meta.py'),
-          mode='r', encoding='utf-8') as f:
-    exec(f.read(), meta_info)
 
-with open('README.md', mode='r', encoding='utf-8') as f:
+project_slug = "nptyping"
+here = Path(__file__).parent.absolute()
+
+
+def _get_dependencies(dependency_file):
+    with open(here / "dependencies" / dependency_file, mode="r", encoding="utf-8") as f:
+        return f.read().strip().split("\n")
+
+
+# Read meta info from package_info.py.
+package_info = {}
+with open(here / project_slug / "package_info.py", mode="r", encoding="utf-8") as f:
+    exec(f.read(), package_info)
+supp_versions = package_info["__python_versions__"]
+
+# The README.md provides the long description text.
+with open("README.md", mode="r", encoding="utf-8") as f:
     long_description = f.read()
 
-requirements = [
-    'numpy',
-    'typish>=1.7.0',
-],
-
-test_requirements = [
-    'pycodestyle',
-    'pylint',
-    'pytest',
-    'coverage',
-    'codecov',
-    'scons',
-    'radon',
-    'xenon',
-    'autoflake',
-    'isort',
+# Check the current version against the supported versions: older versions are not supported.
+u_major = sys.version_info.major
+u_minor = sys.version_info.minor
+versions_as_ints = [[int(v) for v in version.split(".")] for version in supp_versions]
+version_unsupported = not [
+    1 for major, minor in versions_as_ints if u_major == major and u_minor >= minor
 ]
+if version_unsupported:
+    supported_versions_str = ", ".join(version for version in supp_versions)
+    raise Exception(
+        f"Unsupported Python version: {sys.version}. Supported versions: {supported_versions_str}"
+    )
+
 
 extras = {
-    'test': test_requirements,
+    "build": _get_dependencies("build-requirements.txt"),
+    "dev": _get_dependencies("dev-requirements.txt"),
 }
+extras["complete"] = [req for reqs in extras.values() for req in reqs]
+
 
 setup(
-    name=meta_info['__title__'],
-    version=meta_info['__version__'],
-    author=meta_info['__author__'],
-    author_email=meta_info['__author_email__'],
-    description=meta_info['__description__'],
-    url=meta_info['__url__'],
+    name=package_info["__title__"],
+    version=package_info["__version__"],
+    author=package_info["__author__"],
+    author_email=package_info["__author_email__"],
+    description=package_info["__description__"],
+    url=package_info["__url__"],
     long_description=long_description,
-    long_description_content_type='text/markdown',
-    license=meta_info['__license__'],
-    packages=find_packages(exclude=('tests', 'tests.*', 'test_resources', 'test_resources.*')),
-    install_requires=requirements,
-    tests_require=test_requirements,
+    long_description_content_type="text/markdown",
+    license=package_info["__license__"],
+    package_data={
+        "nptyping": [
+            "ndarray.pyi",
+            "shape_expression.pyi",
+            "typing_.pyi",
+            "py.typed",
+        ],
+    },
+    packages=find_packages(
+        exclude=("tests", "tests.*", "test_resources", "test_resources.*")
+    ),
+    install_requires=_get_dependencies("requirements.txt"),
     extras_require=extras,
-    python_requires='>=3.5',
-    test_suite='tests',
+    python_requires=f">={supp_versions[0]}",
+    test_suite="tests",
     zip_safe=False,
     classifiers=[
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
-        'Operating System :: OS Independent',
-        'Natural Language :: English',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
-    ]
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+        "Natural Language :: English",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        *[f"Programming Language :: Python :: {version}" for version in supp_versions],
+    ],
 )

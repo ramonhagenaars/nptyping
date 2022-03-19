@@ -1,0 +1,8 @@
+autoflake
+black
+coverage
+isort
+mypy
+pylint
+setuptools
+wheel
