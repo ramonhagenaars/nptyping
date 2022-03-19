@@ -1,41 +1,45 @@
-import os
+import sys
+from pathlib import Path
 
 from setuptools import find_packages, setup
 
 
 project_slug = "nptyping"
-here = os.path.abspath(os.path.dirname(__file__))
-package_info = {}
-with open(
-    os.path.join(here, project_slug, "package_info.py"), mode="r", encoding="utf-8"
-) as f:
-    exec(f.read(), package_info)
+here = Path(__file__).parent.absolute()
 
+
+def _get_dependencies(dependency_file):
+    with open(here / "dependencies" / dependency_file, mode="r", encoding="utf-8") as f:
+        return f.read().strip().split("\n")
+
+
+# Read meta info from package_info.py.
+package_info = {}
+with open(here / project_slug / "package_info.py", mode="r", encoding="utf-8") as f:
+    exec(f.read(), package_info)
+supp_versions = package_info["__python_versions__"]
+
+# The README.md provides the long description text.
 with open("README.md", mode="r", encoding="utf-8") as f:
     long_description = f.read()
 
-with open(
-    os.path.join(here, "dependencies", "requirements.txt"), mode="r", encoding="utf-8"
-) as f:
-    requirements = f.read().strip().split("\n")
+# Check the current version against the supported versions: older versions are not supported.
+u_major = sys.version_info.major
+u_minor = sys.version_info.minor
+versions_as_ints = [[int(v) for v in version.split(".")] for version in supp_versions]
+version_unsupported = not [
+    1 for major, minor in versions_as_ints if u_major == major and u_minor >= minor
+]
+if version_unsupported:
+    supported_versions_str = ", ".join(version for version in supp_versions)
+    raise Exception(
+        f"Unsupported Python version: {sys.version}. Supported versions: {supported_versions_str}"
+    )
 
-with open(
-    os.path.join(here, "dependencies", "dev-requirements.txt"),
-    mode="r",
-    encoding="utf-8",
-) as f:
-    dev_requirements = f.read().strip().split("\n")
-
-with open(
-    os.path.join(here, "dependencies", "build-requirements.txt"),
-    mode="r",
-    encoding="utf-8",
-) as f:
-    build_requirements = f.read().strip().split("\n")
 
 extras = {
-    "build": build_requirements,
-    "dev": dev_requirements,
+    "build": _get_dependencies("build-requirements.txt"),
+    "dev": _get_dependencies("dev-requirements.txt"),
 }
 extras["complete"] = [req for reqs in extras.values() for req in reqs]
 
@@ -63,9 +67,9 @@ setup(
     packages=find_packages(
         exclude=("tests", "tests.*", "test_resources", "test_resources.*")
     ),
-    install_requires=requirements,
+    install_requires=_get_dependencies("requirements.txt"),
     extras_require=extras,
-    python_requires=f'>={package_info["__python_versions__"][0]}',
+    python_requires=f">={supp_versions[0]}",
     test_suite="tests",
     zip_safe=False,
     classifiers=[
@@ -75,9 +79,6 @@ setup(
         "Natural Language :: English",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        *[
-            f"Programming Language :: Python :: {version}"
-            for version in package_info["__python_versions__"]
-        ],
+        *[f"Programming Language :: Python :: {version}" for version in supp_versions],
     ],
 )
