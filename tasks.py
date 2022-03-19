@@ -64,8 +64,9 @@ def run(context, command, py=None):
 @task
 def destroy(context, py=None):
     """Destroy the generated virtual environment."""
-    print(f"Destroying {_DEFAULT_VENV}")
-    shutil.rmtree(_DEFAULT_VENV, ignore_errors=True)
+    venv_to_destroy = get_venv(py)
+    print(f"Destroying {venv_to_destroy}")
+    shutil.rmtree(venv_to_destroy, ignore_errors=True)
 
 
 @task
