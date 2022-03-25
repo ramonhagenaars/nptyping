@@ -56,12 +56,12 @@ The `NDArray` is the main character of this library and can be used to describe 
 
 ```
 The `NDArray` can take 2 arguments between brackets: the dtype and the shape of the array that is being described. This
-takes the form `NDArray[<DTYPE>, Shape[<SHAPE EXPRESSION>]]`. For example:
+takes the form `NDArray[Shape[<SHAPE EXPRESSION>, <DTYPE>]]`. For example:
 
 ```python
 >>> from nptyping import UInt16, Shape
->>> NDArray[UInt16, Shape["5, 3"]]
-NDArray[UShort, Shape['5, 3']]
+>>> NDArray[Shape["5, 3"], UInt16]
+NDArray[Shape['5, 3'], UShort]
 
 ```
 You can use `typing.Any` to denote any dtype or any shape:
@@ -83,8 +83,8 @@ An example of a shape expression in an `NDArray`:
 ```python
 >>> from typing import Any
 
->>> NDArray[Any, Shape["3, 4"]]
-NDArray[Any, Shape['3, 4']]
+>>> NDArray[Shape["3, 4"], Any]
+NDArray[Shape['3, 4'], Any]
 
 ```
 The above example shows an expression of a shape consisting of 2 dimensions of respectively size 3 and size 4. a fitting
@@ -140,7 +140,7 @@ Shape expressions are validated when put into an `NDArray`. Invalid expressions 
 >>> from nptyping import NDArray, Shape, InvalidShapeError
 
 >>> try:
-...    NDArray[Any, Shape["3, 3,"]]
+...    NDArray[Shape["3, 3,"], Any]
 ... except InvalidShapeError as err:
 ...    print(err)
 '3, 3,' is not a valid shape expression
@@ -154,8 +154,8 @@ Shape expressions are normalized when put into an `NDArray`.
 >>> from typing import Any
 >>> from nptyping import NDArray, Shape
 
->>> NDArray[Any, Shape[" 3 , 3 "]]
-NDArray[Any, Shape['3, 3']]
+>>> NDArray[Shape[" 3 , 3 "], Any]
+NDArray[Shape['3, 3'], Any]
 
 ```
 
@@ -163,11 +163,11 @@ NDArray[Any, Shape['3, 3']]
 Variables can be used to describe dimensions of variable size:
 ```python
 >>> from numpy import random
->>> isinstance(random.randn(2, 2), NDArray[Any, Shape["Size, Size"]])
+>>> isinstance(random.randn(2, 2), NDArray[Shape["Size, Size"], Any])
 True
->>> isinstance(random.randn(100, 100), NDArray[Any, Shape["Size, Size"]])
+>>> isinstance(random.randn(100, 100), NDArray[Shape["Size, Size"], Any])
 True
->>> isinstance(random.randn(42, 43), NDArray[Any, Shape["Size, Size"]])
+>>> isinstance(random.randn(42, 43), NDArray[Shape["Size, Size"], Any])
 False
 
 ```
@@ -179,7 +179,7 @@ A variable is a word that may contain underscores and digits as long as *it star
 #### Wildcards
 A wildcard accepts any dimension size. It is denoted by the asterisk (`*`). Example:
 ```python
->>> isinstance(random.randn(42, 43), NDArray[Any, Shape["*, *"]])
+>>> isinstance(random.randn(42, 43), NDArray[Shape["*, *"], Any])
 True
 
 ```
@@ -187,20 +187,20 @@ True
 #### N dimensions
 The ellipsis (`...`) can be used to denote a variable number of dimensions. For example:
 ```python
->>> isinstance(random.randn(2), NDArray[Any, Shape["2, ..."]])
+>>> isinstance(random.randn(2), NDArray[Shape["2, ..."], Any])
 True
->>> isinstance(random.randn(2, 2, 2), NDArray[Any, Shape["2, ..."]])
+>>> isinstance(random.randn(2, 2, 2), NDArray[Shape["2, ..."], Any])
 True
->>> isinstance(random.randn(2, 2, 3), NDArray[Any, Shape["2, ..."]])
+>>> isinstance(random.randn(2, 2, 3), NDArray[Shape["2, ..."], Any])
 False
 
 ```
 Combined with the wildcard, you could express the "any shape":
 
 ```python
->>> isinstance(random.randn(2), NDArray[Any, Shape["*, ..."]])
+>>> isinstance(random.randn(2), NDArray[Shape["*, ..."], Any])
 True
->>> isinstance(random.randn(2, 42, 100), NDArray[Any, Shape["*, ..."]])
+>>> isinstance(random.randn(2, 42, 100), NDArray[Shape["*, ..."], Any])
 True
 
 ```
@@ -211,7 +211,7 @@ A dimension can be broken down into more detail. We call this a **dimension brea
 describe what a dimension means. Example:
 
 ```python
->>> isinstance(random.randn(100, 2), NDArray[Any, Shape["*, [x, y]"]])
+>>> isinstance(random.randn(100, 2), NDArray[Shape["*, [x, y]"], Any])
 True
 
 ```
@@ -224,9 +224,9 @@ start with a lowercase letter and may contain underscores and digits.
 Labels can be used as extra clarification in a shape expression. They can be used in dimension breakdowns and right
 after dimensions. Example:
 ```python
->>> isinstance(random.randn(5, 2), NDArray[Any, Shape["5 coordinates, [x, y]"]])
+>>> isinstance(random.randn(5, 2), NDArray[Shape["5 coordinates, [x, y]"], Any])
 True
->>> isinstance(random.randn(5, 2), NDArray[Any, Shape["5 coordinates, [x, y] wgs84"]])
+>>> isinstance(random.randn(5, 2), NDArray[Shape["5 coordinates, [x, y] wgs84"], Any])
 True
 
 ```
@@ -326,7 +326,7 @@ An Array with any dimensions of any size and any type:
 >>> NDArray[Any, Any]
 NDArray[Any, Any]
 
->>> NDArray[Any, Shape["*, ..."]]
+>>> NDArray[Shape["*, ..."], Any]
 NDArray[Any, Any]
 
 >>> NDArray  # MyPy doesn't like this one though.
@@ -336,56 +336,56 @@ NDArray[Any, Any]
 
 An array with 1 dimension of any size and any type:
 ```python
->>> NDArray[Any, Shape["*"]]
-NDArray[Any, Shape['*']]
+>>> NDArray[Shape["*"], Any]
+NDArray[Shape['*'], Any]
 
->>> NDArray[Any, Shape["Var"]]
-NDArray[Any, Shape['Var']]
+>>> NDArray[Shape["Var"], Any]
+NDArray[Shape['Var'], Any]
 
 ```
 
 An array with 1 dimension of size 3 and any type:
 ```python
->>> NDArray[Any, Shape["3"]]
-NDArray[Any, Shape['3']]
+>>> NDArray[Shape["3"], Any]
+NDArray[Shape['3'], Any]
 
->>> NDArray[Any, Shape["[entry1, entry2, entry3]"]]
-NDArray[Any, Shape['[entry1, entry2, entry3]']]
+>>> NDArray[Shape["[entry1, entry2, entry3]"], Any]
+NDArray[Shape['[entry1, entry2, entry3]'], Any]
 
 ```
 
 An array with 3 dimensions of size 3, 3 and any and any type:
 ```python
->>> NDArray[Any, Shape["3, 3, *"]]
-NDArray[Any, Shape['3, 3, *']]
+>>> NDArray[Shape["3, 3, *"], Any]
+NDArray[Shape['3, 3, *'], Any]
 
->>> NDArray[Any, Shape["3, 3, Var"]]
-NDArray[Any, Shape['3, 3, Var']]
+>>> NDArray[Shape["3, 3, Var"], Any]
+NDArray[Shape['3, 3, Var'], Any]
 
->>> NDArray[Any, Shape["3, [entry1, entry2, entry3], Var"]]
-NDArray[Any, Shape['3, [entry1, entry2, entry3], Var']]
+>>> NDArray[Shape["3, [entry1, entry2, entry3], Var"], Any]
+NDArray[Shape['3, [entry1, entry2, entry3], Var'], Any]
 
 ```
 
 A square array with 2 dimensions that are of the same size:
 ```python
->>> NDArray[Any, Shape["Dim, Dim"]]
-NDArray[Any, Shape['Dim, Dim']]
+>>> NDArray[Shape["Dim, Dim"], Any]
+NDArray[Shape['Dim, Dim'], Any]
 
 ```
 
 An array with multiple dimensions of the same size:
 ```python
->>> NDArray[Any, Shape["Dim, ..."]]
-NDArray[Any, Shape['Dim, ...']]
+>>> NDArray[Shape["Dim, ..."], Any]
+NDArray[Shape['Dim, ...'], Any]
 
 ```
 
 An array with 2 dimensions of any size with type unsigned int.
 ```python
 >>> from nptyping import UInt
->>> NDArray[UInt, Shape["*, *"]]
-NDArray[UInt, Shape['*, *']]
+>>> NDArray[Shape["*, *"], UInt]
+NDArray[Shape['*, *'], UInt]
 
 ```
 

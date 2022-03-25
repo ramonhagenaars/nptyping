@@ -1,3 +1,4 @@
+# type: ignore
 """
 MIT License
 
@@ -21,7 +22,34 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
+from typing import (
+    Any,
+    Optional,
+    Type,
+    TypeVar,
+)
 
-import numpy as np
+try:
+    from typing import TypeGuard
+except ImportError:
+    from typing_extensions import TypeGuard
 
-NDArray = np.ndarray
+TYPE = TypeVar("TYPE")
+
+
+def assert_isinstance(
+    instance: Any, cls: Type[TYPE], message: Optional[str] = None
+) -> TypeGuard[TYPE]:
+    """
+    A TypeGuard function that is equivalent to `assert instance, cls, message`
+    that hides nasty MyPy or IDE warnings.
+    :param instance: the instance that is checked against cls.
+    :param cls: the class
+    :param message: any message that is displayed when the assert check fails.
+    :return: the type of cls.
+    """
+    if message:
+        assert isinstance(instance, cls), message
+    else:
+        assert isinstance(instance, cls)
+    return True
