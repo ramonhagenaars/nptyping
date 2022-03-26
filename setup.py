@@ -3,7 +3,6 @@ from pathlib import Path
 
 from setuptools import find_packages, setup
 
-
 project_slug = "nptyping"
 here = Path(__file__).parent.absolute()
 
@@ -46,9 +45,7 @@ extras["complete"] = [
     req for key, reqs in extras.items() for req in reqs if key not in ("build", "qa")
 ]
 # Dev: all extras for developers, including build and qa dependencies.
-extras["dev"] = [
-    req for key, reqs in extras.items() for req in reqs if key
-]
+extras["dev"] = [req for key, reqs in extras.items() for req in reqs if key]
 
 
 setup(
