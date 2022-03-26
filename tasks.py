@@ -108,7 +108,7 @@ def lock(context, py=None):
 def install(context, py=None):
     """Install all dependencies (complete)."""
     print(f"Installing dependencies into: {_DEFAULT_VENV}")
-    context.run(f"{get_pip(py)} install .[complete] --constraint constraints.txt")
+    context.run(f"{get_pip(py)} install .[dev] --constraint constraints.txt")
 
 
 @task(clean, venv, lock, install)

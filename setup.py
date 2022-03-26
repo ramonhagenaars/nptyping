@@ -39,9 +39,16 @@ if version_unsupported:
 
 extras = {
     "build": _get_dependencies("build-requirements.txt"),
-    "dev": _get_dependencies("dev-requirements.txt"),
+    "qa": _get_dependencies("qa-requirements.txt"),
 }
-extras["complete"] = [req for reqs in extras.values() for req in reqs]
+# Complete: all extras for end users, excluding dev dependencies.
+extras["complete"] = [
+    req for key, reqs in extras.items() for req in reqs if key not in ("build", "qa")
+]
+# Dev: all extras for developers, including build and qa dependencies.
+extras["dev"] = [
+    req for key, reqs in extras.items() for req in reqs if key
+]
 
 
 setup(
