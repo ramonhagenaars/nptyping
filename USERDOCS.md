@@ -402,7 +402,7 @@ does not offer instance checking with shapes as `nptptying` does.*
 `MyPy` integration, but apart from that it seems easy to use.*
 * [typing.annotated](https://peps.python.org/pep-0593/) <br/>
 *You could also create your own type hints using Python's builtin `typing` module. The `typing.Annotated` will take you
-quite far. `MyPy` will support it (to some extend), but you won't have any instance or shape checking.*
+quite far. `MyPy` will support it (to some extent), but you won't have any instance or shape checking.*
   
 ## FAQ
 
