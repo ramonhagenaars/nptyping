@@ -4,9 +4,6 @@
 
 # *User documentation*
 
----
-
-
 * [Introduction](#Introduction)
 * [Usage](#Usage)
 * [NDArray](#NDArray)
@@ -28,8 +25,6 @@
 
 ## Introduction
 
----
-
 Thank you for showing interest in this library.
 
 The intended audience of this document, are Pythoneers using `numpy`, that want to make their code more readable and 
@@ -45,8 +40,6 @@ You will find a lot of code blocks in this document. If you wonder why they are 
 `>>>` and the `...`): all code blocks are tested using [doctest](https://docs.python.org/3/library/doctest.html).
 
 ## Usage
-
----
 
 ### NDArray
 The `NDArray` is the main character of this library and can be used to describe `numpy.ndarray`.
@@ -313,8 +306,6 @@ As a result, you may also provide `numpy` dtypes directly to an `NDArray`.
 
 ## Examples
 
----
-
 Here is just a list of examples of how one can express arrays with `NDArray`.
 
 An Array with any dimensions of any size and any type:
@@ -391,8 +382,6 @@ NDArray[Shape['*, *'], UInt]
 
 ## Similar projects
 
----
-
 * [numpy.typing](https://numpy.org/devdocs/reference/typing.html) <br/>
 *First and foremost, `numpy`'s own typing. The pyi files are more complete and up to date than `nptyping`'s, so if code
 completion in an IDE is most important to you, this might be your go to. On the other hand, at the moment of writing, it
@@ -406,15 +395,12 @@ quite far. `MyPy` will support it (to some extent), but you won't have any insta
   
 ## FAQ
 
----
 * Can `MyPy` do the instance checking? <br/>
 *Unfortunately no. The checking done by MyPy is limited to "`ndarray` or not an `ndarray`".*
 * Will there ever be support for Pandas DataFrames? Or for Tensorflow Tensors? Or for... ? <br/>
 *Maybe. Possibly. If there is enough demand for it and if I find the spare time.*
 
 ## About
-
----
 
 This project started in 2019 from a personal need to keep a `numpy` project maintainable. I prototyped a very small
 solution to the (then) missing type hint options for `numpy`. Then I put it online for others to use. I learned a lot
