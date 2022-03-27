@@ -26,12 +26,14 @@ try:
     from typing import (  # pylint: disable=unused-import
         Literal,
         TypeAlias,
+        TypeGuard,
         final,
     )
 except ImportError:  # pragma: no cover
     from typing_extensions import (
         Literal,
         TypeAlias,
+        TypeGuard,
         final,
     )
 

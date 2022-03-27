@@ -21,27 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-from typing import (
-    Optional,
-    Protocol,
-    TypeVar,
-)
 
 import numpy as np
 
-from nptyping.typing_ import final  # type: ignore[attr-defined]
-
-DTYPE = TypeVar("DTYPE", covariant=True, bound=np.generic)
-SHAPE = TypeVar("SHAPE", covariant=True)
-
-@final
-class NDArray(Protocol[DTYPE, SHAPE]):
-    @property
-    def base(self) -> Optional[np.ndarray]: ...  # type: ignore[type-arg]
-    @property
-    def ndim(self) -> int: ...
-    @property
-    def size(self) -> int: ...
-
-    # FIXME This is a stub; the actual 2.0.0 release should contain more
-    #       attributes.
+NDArray = np.ndarray

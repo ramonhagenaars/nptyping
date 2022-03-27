@@ -61,7 +61,7 @@ class MyPyTest(TestCase):
         )
 
         self.assertIn('Argument 1 to "func" has incompatible type "str"', mypy_findings)
-        self.assertIn('expected "NDArray[Any, Any]"', mypy_findings)
+        self.assertIn('expected "ndarray[Any, Any]"', mypy_findings)
         self.assertIn("Found 1 error in 1 file", mypy_findings)
 
     def test_mypy_accepts_ndarrays_as_function_arguments(self):

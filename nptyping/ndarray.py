@@ -49,7 +49,7 @@ class NDArrayMeta(ABCMeta):
     such as instance checking.
     """
 
-    __args__: Tuple[DType, ShapeExpression]
+    __args__: Tuple[ShapeExpression, DType]
     _parameterized: bool
 
     def __call__(cls, *_: Any, **__: Any) -> None:
@@ -70,13 +70,13 @@ class NDArrayMeta(ABCMeta):
             raise NPTypingError(f"Type {cls} is already parameterized")
         if not isinstance(item, tuple):
             raise InvalidArgumentsError(f"Unexpected argument of type {type(item)}")
-        dtype, shape_expression = _get_from_tuple(item)
+        shape_expression, dtype = _get_from_tuple(item)
         validate_dtype(dtype)
         validate_shape_expression(shape_expression)
         norm_shape_expression = normalize_shape_expression(shape_expression)
         norm_item = (
-            dtype,
             Literal[norm_shape_expression] if norm_shape_expression is not Any else Any,
+            dtype,
         )
 
         if norm_item == cls.__args__:
@@ -87,7 +87,7 @@ class NDArrayMeta(ABCMeta):
     def __instancecheck__(  # pylint: disable=bad-mcs-method-argument
         self, instance: Any
     ) -> bool:
-        dtype, shape_expression_literal = self.__args__
+        shape_expression_literal, dtype = self.__args__
         return (
             isinstance(instance, np.ndarray)
             and (
@@ -98,10 +98,10 @@ class NDArrayMeta(ABCMeta):
         )
 
     def __str__(cls) -> str:
-        dtype, shape_expression = cls.__args__
+        shape_expression, dtype = cls.__args__
         return (
-            f"{cls.__name__}[{_dtype_to_str(dtype)}, "
-            f"{_shape_expression_to_str(shape_expression)}]"
+            f"{cls.__name__}[{_shape_expression_to_str(shape_expression)}, "
+            f"{_dtype_to_str(dtype)}]"
         )
 
     def __repr__(cls) -> str:
@@ -113,29 +113,29 @@ def _is_literal_like(item: Any) -> bool:
     return hasattr(item, "__args__")
 
 
-def _get_from_tuple(item: Tuple[Any, ...]) -> Tuple[DType, str]:
-    # Return the DType and Shape Expression from a tuple.
+def _get_from_tuple(item: Tuple[Any, ...]) -> Tuple[str, DType]:
+    # Return the Shape Expression and DType from a tuple.
     if len(item) > 2:
         raise InvalidArgumentsError(f"Unexpected argument '{item[2]}'")
 
-    if _is_literal_like(item[1]):
-        dtype = item[0]
-        shape_expression = item[1].__args__[0]
-    elif item[1] is Any:
-        dtype = item[0]
+    if _is_literal_like(item[0]):
+        shape_expression = item[0].__args__[0]
+        dtype = item[1]
+    elif item[0] is Any:
         shape_expression = Any
+        dtype = item[1]
     else:
         raise InvalidArgumentsError(
-            f"Unexpected argument '{item[1]}', expecting"
+            f"Unexpected argument '{item[0]}', expecting"
             f" Shape[<ShapeExpression>] or"
             f" Literal[<ShapeExpression>]"
         )
 
-    return dtype, shape_expression
+    return shape_expression, dtype
 
 
 @lru_cache()
-def _get_type(cls: type, item: Tuple[DType, ShapeExpression]) -> type:
+def _get_type(cls: type, item: Tuple[ShapeExpression, DType]) -> type:
     # Return an NDArray type with the given item.
     return type("NDArray", (cls,), {"__args__": item, "_parameterized": True})
 
@@ -162,14 +162,14 @@ class NDArray(NPTypingType, ABC, metaclass=NDArrayMeta):
 
     ## You can provide a DType and a Shape Expression.
     >>> from nptyping import Int32, Shape
-    >>> NDArray[Int32, Shape["2, 2"]]
-    NDArray[Int, Shape['2, 2']]
+    >>> NDArray[Shape["2, 2"], Int32]
+    NDArray[Shape['2, 2'], Int]
 
     ## Instance checking can be done and the shape is also checked.
     >>> import numpy as np
-    >>> isinstance(np.array([[1, 2], [3, 4]]), NDArray[Int32, Shape['2, 2']])
+    >>> isinstance(np.array([[1, 2], [3, 4]]), NDArray[Shape['2, 2'], Int32])
     True
-    >>> isinstance(np.array([[1, 2], [3, 4], [5, 6]]), NDArray[Int32, Shape['2, 2']])
+    >>> isinstance(np.array([[1, 2], [3, 4], [5, 6]]), NDArray[Shape['2, 2'], Int32])
     False
 
     """

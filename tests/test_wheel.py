@@ -12,6 +12,7 @@ _PATH_TO_SETUP = str(Path(__file__).parent.parent / "setup.py")
 _ROOT = Path(__file__).parent.parent.absolute()
 _EXPECTED_FILES_IN_WHEEL = {
     "__init__.py",
+    "assert_isinstance.py",
     "error.py",
     "ndarray.py",
     "ndarray.pyi",

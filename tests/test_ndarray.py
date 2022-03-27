@@ -22,30 +22,30 @@ class NDArrayTest(TestCase):
 
         # Trivial identity checks.
         self.assertIs(NDArray, NDArray)
-        self.assertIs(NDArray[Any, Shape["1, 1"]], NDArray[Any, Shape["1, 1"]])
+        self.assertIs(NDArray[Shape["1, 1"], Any], NDArray[Shape["1, 1"], Any])
 
         # Tuples should not make any difference.
-        self.assertIs(NDArray[Any, Shape["1, 1"]], NDArray[(Any, Shape["1, 1"])])
+        self.assertIs(NDArray[Shape["1, 1"], Any], NDArray[(Shape["1, 1"], Any)])
 
         # Whitespaces should not make any difference.
-        self.assertIs(NDArray[Any, Shape["1,1"]], NDArray[(Any, Shape[" 1 , 1 "])])
+        self.assertIs(NDArray[Shape["1,1"], Any], NDArray[(Shape[" 1 , 1 "], Any)])
 
         # Arguments may point to the default NDArray (any type, any shape).
         self.assertIs(NDArray, NDArray[Any, Any])
-        self.assertIs(NDArray, NDArray[Any, Shape["*, ..."]])
+        self.assertIs(NDArray, NDArray[Shape["*, ..."], Any])
 
-        self.assertIsNot(NDArray[Any, Shape["1, 1"]], NDArray[Any, Shape["1, 2"]])
+        self.assertIsNot(NDArray[Shape["1, 1"], Any], NDArray[Shape["1, 2"], Any])
         self.assertIsNot(
-            NDArray[np.floating, Shape["1, 1"]], NDArray[Any, Shape["1, 1"]]
+            NDArray[Shape["1, 1"], np.floating], NDArray[Shape["1, 1"], Any]
         )
 
     def test_invalid_arguments_raise_errors(self):
         with self.assertRaises(InvalidArgumentsError) as err:
-            NDArray[Any, Shape["1"], "Not good"]
+            NDArray[Shape["1"], Any, "Not good"]
         self.assertIn("Not good", str(err.exception))
 
         with self.assertRaises(InvalidArgumentsError) as err:
-            NDArray[Any, "Not a Shape Expression"]
+            NDArray["Not a Shape Expression", Any]
         self.assertIn("Not a Shape Expression", str(err.exception))
 
         with self.assertRaises(InvalidArgumentsError) as err:
@@ -62,55 +62,55 @@ class NDArrayTest(TestCase):
             NDArray[UInt8]
 
         with self.assertRaises(InvalidDTypeError) as err:
-            NDArray["Not a DType", Any]
+            NDArray[Any, "Not a DType"]
         self.assertIn("Not a DType", str(err.exception))
 
     def test_valid_arguments_should_not_raise(self):
         NDArray
         NDArray[Any, Any]
-        NDArray[Any, Shape["1"]]
-        NDArray[(Any, Shape["1"])]
-        NDArray[(Any, Literal["1"])]
+        NDArray[Shape["1"], Any]
+        NDArray[(Shape["1"], Any)]
+        NDArray[(Literal["1"], Any)]
 
     def test_str(self):
         self.assertEqual("NDArray[Any, Any]", str(NDArray[Any, Any]))
-        self.assertEqual("NDArray[Any, Any]", str(NDArray[Any, Shape[" * , ... "]]))
+        self.assertEqual("NDArray[Any, Any]", str(NDArray[Shape[" * , ... "], Any]))
         self.assertEqual(
-            "NDArray[Any, Shape['2, 2']]", str(NDArray[Any, Shape[" 2 , 2 "]])
+            "NDArray[Shape['2, 2'], Any]", str(NDArray[Shape[" 2 , 2 "], Any])
         )
-        self.assertEqual("NDArray[UByte, Any]", str(NDArray[UInt8, Any]))
-        self.assertEqual("NDArray[UByte, Any]", str(NDArray[np.uint8, Any]))
+        self.assertEqual("NDArray[Any, UByte]", str(NDArray[Any, UInt8]))
+        self.assertEqual("NDArray[Any, UByte]", str(NDArray[Any, np.uint8]))
         self.assertEqual(
-            str(NDArray[Any, Shape[" 2 , 2 "]]), repr(NDArray[Any, Shape[" 2 , 2 "]])
+            str(NDArray[Shape[" 2 , 2 "], Any]), repr(NDArray[Shape[" 2 , 2 "], Any])
         )
 
     def test_types_with_numpy_dtypes(self):
-        self.assertIsInstance(np.array([42]), NDArray[np.int_, Any])
-        self.assertIsInstance(np.array([42.0]), NDArray[np.float_, Any])
-        self.assertIsInstance(np.array([np.uint8(42)]), NDArray[np.uint8, Any])
-        self.assertIsInstance(np.array([True]), NDArray[np.bool_, Any])
+        self.assertIsInstance(np.array([42]), NDArray[Any, np.int_])
+        self.assertIsInstance(np.array([42.0]), NDArray[Any, np.float_])
+        self.assertIsInstance(np.array([np.uint8(42)]), NDArray[Any, np.uint8])
+        self.assertIsInstance(np.array([True]), NDArray[Any, np.bool_])
 
     def test_types_with_nptyping_aliases(self):
-        self.assertIsInstance(np.array([42]), NDArray[Int, Any])
-        self.assertIsInstance(np.array([42.0]), NDArray[Float, Any])
-        self.assertIsInstance(np.array([np.uint8(42)]), NDArray[UInt8, Any])
-        self.assertIsInstance(np.array([True]), NDArray[Bool, Any])
+        self.assertIsInstance(np.array([42]), NDArray[Any, Int])
+        self.assertIsInstance(np.array([42.0]), NDArray[Any, Float])
+        self.assertIsInstance(np.array([np.uint8(42)]), NDArray[Any, UInt8])
+        self.assertIsInstance(np.array([True]), NDArray[Any, Bool])
 
     def test_recursive_structure_is_forbidden(self):
         with self.assertRaises(NPTypingError) as err:
-            NDArray[Int, Any][Int, Any]
+            NDArray[Any, Int][Any, Int]
         self.assertEqual(
-            "Type NDArray[Int, Any] is already parameterized", str(err.exception)
+            "Type NDArray[Any, Int] is already parameterized", str(err.exception)
         )
 
     def test_ndarray_is_hashable(self):
         hash(NDArray)
         hash(NDArray[Any, Any])
-        hash(NDArray[Any, Shape["2, 2"]])
+        hash(NDArray[Shape["2, 2"], Any])
 
     def test_instantiation_is_forbidden(self):
         with self.assertRaises(NPTypingError):
-            NDArray[Any, Shape["2, 2"]]()
+            NDArray[Shape["2, 2"], Any]()
 
     def test_subclassing_is_forbidden(self):
         with self.assertRaises(NPTypingError):

@@ -2,6 +2,8 @@
 [![Downloads](https://pepy.tech/badge/nptyping/month)](https://pepy.tech/project/nptyping)
 [![PyPI version](https://badge.fury.io/py/nptyping.svg)](https://badge.fury.io/py/nptyping)
 [![codecov](https://codecov.io/gh/ramonhagenaars/nptyping/branch/master/graph/badge.svg)](https://codecov.io/gh/ramonhagenaars/nptyping)
+[![Code style](https://img.shields.io/badge/code%20style-black-black)](https://img.shields.io/badge/code%20style-black-black)
+
 
 <p align='center'>
   <a href='https://https://pypi.org/project/nptyping/'>
@@ -25,7 +27,7 @@ Example of a hinted function with `nptyping`:
 ```python
 >>> from nptyping import NDArray, Int, Shape
 
->>> def func(arr: NDArray[Int, Shape["2, 2"]]) -> None:
+>>> def func(arr: NDArray[Shape["2, 2"], Int]) -> None:
 ...     pass
 
 
@@ -35,23 +37,31 @@ Example of instance checking:
 ```python
 >>> from numpy import array
 
->>> isinstance(array([[1, 2], [3, 4]]), NDArray[Int, Shape["2, 2"]])
+>>> isinstance(array([[1, 2], [3, 4]]), NDArray[Shape["2, 2"], Int])
 True
 
->>> isinstance(array([[1., 2.], [3., 4.]]), NDArray[Int, Shape["2, 2"]])
+>>> isinstance(array([[1., 2.], [3., 4.]]), NDArray[Shape["2, 2"], Int])
 False
 
->>> isinstance(array([1, 2, 3, 4]), NDArray[Int, Shape["2, 2"]])
+>>> isinstance(array([1, 2, 3, 4]), NDArray[Shape["2, 2"], Int])
 False
+
+```
+
+`nptyping` also provides `assert_isinstance`. In contrast to `assert isinstance(...)`, this won't cause IDEs or MyPy
+complaints. Here is an example: 
+```python
+>>> from nptyping import assert_isinstance
+>>> assert_isinstance(array([1]), NDArray[Shape["1"], Int])
+True
 
 ```
 
 Here is an example of how detailed expressions can become with `nptyping`:
 ```python
-def plan_route(locations: NDArray[Float, Shape["[from, to], [x, y]"]]) -> NDArray[Float, Shape["* stops, [x, y]"]]:
+def plan_route(locations: NDArray[Shape["[from, to], [x, y]"], Float]) -> NDArray[Shape["* stops, [x, y]"], Float]:
     ...
 ```
-
 
 More examples can be found in the [documentation](https://github.com/ramonhagenaars/nptyping/blob/master/USERDOCS.md#Examples).
 

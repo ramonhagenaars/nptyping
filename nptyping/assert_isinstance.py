@@ -1,3 +1,4 @@
+# type: ignore
 """
 MIT License
 
@@ -21,16 +22,34 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-__title__ = "nptyping"
-__version__ = "2.0.0a2"
-__author__ = "Ramon Hagenaars"
-__author_email__ = "ramon.hagenaars@gmail.com"
-__description__ = "Type hints for NumPy."
-__url__ = "https://github.com/ramonhagenaars/nptyping"
-__license__ = "MIT"
-__python_versions__ = [
-    "3.7",
-    "3.8",
-    "3.9",
-    "3.10",
-]
+from typing import (
+    Any,
+    Optional,
+    Type,
+    TypeVar,
+)
+
+try:
+    from typing import TypeGuard
+except ImportError:  # pragma: no cover
+    from typing_extensions import TypeGuard
+
+TYPE = TypeVar("TYPE")
+
+
+def assert_isinstance(
+    instance: Any, cls: Type[TYPE], message: Optional[str] = None
+) -> TypeGuard[TYPE]:
+    """
+    A TypeGuard function that is equivalent to `assert instance, cls, message`
+    that hides nasty MyPy or IDE warnings.
+    :param instance: the instance that is checked against cls.
+    :param cls: the class
+    :param message: any message that is displayed when the assert check fails.
+    :return: the type of cls.
+    """
+    if message:
+        assert isinstance(instance, cls), message
+    else:
+        assert isinstance(instance, cls)
+    return True

@@ -1,10 +1,31 @@
-from doctest import testmod
+"""
+MIT License
+
+Copyright (c) 2022 Ramon Hagenaars
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
 import os
 import shutil
 import sys
 import venv as venv_
 from glob import glob
-from importlib import import_module
 from pathlib import Path
 
 from invoke import task
@@ -106,9 +127,9 @@ def lock(context, py=None):
 
 @task
 def install(context, py=None):
-    """Install all dependencies (complete)."""
+    """Install all dependencies (dev)."""
     print(f"Installing dependencies into: {_DEFAULT_VENV}")
-    context.run(f"{get_pip(py)} install .[complete] --constraint constraints.txt")
+    context.run(f"{get_pip(py)} install .[dev] --constraint constraints.txt")
 
 
 @task(clean, venv, lock, install)
@@ -179,6 +200,7 @@ def qa(context, py=None):
 
 @task
 def black(context, check=False, py=None):
+    """Run Black for formatting."""
     cmd = f"{get_py(py)} -m black {_ROOT} setup.py tasks.py tests"
     if check:
         cmd += " --check"
@@ -188,7 +210,7 @@ def black(context, check=False, py=None):
 @task
 def isort(context, check=False, py=None):
     """Run isort for optimizing imports."""
-    cmd = f"{get_py(py)} -m isort {_ROOT} tests"
+    cmd = f"{get_py(py)} -m isort {_ROOT} setup.py tasks.py tests"
     if check:
         cmd += " --check"
     context.run(cmd)
@@ -198,7 +220,7 @@ def isort(context, check=False, py=None):
 def autoflake(context, check=False, py=None):
     """Run autoflake to remove unused imports and variables."""
     cmd = (
-        f"{get_py(py)} -m autoflake {_ROOT} tests --recursive --in-place"
+        f"{get_py(py)} -m autoflake {_ROOT} setup.py tasks.py tests --recursive --in-place"
         f" --remove-unused-variables --expand-star-imports"
     )
     if check:
