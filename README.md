@@ -2,6 +2,8 @@
 [![Downloads](https://pepy.tech/badge/nptyping/month)](https://pepy.tech/project/nptyping)
 [![PyPI version](https://badge.fury.io/py/nptyping.svg)](https://badge.fury.io/py/nptyping)
 [![codecov](https://codecov.io/gh/ramonhagenaars/nptyping/branch/master/graph/badge.svg)](https://codecov.io/gh/ramonhagenaars/nptyping)
+[![Code style](https://img.shields.io/badge/code%20style-black-black)](https://img.shields.io/badge/code%20style-black-black)
+
 
 <p align='center'>
   <a href='https://https://pypi.org/project/nptyping/'>
