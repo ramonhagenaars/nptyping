@@ -380,6 +380,32 @@ NDArray[Shape['*, *'], UInt]
 
 ```
 
+Here are some examples of rich expressions that `nptyping` facilitates:
+```python
+>>> from nptyping import NDArray, Shape, Float
+
+>>> def plan_route(locations: NDArray[Shape["[from, to], [x, y]"], Float]) -> NDArray[Shape["* stops, [x, y]"], Float]:
+...    ...
+
+>>> AssetArray = NDArray[Shape["* assets, [id, type, age, state, x, y]"], Float]
+
+>>> def get_assets_within_range(x: float, y: float, range_km: float, assets: AssetArray) -> AssetArray:
+...     ...
+
+```
+
+Here is an example of how to get type safety to the max, by stacking `nptyping` up with
+[beartype](https://github.com/beartype/beartype):
+```python
+>>> from beartype import beartype
+
+>>> @beartype
+... def type_safety(assets: AssetArray) -> None:
+...     # assets is now guaranteed by beartype to be an AssetArray.
+...     ...
+
+```
+
 ## Similar projects
 
 * [numpy.typing](https://numpy.org/devdocs/reference/typing.html) <br/>
