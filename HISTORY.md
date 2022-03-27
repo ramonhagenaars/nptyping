@@ -1,5 +1,13 @@
 # History
 
+## 2.0.0a2 (2022-03-27)
+
+- Changed the interface of `NDArray`: switched the order to `NDArray[SHAPE, DTYPE]` to be compatible to `numpy.ndarray.pyi`
+- Added autocompletion for all attributes of `ndarray` by changing the implementation of `NDArray`
+- Added CONTRIBUTING.md
+- Added support for dynamic type checker: beartype
+- Added support for dynamic type checker: typeguard
+
 ## 2.0.0a1 (2022-03-19)
 
 - Changed the interface of `NDArray`
