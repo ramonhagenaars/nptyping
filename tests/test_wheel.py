@@ -1,4 +1,5 @@
 import os
+import subprocess
 import sys
 from contextlib import contextmanager
 from glob import glob
@@ -40,8 +41,9 @@ class WheelTest(TestCase):
     def test_wheel_is_built_correctly(self):
 
         with working_dir(_ROOT):
-            res = os.system(f"{sys.executable} setup.py bdist_wheel")
-            self.assertEqual(0, res)
+            subprocess.check_output(
+                f"{sys.executable} setup.py bdist_wheel", shell=True
+            )
             wheel_files = glob(f"dist/*{__version__}*")
             self.assertEqual(1, len(wheel_files))
 
