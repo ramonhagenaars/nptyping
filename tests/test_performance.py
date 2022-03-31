@@ -21,6 +21,6 @@ class PerformanceTest(TestCase):
         first_time_sec = Timer(_check_inst).timeit(number=1)
         second_time_sec = Timer(_check_inst).timeit(number=1)
 
-        self.assertLess(first_time_sec, 0.01)
+        self.assertLess(first_time_sec, 0.02)
         self.assertLess(second_time_sec, first_time_sec)
-        self.assertLess(second_time_sec, 0.0001)
+        self.assertLess(second_time_sec, 0.0002)
