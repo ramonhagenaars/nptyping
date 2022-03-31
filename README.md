@@ -21,6 +21,7 @@
 💡 *Type hints for `NumPy`* <br/>
 💡 *Extensive dynamic type checks for dtypes and shapes of arrays* <br/>
 💡 *Limited static type checks with `MyPy`* <br/>
+💡 *Extends `numpy.typing`* <br/>
 
 Example of a hinted function with `nptyping`:
 
