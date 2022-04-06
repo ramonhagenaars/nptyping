@@ -1,5 +1,19 @@
 # History
 
+## 2.0.0 (2022-04-07)
+
+Changes since `1.4.4`:
+- Changed the interface of `NDArray` into `NDArray[SHAPE, DTYPE]`
+- Added MyPy-acceptance (limited static type checking)
+- Added support for variables
+- Added support for labels and named dimensions
+- Added support for all numpy dtypes with `NDArray`
+- Added support for dynamic type checker: beartype
+- Added support for dynamic type checker: typeguard
+- Added autocompletion for all attributes of `ndarray`
+- Added CONTRIBUTING.md
+- Removed support for Python 3.5 and Python 3.6
+
 ## 2.0.0a2 (2022-03-27)
 
 - Changed the interface of `NDArray`: switched the order to `NDArray[SHAPE, DTYPE]` to be compatible to `numpy.ndarray.pyi`
