@@ -113,6 +113,26 @@ class MyPyTest(TestCase):
 
         self.assertIn("Success", mypy_findings)
 
+    def test_mypy_knows_of_ndarray_methods(self):
+        # If MyPy knows of some arbitrary ndarray methods, we can assume that
+        # code completion works.
+        mypy_findings = _check_mypy_on_code(
+            """
+            from typing import Any
+            from nptyping import NDArray
+            
+            
+            arr: NDArray[Any, Any]
+            arr.shape
+            arr.size
+            arr.sort
+            arr.squeeze
+            arr.transpose
+        """
+        )
+
+        self.assertIn("Success", mypy_findings)
+
     def test_mypy_accepts_nptyping_types(self):
         mypy_findings = _check_mypy_on_code(
             """

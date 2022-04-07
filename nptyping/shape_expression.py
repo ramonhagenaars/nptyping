@@ -77,7 +77,7 @@ def normalize_shape_expression(
     # Replace whitespaces right before labels with $.
     shape_expression = re.sub(rf"\s*{_REGEX_LABEL}", r"$\1", shape_expression)
     # Let all commas be followed by a $.
-    shape_expression = re.sub(",", ",$", shape_expression)
+    shape_expression = shape_expression.replace(",", ",$")
     # Remove all whitespaces left.
     shape_expression = re.sub(r"\s*", "", shape_expression)
     # Remove $ right after a bracket.
