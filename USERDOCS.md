@@ -49,7 +49,7 @@ The `NDArray` is the main character of this library and can be used to describe 
 
 ```
 The `NDArray` can take 2 arguments between brackets: the dtype and the shape of the array that is being described. This
-takes the form `NDArray[Shape[<SHAPE EXPRESSION>, <DTYPE>]]`. For example:
+takes the form `NDArray[Shape[<SHAPE EXPRESSION>], <DTYPE>]`. For example:
 
 ```python
 >>> from nptyping import UInt16, Shape
