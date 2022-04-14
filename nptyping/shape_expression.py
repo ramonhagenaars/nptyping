@@ -25,6 +25,7 @@ import re
 import string
 from functools import lru_cache
 from typing import (
+    TYPE_CHECKING,
     Any,
     List,
     Tuple,
@@ -34,18 +35,19 @@ from typing import (
 from nptyping.error import InvalidShapeError
 from nptyping.typing_ import Literal
 
+if TYPE_CHECKING:
+    from nptyping.shape import Shape  # pragma: no cover
+
 
 @lru_cache()
-def check_shape(shape, shape_expression):
+def check_shape(shape: Tuple[int, ...], target: "Shape") -> bool:
     """
     Check whether the given shape corresponds to the given shape_expression.
     :param shape: the shape in question.
-    :param shape_expression: the shape expression to which shape is tested.
+    :param target: the shape expression to which shape is tested.
     :return: True if the given shape corresponds to shape_expression.
     """
-    dim_strings = _get_dimensions(shape_expression)
-    dim_strings = _remove_labels(dim_strings)
-    dim_strings = _handle_ellipsis(dim_strings, shape)
+    dim_strings = _handle_ellipsis(target.prepared_args, shape)
     return _check_dimensions_against_shape(dim_strings, shape)
 
 
@@ -63,17 +65,13 @@ def validate_shape_expression(shape_expression: Union[str, Literal[Any]]) -> Non
         raise InvalidShapeError(f"'{shape_expression}' is not a valid shape expression")
 
 
-def normalize_shape_expression(
-    shape_expression: Union[str, Literal[Any]]
-) -> Union[str, Literal[Any]]:
+def normalize_shape_expression(shape_expression: str) -> Union[str, Literal[Any]]:
     """
     Normalize the given shape expression, e.g. by removing whitespaces, making
     similar expressions look the same.
     :param shape_expression: the shape expression that is to be normalized.
     :return: a normalized shape expression.
     """
-    if shape_expression is Any:
-        return Any
     # Replace whitespaces right before labels with $.
     shape_expression = re.sub(rf"\s*{_REGEX_LABEL}", r"$\1", shape_expression)
     # Let all commas be followed by a $.
@@ -84,10 +82,34 @@ def normalize_shape_expression(
     shape_expression = re.sub(r"\[\$+", "[", shape_expression)
     # Replace $ with a single space.
     shape_expression = re.sub(r"\$+", " ", shape_expression)
-
-    if shape_expression == "*, ...":
-        return Any
     return shape_expression
+
+
+def get_dimensions(shape_expression: str) -> List[str]:
+    """
+    Find all "break downs" (the parts between brackets) in a shape expressions
+    and replace them with mere dimension sizes.
+
+    :param shape_expression: the shape expression that gets the break downs replaced.
+    :return: a list of dimensions without break downs.
+    """
+    shape_expression_without_breakdowns = shape_expression
+    for dim_breakdown in re.findall(r"(\[.+?\])", shape_expression_without_breakdowns):
+        dim_size = len(dim_breakdown.split(","))
+        shape_expression_without_breakdowns = (
+            shape_expression_without_breakdowns.replace(dim_breakdown, str(dim_size))
+        )
+    return shape_expression_without_breakdowns.split(",")
+
+
+def remove_labels(dimensions: List[str]) -> List[str]:
+    """
+    Remove all labels (words that start with a lowercase).
+
+    :param dimensions: a list of dimensions.
+    :return: a copy of the given list without labels.
+    """
+    return [re.sub(r"\b[a-z]\w*", "", dim) for dim in dimensions]
 
 
 def _check_dimensions_against_shape(dimensions: List[str], shape: Tuple[int]) -> bool:
@@ -131,30 +153,13 @@ def _is_wildcard(dim: str) -> bool:
     return dim == "*"
 
 
-def _get_dimensions(dimension: str) -> List[str]:
-    # Find all "break downs" in a shape expressions (the parts between
-    # brackets) and replace them with mere dimension sizes.
-    dimension_without_breakdowns = dimension
-    for dim_breakdown in re.findall(r"(\[.+?\])", dimension_without_breakdowns):
-        dim_size = len(dim_breakdown.split(","))
-        dimension_without_breakdowns = dimension_without_breakdowns.replace(
-            dim_breakdown, str(dim_size)
-        )
-    return dimension_without_breakdowns.split(",")
-
-
-def _remove_labels(dimensions: List[str]) -> List[str]:
-    # Remove all labels (words that start with a lowercase).
-    return [re.sub(r"\b[a-z]\w*", "", dim) for dim in dimensions]
-
-
 def _handle_ellipsis(dimensions: List[str], shape: Tuple[int]) -> List[str]:
     # Let the ellipsis allows for any number of dimensions by replacing the
     # ellipsis with the dimension size repeated the number of times that
     # corresponds to the shape of the instance.
     result = dimensions
     if len(dimensions) == 2 and dimensions[1].strip() == "...":
-        result = dimensions[0] * len(shape)
+        result = dimensions[0:1] * len(shape)
     return result
 
 

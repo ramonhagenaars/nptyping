@@ -30,8 +30,11 @@ _EXPECTED_FILES_IN_WHEEL = {
     "nptyping_type.py",
     "package_info.py",
     "py.typed",
+    "shape.py",
+    "shape.pyi",
     "shape_expression.py",
     "shape_expression.pyi",
+    "subscriptable_meta.py",
     "typing_.py",
     "typing_.pyi",
 }

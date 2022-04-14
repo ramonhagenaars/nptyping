@@ -21,86 +21,53 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-from abc import ABC, ABCMeta
-from functools import lru_cache
+from abc import ABC
 from typing import Any, Tuple
 
 import numpy as np
 
-from nptyping.error import InvalidArgumentsError, NPTypingError
+from nptyping.error import InvalidArgumentsError
 from nptyping.nptyping_type import NPTypingType
-from nptyping.shape_expression import (
-    check_shape,
-    normalize_shape_expression,
-    validate_shape_expression,
-)
+from nptyping.shape import Shape
+from nptyping.shape_expression import check_shape
+from nptyping.subscriptable_meta import SubscriptableMeta
 from nptyping.typing_ import (
     DType,
-    Literal,
-    ShapeExpression,
     name_per_dtype,
     validate_dtype,
 )
 
 
-class NDArrayMeta(ABCMeta):
+class NDArrayMeta(SubscriptableMeta, cls_name="NDArray"):
     """
     Metaclass that is coupled to nptyping.NDArray. It contains all actual logic
     such as instance checking.
     """
 
-    __args__: Tuple[ShapeExpression, DType]
+    __args__: Tuple[Shape, DType]
     _parameterized: bool
 
-    def __call__(cls, *_: Any, **__: Any) -> None:
-        raise NPTypingError(
-            "Cannot instantiate nptyping.NDArray. Did you mean to use [ ] ?"
-        )
-
-    def __new__(cls, name: str, *args, **kwargs) -> type:
-        if name == "NDArray":
-            return type.__new__(cls, name, *args, **kwargs)
-        raise NPTypingError("Cannot subclass nptyping.NDArray.")
-
-    def __setattr__(cls, key: str, value: Any) -> None:
-        raise NPTypingError("Cannot set values to nptyping.NDArray.")
-
-    def __getitem__(cls, item: Any) -> type:
-        if getattr(cls, "_parameterized", False):
-            raise NPTypingError(f"Type {cls} is already parameterized")
+    def _get_item(cls, item: Any) -> Tuple[Any, ...]:
         if not isinstance(item, tuple):
-            raise InvalidArgumentsError(f"Unexpected argument of type {type(item)}")
-        shape_expression, dtype = _get_from_tuple(item)
+            raise InvalidArgumentsError(f"Unexpected argument of type {type(item)}.")
+        shape, dtype = _get_from_tuple(item)
         validate_dtype(dtype)
-        validate_shape_expression(shape_expression)
-        norm_shape_expression = normalize_shape_expression(shape_expression)
-        norm_item = (
-            Literal[norm_shape_expression] if norm_shape_expression is not Any else Any,
-            dtype,
-        )
-
-        if norm_item == cls.__args__:
-            return cls
-
-        return _get_type(cls, norm_item)
+        return shape, dtype
 
     def __instancecheck__(  # pylint: disable=bad-mcs-method-argument
         self, instance: Any
     ) -> bool:
-        shape_expression_literal, dtype = self.__args__
+        shape, dtype = self.__args__
         return (
             isinstance(instance, np.ndarray)
-            and (
-                shape_expression_literal is Any
-                or check_shape(instance.shape, shape_expression_literal.__args__[0])
-            )
+            and (shape is Any or check_shape(instance.shape, shape))
             and (dtype is Any or issubclass(instance.dtype.type, dtype))
         )
 
     def __str__(cls) -> str:
-        shape_expression, dtype = cls.__args__
+        shape, dtype = cls.__args__
         return (
-            f"{cls.__name__}[{_shape_expression_to_str(shape_expression)}, "
+            f"{cls.__name__}[{_shape_expression_to_str(shape)}, "
             f"{_dtype_to_str(dtype)}]"
         )
 
@@ -113,31 +80,27 @@ def _is_literal_like(item: Any) -> bool:
     return hasattr(item, "__args__")
 
 
-def _get_from_tuple(item: Tuple[Any, ...]) -> Tuple[str, DType]:
+def _get_from_tuple(item: Tuple[Any, ...]) -> Tuple[Shape, DType]:
     # Return the Shape Expression and DType from a tuple.
     if len(item) > 2:
-        raise InvalidArgumentsError(f"Unexpected argument '{item[2]}'")
+        raise InvalidArgumentsError(f"Unexpected argument '{item[2]}'.")
 
-    if _is_literal_like(item[0]):
+    dtype = item[1]
+    if item[0] is Any or item[0] is Shape:
+        shape = Any
+    elif issubclass(item[0], Shape):
+        shape = item[0]
+    elif _is_literal_like(item[0]):
         shape_expression = item[0].__args__[0]
-        dtype = item[1]
-    elif item[0] is Any:
-        shape_expression = Any
-        dtype = item[1]
+        shape = Shape[shape_expression]
     else:
         raise InvalidArgumentsError(
             f"Unexpected argument '{item[0]}', expecting"
             f" Shape[<ShapeExpression>] or"
-            f" Literal[<ShapeExpression>]"
+            f" Literal[<ShapeExpression>]."
         )
 
-    return shape_expression, dtype
-
-
-@lru_cache()
-def _get_type(cls: type, item: Tuple[ShapeExpression, DType]) -> type:
-    # Return an NDArray type with the given item.
-    return type("NDArray", (cls,), {"__args__": item, "_parameterized": True})
+    return shape, dtype
 
 
 def _dtype_to_str(dtype: Any) -> str:
@@ -147,9 +110,7 @@ def _dtype_to_str(dtype: Any) -> str:
 
 
 def _shape_expression_to_str(shape_expression: Any) -> str:
-    if _is_literal_like(shape_expression):
-        return f"Shape['{shape_expression.__args__[0]}']"
-    return "Any"
+    return "Any" if shape_expression is Any else str(shape_expression)
 
 
 class NDArray(NPTypingType, ABC, metaclass=NDArrayMeta):

@@ -29,6 +29,7 @@ from nptyping.error import (
 )
 from nptyping.ndarray import NDArray
 from nptyping.package_info import __version__
+from nptyping.shape import Shape  # type: ignore[attr-defined]
 from nptyping.shape_expression import (
     normalize_shape_expression,
     validate_shape_expression,
@@ -69,9 +70,6 @@ from nptyping.typing_ import (  # type: ignore[attr-defined]
     IntC,
     Integer,
     IntP,
-)
-from nptyping.typing_ import Literal as Shape  # type: ignore[attr-defined]
-from nptyping.typing_ import (  # type: ignore[attr-defined]
     LongComplex,
     LongDouble,
     LongFloat,

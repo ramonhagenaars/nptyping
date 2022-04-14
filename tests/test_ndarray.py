@@ -100,7 +100,8 @@ class NDArrayTest(TestCase):
         with self.assertRaises(NPTypingError) as err:
             NDArray[Any, Int][Any, Int]
         self.assertEqual(
-            "Type NDArray[Any, Int] is already parameterized", str(err.exception)
+            "Type nptyping.NDArray[Any, Int] is already parameterized.",
+            str(err.exception),
         )
 
     def test_ndarray_is_hashable(self):

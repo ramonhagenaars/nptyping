@@ -83,10 +83,12 @@ NDArray[Shape['3, 4'], Any]
 The above example shows an expression of a shape consisting of 2 dimensions of respectively size 3 and size 4. a fitting
 array would be: `np.array([[11, 12, 13, 14], [21, 22, 23, 24], [31, 32, 33, 34]])`.
 
-`Shape` is actually just an alias for `typing.Literal`:
+`Shape` is actually just a rich alias for `typing.Literal`:
 ```python
->>> Shape["2, 2"]
-typing.Literal['2, 2']
+>>> from typing import Literal
+
+>>> Shape["2, 2"] == Literal['2, 2']
+True
 
 ```
 This also means that you can use `typing.Literal` instead of `Shape` if you want.
@@ -97,7 +99,7 @@ A shape expression is just a comma separated list of dimensions. A dimension can
 the former examples. But you can also use variables, labels, wildcards and dimension breakdowns:
 ```python
 >>> Shape["3, 3 withLabel, *, Var, [entry1, entry2, entry3]"]
-typing.Literal['3, 3 withLabel, *, Var, [entry1, entry2, entry3]']
+Shape['3, 3 withLabel, *, Var, [entry1, entry2, entry3]']
 
 ```
 The shape expression above denotes a shape of size 3, 3, any, any, 3. For more details on the concepts of variables,

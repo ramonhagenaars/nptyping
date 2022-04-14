@@ -61,6 +61,7 @@ setup(
     package_data={
         "nptyping": [
             "ndarray.pyi",
+            "shape.pyi",
             "shape_expression.pyi",
             "typing_.pyi",
             "py.typed",
