@@ -51,5 +51,5 @@ def assert_isinstance(
     if message:
         assert isinstance(instance, cls), message
     else:
-        assert isinstance(instance, cls)
+        assert isinstance(instance, cls), f"instance={instance!r}, cls={cls!r}"
     return True

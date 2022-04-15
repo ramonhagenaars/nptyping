@@ -8,8 +8,9 @@ class AssertInstanceTest(TestCase):
         assert_isinstance(1, int)
 
     def test_assert_isinstance_false(self):
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(AssertionError) as err:
             assert_isinstance(1, str)
+        self.assertIn("instance=1, cls=<class 'str'>", str(err.exception))
 
     def test_assert_isinstance_false_with_message(self):
         with self.assertRaises(AssertionError) as err:
