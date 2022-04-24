@@ -48,8 +48,6 @@ def assert_isinstance(
     :param message: any message that is displayed when the assert check fails.
     :return: the type of cls.
     """
-    if message:
-        assert isinstance(instance, cls), message
-    else:
-        assert isinstance(instance, cls), f"instance={instance!r}, cls={cls!r}"
+    message = message or f"instance={instance!r}, cls={cls!r}"
+    assert isinstance(instance, cls), message
     return True
