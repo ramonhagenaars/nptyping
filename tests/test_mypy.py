@@ -23,8 +23,8 @@ class MyPyTest(TestCase):
             """
             from typing import Any
             from nptyping import NDArray
-            
-            
+
+
             NDArray[Any, Any]
         """
         )
@@ -36,8 +36,8 @@ class MyPyTest(TestCase):
             """
             from typing import Any
             from nptyping import NDArray, Shape
-            
-            
+
+
             NDArray[Any, Shape["3, 3"]]
         """
         )
@@ -50,13 +50,13 @@ class MyPyTest(TestCase):
             from typing import Any
             import numpy as np
             from nptyping import NDArray, Shape
-            
-            
+
+
             def func(_: NDArray[Any, Shape["2, 2"]]) -> None:
                 ...
-            
 
-            func("Not an array...")            
+
+            func("Not an array...")
         """
         )
 
@@ -70,12 +70,12 @@ class MyPyTest(TestCase):
             from typing import Any
             import numpy as np
             from nptyping import NDArray, Shape
-            
-            
+
+
             def func(_: NDArray[Any, Shape["2, 2"]]) -> None:
                 ...
-            
-            
+
+
             func(np.array([1, 2]))  # (Wrong shape though)
         """
         )
@@ -88,8 +88,8 @@ class MyPyTest(TestCase):
             from typing import Any
             import numpy as np
             from nptyping import NDArray
-            
-            
+
+
             arr: NDArray[Any, Any] = np.array([1, 2, 3])
         """
         )
@@ -102,8 +102,8 @@ class MyPyTest(TestCase):
             from typing import Any
             from nptyping import NDArray
             import numpy as np
-            
-            
+
+
             NDArray[np.int_, Any]
             NDArray[np.float_, Any]
             NDArray[np.uint8, Any]
@@ -120,8 +120,8 @@ class MyPyTest(TestCase):
             """
             from typing import Any
             from nptyping import NDArray
-            
-            
+
+
             arr: NDArray[Any, Any]
             arr.shape
             arr.size
@@ -202,9 +202,9 @@ class MyPyTest(TestCase):
                 String,
                 Bytes0,
                 Unicode,
-                Str0,                
+                Str0,
             )
-            
+
             NDArray[Number, Any]
             NDArray[Bool, Any]
             NDArray[Bool8, Any]
