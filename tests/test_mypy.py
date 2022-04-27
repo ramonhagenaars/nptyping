@@ -72,7 +72,7 @@ class MyPyTest(TestCase):
             from nptyping import NDArray, Shape
             
             
-            def func(_: NDArray[Any, Shape["2, 2"]]) -> None:
+            def func(_: NDArray[Shape["2, 2"], Any]) -> None:
                 ...
             
             
