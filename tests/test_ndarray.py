@@ -116,7 +116,7 @@ class NDArrayTest(TestCase):
     def test_subclassing_is_forbidden(self):
         with self.assertRaises(NPTypingError):
 
-            class C(NDArray):
+            class SomeSubclass(NDArray):
                 ...
 
     def test_changing_attributes_is_forbidden(self):

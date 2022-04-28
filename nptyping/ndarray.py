@@ -26,11 +26,18 @@ from typing import Any, Tuple
 
 import numpy as np
 
+from nptyping.base_meta_classes import (
+    FinalMeta,
+    ImmutableMeta,
+    InconstructableMeta,
+    MaybeCheckableMeta,
+    PrintableMeta,
+    SubscriptableMeta,
+)
 from nptyping.error import InvalidArgumentsError
 from nptyping.nptyping_type import NPTypingType
 from nptyping.shape import Shape
 from nptyping.shape_expression import check_shape
-from nptyping.subscriptable_meta import SubscriptableMeta
 from nptyping.typing_ import (
     DType,
     name_per_dtype,
@@ -38,7 +45,15 @@ from nptyping.typing_ import (
 )
 
 
-class NDArrayMeta(SubscriptableMeta, cls_name="NDArray"):
+class NDArrayMeta(
+    SubscriptableMeta,
+    InconstructableMeta,
+    ImmutableMeta,
+    FinalMeta,
+    MaybeCheckableMeta,
+    PrintableMeta,
+    name="NDArray",
+):
     """
     Metaclass that is coupled to nptyping.NDArray. It contains all actual logic
     such as instance checking.
@@ -70,9 +85,6 @@ class NDArrayMeta(SubscriptableMeta, cls_name="NDArray"):
             f"{cls.__name__}[{_shape_expression_to_str(shape)}, "
             f"{_dtype_to_str(dtype)}]"
         )
-
-    def __repr__(cls) -> str:
-        return str(cls)
 
 
 def _is_literal_like(item: Any) -> bool:
