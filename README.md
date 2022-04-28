@@ -72,7 +72,7 @@ The place to go if you are using this library. <br/><br/>
 * [Release notes](https://github.com/ramonhagenaars/nptyping/blob/master/HISTORY.md) <br/>
 To see what's new, check out the release notes. <br/><br/>
 
-* [Contributing](https://github.com/ramonhagenaars/nptyping/blob/master/CONTRIBUTION.md) <br/>
+* [Contributing](https://github.com/ramonhagenaars/nptyping/blob/master/CONTRIBUTING.md) <br/>
 If you're interested in developing along, find the guidelines here. <br/><br/>
 
 * [Licence](https://github.com/ramonhagenaars/nptyping/blob/master/LICENSE) <br/>

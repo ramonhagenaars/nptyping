@@ -1,5 +1,12 @@
 # History
 
+## 2.0.1 (2022-04-28)
+
+Thanks to [Jasha10](https://github.com/Jasha10) for this release.
+- Added an improved default message for `assert_isinstance`.
+  
+Also some typos in README, in `test_mypy.py` and some style corrections.
+
 ## 2.0.0 (2022-04-07)
 
 Changes since `1.4.4`:
