@@ -2,6 +2,7 @@ from unittest import TestCase
 
 from nptyping import Shape
 from nptyping.error import InvalidArgumentsError
+from nptyping.typing_ import Literal
 
 
 class ShapeTest(TestCase):
@@ -20,3 +21,6 @@ class ShapeTest(TestCase):
 
     def test_repr(self):
         self.assertEqual("Shape['2, 2']", repr(Shape[" 2 , 2 "]))
+
+    def test_shape_and_literal_are_interchangeable(self):
+        self.assertEqual(Shape["2, 2"], Literal["2, 2"])
