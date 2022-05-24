@@ -14,6 +14,7 @@ class LibExportTest(TestCase):
             "InvalidShapeError",
             "InvalidArgumentsError",
             "Shape",
+            "Structure",
             "__version__",
             "DType",
             "Number",

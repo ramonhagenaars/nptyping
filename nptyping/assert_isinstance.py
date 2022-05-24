@@ -1,4 +1,3 @@
-# type: ignore
 """
 MIT License
 
@@ -30,9 +29,9 @@ from typing import (
 )
 
 try:
-    from typing import TypeGuard
+    from typing import TypeGuard  # type: ignore[attr-defined]
 except ImportError:  # pragma: no cover
-    from typing_extensions import TypeGuard
+    from typing_extensions import TypeGuard  # type: ignore[attr-defined]
 
 TYPE = TypeVar("TYPE")
 

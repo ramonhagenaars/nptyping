@@ -35,5 +35,9 @@ class InvalidShapeError(NPTypingError):
     """Raised when a shape is considered not valid."""
 
 
+class InvalidStructureError(NPTypingError):
+    """Raised when a structure is considered not valid."""
+
+
 class InvalidDTypeError(NPTypingError):
     """Raised when an argument is not a DType."""

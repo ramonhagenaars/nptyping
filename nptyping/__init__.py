@@ -21,20 +21,23 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-from nptyping.assert_isinstance import assert_isinstance  # type: ignore[attr-defined]
+from nptyping.assert_isinstance import assert_isinstance
 from nptyping.error import (
     InvalidArgumentsError,
+    InvalidDTypeError,
     InvalidShapeError,
+    InvalidStructureError,
     NPTypingError,
 )
 from nptyping.ndarray import NDArray
 from nptyping.package_info import __version__
-from nptyping.shape import Shape  # type: ignore[attr-defined]
+from nptyping.shape import Shape
 from nptyping.shape_expression import (
     normalize_shape_expression,
     validate_shape_expression,
 )
-from nptyping.typing_ import (  # type: ignore[attr-defined]
+from nptyping.structure import Structure
+from nptyping.typing_ import (
     Bool,
     Bool8,
     Byte,
@@ -110,6 +113,7 @@ __all__ = [
     "InvalidShapeError",
     "InvalidArgumentsError",
     "Shape",
+    "Structure",
     "__version__",
     "DType",
     "Number",

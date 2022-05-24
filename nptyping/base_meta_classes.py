@@ -113,7 +113,7 @@ class PrintableMeta(ABCMeta):
 
     @abstractmethod
     def __str__(cls) -> str:
-        ...
+        ...  # pragma: no cover
 
     def __repr__(cls) -> str:
         return str(cls)
@@ -130,7 +130,7 @@ class SubscriptableMeta(ABCMeta):
 
     @abstractmethod
     def _get_item(cls, item: Any) -> Tuple[Any, ...]:
-        ...
+        ...  # pragma: no cover
 
     def _get_additional_values(
         cls, item: Any  # pylint: disable=unused-argument
@@ -172,6 +172,8 @@ class ComparableByArgsMeta(ABCMeta):
     Makes a class comparable by means of its __args__.
     """
 
+    __args__: Tuple[Any, ...]
+
     def __eq__(cls, other: Any) -> bool:
         return (
             hasattr(cls, "__args__")
@@ -194,18 +196,18 @@ class ContainerMeta(
     ABCMeta,
 ):
     """
-    fixme
+    Base meta class for "containers" such as Shape and Structure.
     """
 
     _known_expressions: Set[str] = set()
 
     @abstractmethod
     def _validate_expression(cls, item: str) -> None:
-        ...
+        ...  # pragma: no cover
 
     @abstractmethod
     def _normalize_expression(cls, item: str) -> str:
-        ...
+        ...  # pragma: no cover
 
     def _get_item(cls, item: Any) -> Tuple[Any, ...]:
         if not isinstance(item, str):
@@ -224,7 +226,9 @@ class ContainerMeta(
         return (norm_shape_expression,)
 
     def __subclasscheck__(cls, subclass: Any) -> bool:
-        type_match = type(subclass) == cls  # pylint: disable=unidiomatic-typecheck
+        type_match = type(subclass) == type(  # pylint: disable=unidiomatic-typecheck
+            cls
+        )
         return type_match and (
             subclass.__args__ == cls.__args__ or not cls._parameterized
         )

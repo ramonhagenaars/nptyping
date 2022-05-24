@@ -1,6 +1,3 @@
-# type: ignore
-# Let MyPy ignore this file to avoid complaints on the import of Literal under
-# different Python versions.
 """
 MIT License
 
@@ -25,6 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 try:
-    from typing import Literal as Shape
+    from typing import Literal  # type: ignore[attr-defined]
 except ImportError:
-    from typing_extensions import Literal as Shape
+    from typing_extensions import Literal  # type: ignore[attr-defined,misc]
+
+from typing import cast
+
+Shape = cast(Literal, Shape)  # type: ignore[has-type,misc]

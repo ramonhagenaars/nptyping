@@ -1,6 +1,3 @@
-# type: ignore
-# Let MyPy ignore this file to avoid complaints on the imports of Literal and
-# TypeAlias under different Python versions.
 """
 MIT License
 
@@ -34,13 +31,13 @@ from typing import (
 import numpy as np
 
 try:
-    from typing import (
+    from typing import (  # type: ignore[attr-defined,misc]
         Literal,
         TypeAlias,
         final,
     )
 except ImportError:
-    from typing_extensions import (
+    from typing_extensions import (  # type: ignore[attr-defined,misc]
         Literal,
         TypeAlias,
         final,
@@ -111,6 +108,7 @@ Void0: TypeAlias = np.void0
 Character: TypeAlias = np.character
 Bytes: TypeAlias = np.bytes_
 String: TypeAlias = np.string_
+Str: TypeAlias = np.str_
 Bytes0: TypeAlias = np.bytes0
 Unicode: TypeAlias = np.unicode_
 Str0: TypeAlias = np.str0

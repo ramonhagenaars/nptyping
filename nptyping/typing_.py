@@ -41,22 +41,6 @@ from typing import Any, Union
 
 import numpy as np
 
-from nptyping.error import InvalidDTypeError
-
-
-def validate_dtype(dtype: Any):
-    """
-    Validate dtype and raise an InvalidDTypeError if it is not considered a
-    valid DType
-    :param dtype: the value that is tested for a DType.
-    :return: None.
-    """
-    if dtype is not Any and (
-        not isinstance(dtype, type) or not issubclass(dtype, np.generic)
-    ):
-        raise InvalidDTypeError(f"{dtype} is not a valid DType")
-
-
 DType: TypeAlias = Union[np.generic, Literal[Any]]
 ShapeExpression: TypeAlias = Union[Literal[str], Literal[Any]]
 Shape: TypeAlias = Literal
@@ -120,6 +104,7 @@ Void: TypeAlias = np.void
 Void0: TypeAlias = np.void0
 Character: TypeAlias = np.character
 Bytes: TypeAlias = np.bytes_
+Str: TypeAlias = np.str_
 String: TypeAlias = np.string_
 Bytes0: TypeAlias = np.bytes0
 Unicode: TypeAlias = np.unicode_
@@ -186,9 +171,11 @@ dtypes = [
     (Character, "Character"),
     (Bytes, "Bytes"),
     (String, "String"),
+    (Str, "Str"),
     (Bytes0, "Bytes0"),
     (Unicode, "Unicode"),
     (Str0, "Str0"),
 ]
 
 name_per_dtype = dict(dtypes)
+dtype_per_name = {name: dtype for dtype, name in dtypes}

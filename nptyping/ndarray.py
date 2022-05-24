@@ -38,10 +38,12 @@ from nptyping.error import InvalidArgumentsError
 from nptyping.nptyping_type import NPTypingType
 from nptyping.shape import Shape
 from nptyping.shape_expression import check_shape
+from nptyping.structure import Structure
+from nptyping.structure_expression import check_structure, check_type_names
 from nptyping.typing_ import (
     DType,
+    dtype_per_name,
     name_per_dtype,
-    validate_dtype,
 )
 
 
@@ -66,17 +68,24 @@ class NDArrayMeta(
         if not isinstance(item, tuple):
             raise InvalidArgumentsError(f"Unexpected argument of type {type(item)}.")
         shape, dtype = _get_from_tuple(item)
-        validate_dtype(dtype)
         return shape, dtype
 
     def __instancecheck__(  # pylint: disable=bad-mcs-method-argument
         self, instance: Any
     ) -> bool:
         shape, dtype = self.__args__
+        dtype_is_structure = issubclass(dtype, Structure)
+        structure_is_ok = dtype_is_structure and check_structure(
+            instance.dtype, dtype, dtype_per_name
+        )
         return (
             isinstance(instance, np.ndarray)
             and (shape is Any or check_shape(instance.shape, shape))
-            and (dtype is Any or issubclass(instance.dtype.type, dtype))
+            and (
+                dtype is Any
+                or structure_is_ok
+                or issubclass(instance.dtype.type, dtype)
+            )
         )
 
     def __str__(cls) -> str:
@@ -97,22 +106,54 @@ def _get_from_tuple(item: Tuple[Any, ...]) -> Tuple[Shape, DType]:
     if len(item) > 2:
         raise InvalidArgumentsError(f"Unexpected argument '{item[2]}'.")
 
-    dtype = item[1]
-    if item[0] is Any or item[0] is Shape:
+    shape = _get_shape(item[0])
+    dtype = _get_dtype(item[1])
+
+    return shape, dtype
+
+
+def _get_shape(dtype_candidate: Any) -> Shape:
+    if dtype_candidate is Any or dtype_candidate is Shape:
         shape = Any
-    elif issubclass(item[0], Shape):
-        shape = item[0]
-    elif _is_literal_like(item[0]):
-        shape_expression = item[0].__args__[0]
+    elif issubclass(dtype_candidate, Shape):
+        shape = dtype_candidate
+    elif _is_literal_like(dtype_candidate):
+        shape_expression = dtype_candidate.__args__[0]
         shape = Shape[shape_expression]
     else:
         raise InvalidArgumentsError(
-            f"Unexpected argument '{item[0]}', expecting"
-            f" Shape[<ShapeExpression>] or"
-            f" Literal[<ShapeExpression>]."
+            f"Unexpected argument '{dtype_candidate}', expecting"
+            " Shape[<ShapeExpression>]"
+            " or Literal[<ShapeExpression>]"
+            " or typing.Any."
         )
+    return shape
 
-    return shape, dtype
+
+def _get_dtype(dtype_candidate: Any) -> DType:
+    is_dtype = isinstance(dtype_candidate, type) and issubclass(
+        dtype_candidate, np.generic
+    )
+    if dtype_candidate is Any:
+        dtype = Any
+    elif is_dtype:
+        dtype = dtype_candidate
+    elif issubclass(dtype_candidate, Structure):
+        dtype = dtype_candidate
+        check_type_names(dtype, dtype_per_name)
+    elif _is_literal_like(dtype_candidate):
+        structure_expression = dtype_candidate.__args__[0]
+        dtype = Structure[structure_expression]
+        check_type_names(dtype, dtype_per_name)
+    else:
+        raise InvalidArgumentsError(
+            f"Unexpected argument '{dtype_candidate}', expecting"
+            " Structure[<StructureExpression>]"
+            " or Literal[<ShapeExpression>]"
+            " or a dtype"
+            " or typing.Any."
+        )
+    return dtype
 
 
 def _dtype_to_str(dtype: Any) -> str:

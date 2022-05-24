@@ -138,7 +138,7 @@ Shape expressions are validated when put into an `NDArray`. Invalid expressions 
 ...    NDArray[Shape["3, 3,"], Any]
 ... except InvalidShapeError as err:
 ...    print(err)
-'3, 3,' is not a valid shape expression
+'3, 3,' is not a valid shape expression.
 
 ```
 
@@ -292,6 +292,7 @@ Void0
 Character
 Bytes
 String
+Str
 Bytes0
 Unicode
 Str0

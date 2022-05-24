@@ -62,10 +62,12 @@ def validate_shape_expression(shape_expression: Union[str, Literal[Any]]) -> Non
     if shape_expression is not Any and not re.match(
         _REGEX_SHAPE_EXPRESSION, shape_expression
     ):
-        raise InvalidShapeError(f"'{shape_expression}' is not a valid shape expression")
+        raise InvalidShapeError(
+            f"'{shape_expression}' is not a valid shape expression."
+        )
 
 
-def normalize_shape_expression(shape_expression: str) -> Union[str, Literal[Any]]:
+def normalize_shape_expression(shape_expression: str) -> str:
     """
     Normalize the given shape expression, e.g. by removing whitespaces, making
     similar expressions look the same.

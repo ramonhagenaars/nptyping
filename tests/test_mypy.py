@@ -44,6 +44,19 @@ class MyPyTest(TestCase):
 
         self.assertIn("Success", mypy_findings)
 
+    def test_mypy_accepts_structure(self):
+        mypy_findings = _check_mypy_on_code(
+            """
+            from typing import Any
+            from nptyping import NDArray, Structure
+
+
+            NDArray[Any, Structure["x: Float, y: Int"]]
+        """
+        )
+
+        self.assertIn("Success", mypy_findings)
+
     def test_mypy_disapproves_wrong_function_arguments(self):
         mypy_findings = _check_mypy_on_code(
             """
@@ -136,8 +149,9 @@ class MyPyTest(TestCase):
     def test_mypy_accepts_nptyping_types(self):
         mypy_findings = _check_mypy_on_code(
             """
-            from typing import Any
+            from typing import Any, TypeVar
             import numpy as np
+            import numpy.typing as npt
             from nptyping import (
                 NDArray,
                 Number,
@@ -204,15 +218,17 @@ class MyPyTest(TestCase):
                 Unicode,
                 Str0,
             )
+            
+            T = TypeVar("T", bound=npt.NBitBase)
 
-            NDArray[Number, Any]
+            NDArray[Number[T], Any]
             NDArray[Bool, Any]
             NDArray[Bool8, Any]
             NDArray[Object, Any]
             NDArray[Object0, Any]
             NDArray[Datetime64, Any]
-            NDArray[Integer, Any]
-            NDArray[SignedInteger, Any]
+            NDArray[Integer[T], Any]
+            NDArray[SignedInteger[T], Any]
             NDArray[Int8, Any]
             NDArray[Int16, Any]
             NDArray[Int32, Any]
@@ -225,7 +241,7 @@ class MyPyTest(TestCase):
             NDArray[Int, Any]
             NDArray[LongLong, Any]
             NDArray[Timedelta64, Any]
-            NDArray[UnsignedInteger, Any]
+            NDArray[UnsignedInteger[T], Any]
             NDArray[UInt8, Any]
             NDArray[UInt16, Any]
             NDArray[UInt32, Any]
@@ -237,8 +253,8 @@ class MyPyTest(TestCase):
             NDArray[UInt0, Any]
             NDArray[UInt, Any]
             NDArray[ULongLong, Any]
-            NDArray[Inexact, Any]
-            NDArray[Floating, Any]
+            NDArray[Inexact[T], Any]
+            NDArray[Floating[T], Any]
             NDArray[Float16, Any]
             NDArray[Float32, Any]
             NDArray[Float64, Any]
@@ -248,7 +264,7 @@ class MyPyTest(TestCase):
             NDArray[Float, Any]
             NDArray[LongDouble, Any]
             NDArray[LongFloat, Any]
-            NDArray[ComplexFloating, Any]
+            NDArray[ComplexFloating[T, T], Any]
             NDArray[Complex64, Any]
             NDArray[Complex128, Any]
             NDArray[CSingle, Any]

@@ -24,9 +24,8 @@ SOFTWARE.
 from abc import ABC
 from typing import Any, Dict
 
-from nptyping.nptyping_type import NPTypingType
-
 from nptyping.base_meta_classes import ContainerMeta
+from nptyping.nptyping_type import NPTypingType
 from nptyping.shape_expression import (
     get_dimensions,
     normalize_shape_expression,
