@@ -221,7 +221,7 @@ def autoflake(context, check=False, py=None):
     """Run autoflake to remove unused imports and variables."""
     cmd = (
         f"{get_py(py)} -m autoflake {_ROOT} setup.py tasks.py tests --recursive --in-place"
-        f" --remove-unused-variables --expand-star-imports"
+        f" --remove-unused-variables --remove-all-unused-imports --expand-star-imports"
     )
     if check:
         cmd += " --check"
