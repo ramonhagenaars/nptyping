@@ -24,6 +24,7 @@ if os.name == "nt":
 _EXPECTED_FILES_IN_WHEEL = {
     "__init__.py",
     "assert_isinstance.py",
+    "base_meta_classes.py",
     "error.py",
     "ndarray.py",
     "ndarray.pyi",
@@ -33,10 +34,10 @@ _EXPECTED_FILES_IN_WHEEL = {
     "shape.py",
     "shape.pyi",
     "shape_expression.py",
-    "shape_expression.pyi",
-    "subscriptable_meta.py",
+    "structure.py",
+    "structure.pyi",
+    "structure_expression.py",
     "typing_.py",
-    "typing_.pyi",
 }
 
 

@@ -30,20 +30,21 @@ try:
         final,
     )
 except ImportError:  # pragma: no cover
-    from typing_extensions import (
+    from typing_extensions import (  # type: ignore[attr-defined,misc]
         Literal,
         TypeAlias,
         TypeGuard,
         final,
     )
 
-from typing import Any, Union
+from typing import Tuple, Union
 
 import numpy as np
 
-DType: TypeAlias = Union[np.generic, Literal[Any]]
-ShapeExpression: TypeAlias = Union[Literal[str], Literal[Any]]
-Shape: TypeAlias = Literal
+ShapeExpression: TypeAlias = str
+StructureExpression: TypeAlias = str
+DType: TypeAlias = Union[np.generic, StructureExpression]
+ShapeTuple: TypeAlias = Tuple[int, ...]
 
 Number: TypeAlias = np.number
 Bool: TypeAlias = np.bool_

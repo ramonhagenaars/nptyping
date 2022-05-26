@@ -27,20 +27,20 @@ from functools import lru_cache
 from typing import (
     TYPE_CHECKING,
     Any,
+    Dict,
     List,
-    Tuple,
     Union,
 )
 
 from nptyping.error import InvalidShapeError
-from nptyping.typing_ import Literal
+from nptyping.typing_ import ShapeExpression, ShapeTuple
 
 if TYPE_CHECKING:
     from nptyping.shape import Shape  # pragma: no cover
 
 
 @lru_cache()
-def check_shape(shape: Tuple[int, ...], target: "Shape") -> bool:
+def check_shape(shape: ShapeTuple, target: "Shape") -> bool:
     """
     Check whether the given shape corresponds to the given shape_expression.
     :param shape: the shape in question.
@@ -51,7 +51,7 @@ def check_shape(shape: Tuple[int, ...], target: "Shape") -> bool:
     return _check_dimensions_against_shape(dim_strings, shape)
 
 
-def validate_shape_expression(shape_expression: Union[str, Literal[Any]]) -> None:
+def validate_shape_expression(shape_expression: Union[ShapeExpression, Any]) -> None:
     """
     Validate shape_expression and raise an InvalidShapeError if it is not
     considered valid.
@@ -67,7 +67,7 @@ def validate_shape_expression(shape_expression: Union[str, Literal[Any]]) -> Non
         )
 
 
-def normalize_shape_expression(shape_expression: str) -> str:
+def normalize_shape_expression(shape_expression: ShapeExpression) -> ShapeExpression:
     """
     Normalize the given shape expression, e.g. by removing whitespaces, making
     similar expressions look the same.
@@ -114,12 +114,12 @@ def remove_labels(dimensions: List[str]) -> List[str]:
     return [re.sub(r"\b[a-z]\w*", "", dim) for dim in dimensions]
 
 
-def _check_dimensions_against_shape(dimensions: List[str], shape: Tuple[int]) -> bool:
+def _check_dimensions_against_shape(dimensions: List[str], shape: ShapeTuple) -> bool:
     # Walk through the dimensions and test them against the given shape,
     # taking into consideration variables, wildcards, etc.
     if len(shape) != len(dimensions):
         return False
-    assigned_variables = {}
+    assigned_variables: Dict[str, str] = {}
     for inst_dim, cls_dim in zip(shape, dimensions):
         cls_dim_ = cls_dim.strip()
         inst_dim_ = str(inst_dim)
@@ -155,7 +155,7 @@ def _is_wildcard(dim: str) -> bool:
     return dim == "*"
 
 
-def _handle_ellipsis(dimensions: List[str], shape: Tuple[int]) -> List[str]:
+def _handle_ellipsis(dimensions: List[str], shape: ShapeTuple) -> List[str]:
     # Let the ellipsis allows for any number of dimensions by replacing the
     # ellipsis with the dimension size repeated the number of times that
     # corresponds to the shape of the instance.
