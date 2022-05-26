@@ -23,7 +23,7 @@ SOFTWARE.
 """
 
 try:
-    from typing import (  # pylint: disable=unused-import
+    from typing import (  # type: ignore[attr-defined,misc] # pylint: disable=unused-import
         Literal,
         TypeAlias,
         TypeGuard,

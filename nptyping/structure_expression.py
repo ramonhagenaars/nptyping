@@ -37,14 +37,14 @@ from typing import (
 import numpy as np
 
 from nptyping.error import InvalidStructureError
-from nptyping.typing_ import Literal  # type: ignore[attr-defined]
+from nptyping.typing_ import StructureExpression
 
 if TYPE_CHECKING:
     from nptyping.structure import Structure  # pragma: no cover
 
 
 def validate_structure_expression(
-    structure_expression: Union[str, Literal[Any]]
+    structure_expression: Union[StructureExpression, Any]
 ) -> None:
     """
     Validate the given structure_expression and raise an InvalidStructureError
@@ -126,7 +126,9 @@ def check_type_name(type_name: str, type_per_name: Dict[str, type]) -> None:
         )
 
 
-def normalize_structure_expression(structure_expression: str) -> str:
+def normalize_structure_expression(
+    structure_expression: StructureExpression,
+) -> StructureExpression:
     """
     Normalize the given structure expression, e.g. by removing whitespaces,
     making similar expressions look the same.
@@ -139,7 +141,9 @@ def normalize_structure_expression(structure_expression: str) -> str:
     return normalized_structure_expression.replace(",", ", ")
 
 
-def create_name_to_type_dict(structure_expression: str) -> Dict[str, str]:
+def create_name_to_type_dict(
+    structure_expression: StructureExpression,
+) -> Dict[str, str]:
     """
     Create a dict with a name as key and a type (str) as value from the given
     structure expression. Structure["x: Int, y: Float"] would yield
@@ -157,7 +161,7 @@ def create_name_to_type_dict(structure_expression: str) -> Dict[str, str]:
 
 
 def _validate_structure_expression_contains_no_multiple_field_names(
-    structure_expression: Union[str, Literal[Any]]
+    structure_expression: StructureExpression,
 ) -> None:
     # Validate that there are not multiple occurrences of the same field names.
     matches = re.findall(_REGEX_FIELD, re.sub(r"\s*", "", structure_expression))
@@ -187,7 +191,9 @@ def _validate_structure_expression_contains_no_multiple_field_names(
         )
 
 
-def _create_type_to_names_dict(structure_expression: str) -> Dict[str, List[str]]:
+def _create_type_to_names_dict(
+    structure_expression: StructureExpression,
+) -> Dict[str, List[str]]:
     # Create a dictionary with field names per type, sorted by type and then by
     # name.
     names_per_type: Dict[str, List[str]] = defaultdict(list)
