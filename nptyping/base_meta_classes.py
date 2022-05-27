@@ -200,6 +200,7 @@ class ContainerMeta(
     """
 
     _known_expressions: Set[str] = set()
+    __args__: Tuple[str, ...]
 
     @abstractmethod
     def _validate_expression(cls, item: str) -> None:
@@ -235,3 +236,15 @@ class ContainerMeta(
 
     def __str__(cls) -> str:
         return f"{cls._name()}['{cls.__args__[0]}']"
+
+    def __eq__(cls, other: Any) -> bool:
+        result = cls is other
+        if not result and hasattr(cls, "__args__") and hasattr(other, "__args__"):
+            normalized_args = tuple(
+                cls._normalize_expression(str(arg)) for arg in other.__args__
+            )
+            result = cls.__args__ == normalized_args
+        return result
+
+    def __hash__(cls) -> int:
+        return hash(cls.__args__)
