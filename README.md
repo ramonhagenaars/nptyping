@@ -23,20 +23,26 @@ Example of a hinted function with `nptyping`:
 >>> def func(arr: NDArray[Shape["2, 2"], Int]) -> None:
 ...     pass
 
-
 ```
+
+### Installation
+```
+pip install nptyping
+```
+
+### Instance checking
 
 Example of instance checking:
 ```python
->>> from numpy import array
+>>> import numpy as np
 
->>> isinstance(array([[1, 2], [3, 4]]), NDArray[Shape["2, 2"], Int])
+>>> isinstance(np.array([[1, 2], [3, 4]]), NDArray[Shape["2, 2"], Int])
 True
 
->>> isinstance(array([[1., 2.], [3., 4.]]), NDArray[Shape["2, 2"], Int])
+>>> isinstance(np.array([[1., 2.], [3., 4.]]), NDArray[Shape["2, 2"], Int])
 False
 
->>> isinstance(array([1, 2, 3, 4]), NDArray[Shape["2, 2"], Int])
+>>> isinstance(np.array([1, 2, 3, 4]), NDArray[Shape["2, 2"], Int])
 False
 
 ```
@@ -45,24 +51,46 @@ False
 complaints. Here is an example: 
 ```python
 >>> from nptyping import assert_isinstance
->>> assert_isinstance(array([1]), NDArray[Shape["1"], Int])
+
+>>> assert_isinstance(np.array([1]), NDArray[Shape["1"], Int])
 True
 
 ```
 
-Here is an example of how detailed expressions can become with `nptyping`:
+### Structured arrays
+
+You can also express structured arrays using `nptyping.Structure`:
 ```python
-def plan_route(locations: NDArray[Shape["[from, to], [x, y]"], Float]) -> NDArray[Shape["* stops, [x, y]"], Float]:
+>>> from nptyping import Structure
+
+>>> Structure["name: Str, age: Int"]
+Structure['age: Int, name: Str']
+
+```
+
+Here is an example to see it in action:
+```python
+>>> from typing import Any
+>>> import numpy as np
+>>> from nptyping import NDArray, Structure
+
+>>> arr = np.array([("Peter", 34)], dtype=[("name", "U10"), ("age", "i4")])
+>>> isinstance(arr, NDArray[Any, Structure["name: Str, age: Int"]])
+True
+
+```
+
+### More examples
+
+Here is an example of a rich expression that can be done with `nptyping`:
+```python
+def plan_route(
+        locations: NDArray[Shape["[from, to], [x, y]"], Float]
+) -> NDArray[Shape["* stops, [x, y]"], Float]:
     ...
 ```
 
 More examples can be found in the [documentation](https://github.com/ramonhagenaars/nptyping/blob/master/USERDOCS.md#Examples).
-
-## Installation
-
-```
-pip install nptyping
-```
 
 ## Documentation
 
