@@ -158,8 +158,12 @@ def _get_dtype(dtype_candidate: Any) -> DType:
 
 def _dtype_to_str(dtype: Any) -> str:
     if dtype is Any:
-        return "Any"
-    return name_per_dtype[dtype]
+        result = "Any"
+    elif issubclass(dtype, Structure):
+        result = str(dtype)
+    else:
+        result = name_per_dtype[dtype]
+    return result
 
 
 def _shape_expression_to_str(shape_expression: Any) -> str:
