@@ -32,3 +32,9 @@ class StructureTest(TestCase):
     def test_get_names(self):
         structure = Structure["a: Float, b: Int, [c, d, e]: Complex"]
         self.assertEqual({"a", "b", "c", "d", "e"}, set(structure.get_names()))
+
+    def test_structure_can_be_compared_to_literal(self):
+        self.assertEqual(Structure["a: Int, b: Float"], Literal["a: Int, b: Float"])
+        self.assertEqual(
+            Structure["b: Float, a: Int"], Literal[" a : Int , b : Float "]
+        )

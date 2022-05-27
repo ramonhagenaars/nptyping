@@ -22,5 +22,6 @@ class ShapeTest(TestCase):
     def test_repr(self):
         self.assertEqual("Shape['2, 2']", repr(Shape[" 2 , 2 "]))
 
-    def test_shape_and_literal_are_interchangeable(self):
+    def test_shape_can_be_compared_to_literal(self):
         self.assertEqual(Shape["2, 2"], Literal["2, 2"])
+        self.assertEqual(Shape[" 2 , 2 "], Literal["2,2"])
