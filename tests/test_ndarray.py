@@ -220,6 +220,14 @@ class NDArrayTest(TestCase):
         self.assertEqual(
             str(NDArray[Shape[" 2 , 2 "], Any]), repr(NDArray[Shape[" 2 , 2 "], Any])
         )
+        self.assertEqual(
+            "NDArray[Any, Structure['[x, y]: Float']]",
+            str(NDArray[Any, Structure["x: Float, y: Float"]]),
+        )
+        self.assertEqual(
+            "NDArray[Any, Structure['[x, y]: Float']]",
+            repr(NDArray[Any, Structure["x: Float, y: Float"]]),
+        )
 
     def test_types_with_numpy_dtypes(self):
         self.assertIsInstance(np.array([42]), NDArray[Any, np.int_])
