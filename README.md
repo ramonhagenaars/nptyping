@@ -88,6 +88,7 @@ def plan_route(
         locations: NDArray[Shape["[from, to], [x, y]"], Float]
 ) -> NDArray[Shape["* stops, [x, y]"], Float]:
     ...
+
 ```
 
 More examples can be found in the [documentation](https://github.com/ramonhagenaars/nptyping/blob/master/USERDOCS.md#Examples).
