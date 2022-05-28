@@ -151,12 +151,23 @@ class NDArrayTest(TestCase):
         )
 
     def test_isinstance_fails_if_structure_doesnt_match(self):
-        arr = np.array([("Pete", 34)], dtype=[("name", "U8"), ("age", "i4")])
+        arr = np.array([("Johnny", 34)], dtype=[("name", "U8"), ("age", "i4")])
         self.assertNotIsInstance(
             arr,
             NDArray[Any, Structure["name: Str, age: Float"]],
         )
-        # FIXME more similar tests
+
+        arr = np.array([("Bill", 34)], dtype=[("name", "U8"), ("age", "i4")])
+        self.assertNotIsInstance(
+            arr,
+            NDArray[Any, Structure["name: String, age: Int"]],
+        )
+
+        arr = np.array([("Clair", 34)], dtype=[("name", "U8"), ("age", "i4")])
+        self.assertNotIsInstance(
+            arr,
+            NDArray[Any, Structure["[name, age]: Str"]],
+        )
 
     def test_isinstance_fails_if_structure_contains_invalid_types(self):
         with self.assertRaises(InvalidStructureError) as err:
