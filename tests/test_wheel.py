@@ -31,6 +31,8 @@ _EXPECTED_FILES_IN_WHEEL = {
     "nptyping_type.py",
     "package_info.py",
     "py.typed",
+    "recarray.py",
+    "recarray.pyi",
     "shape.py",
     "shape.pyi",
     "shape_expression.py",
