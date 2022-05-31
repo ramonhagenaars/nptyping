@@ -23,4 +23,4 @@ class PerformanceTest(TestCase):
 
         self.assertLess(first_time_sec, 0.02)
         self.assertLess(second_time_sec, first_time_sec)
-        self.assertLess(second_time_sec, 0.0003)
+        self.assertLess(second_time_sec, 0.0004)
