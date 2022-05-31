@@ -18,7 +18,7 @@ def _check_mypy_on_code(python_code: str) -> str:
 
 
 class MyPyTest(TestCase):
-    def test_mypy_accepts_any(self):
+    def test_mypy_accepts_ndarray_with_any(self):
         mypy_findings = _check_mypy_on_code(
             """
             from typing import Any
@@ -31,7 +31,7 @@ class MyPyTest(TestCase):
 
         self.assertIn("Success", mypy_findings)
 
-    def test_mypy_accepts_shape(self):
+    def test_mypy_accepts_ndarray_with_shape(self):
         mypy_findings = _check_mypy_on_code(
             """
             from typing import Any
@@ -44,11 +44,11 @@ class MyPyTest(TestCase):
 
         self.assertIn("Success", mypy_findings)
 
-    def test_mypy_accepts_structure(self):
+    def test_mypy_accepts_ndarray_with_structure(self):
         mypy_findings = _check_mypy_on_code(
             """
             from typing import Any
-            from nptyping import NDArray, Structure
+            from nptyping import NDArray, RecArray, Structure
 
 
             NDArray[Any, Structure["x: Float, y: Int"]]
@@ -57,7 +57,7 @@ class MyPyTest(TestCase):
 
         self.assertIn("Success", mypy_findings)
 
-    def test_mypy_disapproves_wrong_function_arguments(self):
+    def test_mypy_disapproves_ndarray_with_wrong_function_arguments(self):
         mypy_findings = _check_mypy_on_code(
             """
             from typing import Any
@@ -104,6 +104,19 @@ class MyPyTest(TestCase):
 
 
             arr: NDArray[Any, Any] = np.array([1, 2, 3])
+        """
+        )
+
+        self.assertIn("Success", mypy_findings)
+
+    def test_mypy_accepts_recarray_with_structure(self):
+        mypy_findings = _check_mypy_on_code(
+            """
+            from typing import Any
+            from nptyping import RecArray, Structure
+
+
+            RecArray[Any, Structure["x: Float, y: Int"]]
         """
         )
 

@@ -34,7 +34,7 @@ from nptyping.shape_expression import (
 )
 
 
-class ShapeMeta(ContainerMeta, name="Shape"):
+class ShapeMeta(ContainerMeta, implementation="Shape"):
     """
     Metaclass that is coupled to nptyping.Shape.
     """

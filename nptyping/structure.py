@@ -37,7 +37,7 @@ from nptyping.structure_expression import (
 )
 
 
-class StructureMeta(ContainerMeta, name="Structure"):
+class StructureMeta(ContainerMeta, implementation="Structure"):
     """
     Metaclass that is coupled to nptyping.Structure.
     """

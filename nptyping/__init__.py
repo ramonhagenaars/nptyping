@@ -31,6 +31,7 @@ from nptyping.error import (
 )
 from nptyping.ndarray import NDArray
 from nptyping.package_info import __version__
+from nptyping.recarray import RecArray
 from nptyping.shape import Shape
 from nptyping.shape_expression import (
     normalize_shape_expression,
@@ -106,6 +107,7 @@ from nptyping.typing_ import (
 
 __all__ = [
     "NDArray",
+    "RecArray",
     "assert_isinstance",
     "validate_shape_expression",
     "normalize_shape_expression",

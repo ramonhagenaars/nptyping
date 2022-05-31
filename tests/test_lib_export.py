@@ -7,6 +7,7 @@ class LibExportTest(TestCase):
     def test_all(self):
         expected_exports = {
             "NDArray",
+            "RecArray",
             "assert_isinstance",
             "validate_shape_expression",
             "normalize_shape_expression",

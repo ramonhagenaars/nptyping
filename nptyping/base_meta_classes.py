@@ -36,26 +36,6 @@ from nptyping.error import InvalidArgumentsError, NPTypingError
 _T = TypeVar("_T")
 
 
-class _NameableMeta(ABCMeta):
-    """
-    Allows storing a name when inheriting from this meta class.
-
-    This meta class is intended for other base meta classes only.
-    """
-
-    _name_per_meta_cls: Dict[type, str] = {}
-
-    def __init_subclass__(cls, name: Optional[str] = None) -> None:
-        # name is made Optional here, to allow other meta classes to inherit.
-        if name:
-            cls._name_per_meta_cls[cls] = name
-
-    def _name(cls) -> str:
-        if cls in cls._name_per_meta_cls:
-            return cls._name_per_meta_cls[cls]
-        return cls._name_per_meta_cls[type(cls)]
-
-
 class InconstructableMeta(ABCMeta):
     """
     Makes it impossible for a class to get instantiated.
@@ -77,13 +57,24 @@ class ImmutableMeta(ABCMeta):
             raise NPTypingError(f"Cannot set values to nptyping.{cls.__name__}.")
 
 
-class FinalMeta(_NameableMeta, ABCMeta):
+class FinalMeta(ABCMeta):
     """
     Makes it impossible for classes to inherit from some class.
+
+    An concrete inheriting meta class requires to define a name for its
+    implementation. The class with this name will be the only class that is
+    allowed to use that concrete meta class.
     """
 
+    _name_per_meta_cls: Dict[type, Optional[str]] = {}
+
+    def __init_subclass__(cls, implementation: Optional[str] = None) -> None:
+        # implementation is made Optional here, to allow other meta classes to
+        # inherit.
+        cls._name_per_meta_cls[cls] = implementation
+
     def __new__(cls, name: str, *args: Any, **kwargs: Any) -> type:
-        if name in cls._name_per_meta_cls.values():
+        if name == cls._name_per_meta_cls[cls]:
             assert name, "cls_name not set"
             return type.__new__(cls, name, *args, **kwargs)
 
@@ -235,7 +226,7 @@ class ContainerMeta(
         )
 
     def __str__(cls) -> str:
-        return f"{cls._name()}['{cls.__args__[0]}']"
+        return f"{cls.__name__}['{cls.__args__[0]}']"
 
     def __eq__(cls, other: Any) -> bool:
         result = cls is other

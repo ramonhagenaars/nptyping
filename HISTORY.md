@@ -1,6 +1,8 @@
 # History
 
 ## 2.1.0 FIXME
+- Added `Structure` and "structure expressions" to support structured arrays.
+- Added `RecArray`.
 
 ## 2.0.1 (2022-04-28)
 

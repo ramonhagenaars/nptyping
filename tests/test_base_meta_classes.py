@@ -9,18 +9,11 @@ from nptyping.base_meta_classes import (
     InconstructableMeta,
     MaybeCheckableMeta,
     SubscriptableMeta,
-    _NameableMeta,
 )
 from nptyping.error import NPTypingError
 
 
 class SubscriptableMetaTest(TestCase):
-    def test_nameable_meta(self):
-        class CMeta(_NameableMeta, name="SomeName"):
-            ...
-
-        self.assertEqual("SomeName", CMeta._name(CMeta))
-
     def test_subscriptable_meta(self):
         class CMeta(SubscriptableMeta):
             def _get_item(cls, item: Any) -> Tuple[Any, ...]:
@@ -35,7 +28,7 @@ class SubscriptableMetaTest(TestCase):
         self.assertIs(C[42], C42)
 
     def test_final_meta(self):
-        class CMeta(FinalMeta, name="C"):
+        class CMeta(FinalMeta, implementation="C"):
             ...
 
         class C(metaclass=CMeta):
@@ -131,7 +124,7 @@ class SubscriptableMetaTest(TestCase):
         )
 
     def test_container_meta(self):
-        class TestContainerMeta(ContainerMeta, name="TestContainer"):
+        class TestContainerMeta(ContainerMeta, implementation="TestContainer"):
             def _normalize_expression(cls, item: str) -> str:
                 return item.lower()
 
