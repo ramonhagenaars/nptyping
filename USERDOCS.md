@@ -6,19 +6,20 @@
 
 * [Introduction](#Introduction)
 * [Usage](#Usage)
-* [NDArray](#NDArray)
-* [Shape expressions](#Shape-expressions)
-    * [Syntax](#Syntax-shape-expressions)
-    * [Validation](#Validation)
-    * [Normalization](#Normalization)
-    * [Variables](#Variables)
-    * [Wildcards](#Wildcards)
-    * [N dimensions](#N-dimensions)
-    * [Dimension breakdowns](#Dimension-breakdowns)
-    * [Labels](#Labels)
-* [DTypes](#DTypes)
-* [Structure expressions](#Structure-expressions)
-  * [Syntax](#Syntax-structure-expressions)
+    * [NDArray](#NDArray)
+    * [Shape expressions](#Shape-expressions)
+        * [Syntax](#Syntax-shape-expressions)
+        * [Validation](#Validation)
+        * [Normalization](#Normalization)
+        * [Variables](#Variables)
+        * [Wildcards](#Wildcards)
+        * [N dimensions](#N-dimensions)
+        * [Dimension breakdowns](#Dimension-breakdowns)
+        * [Labels](#Labels)
+    * [DTypes](#DTypes)
+    * [Structure expressions](#Structure-expressions)
+      * [Syntax](#Syntax-structure-expressions)
+    * [RecArray](#RecArray)
 * [Examples](#Examples)
 * [Similar projects](#Similar-projects)
 * [FAQ](#FAQ)
@@ -381,7 +382,20 @@ digit                 =  "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
 underscore            =  "_"
 ```
 
-## Examples
+### RecArray
+The `RecArray` corresponds to [numpy.recarray](https://numpy.org/doc/stable/reference/generated/numpy.recarray.html).
+It is an extension of `NDArray` and behaves similarly. A key difference is that with `RecArray`, the `Structure` OR 
+`typing.Any` are mandatory. 
+
+```python
+>>> from nptyping import RecArray
+
+>>> RecArray[Any, Structure["x: Float, y: Float"]]
+RecArray[Any, Structure['[x, y]: Float']]
+
+```
+
+### Examples
 
 Here is just a list of examples of how one can express arrays with `NDArray`.
 

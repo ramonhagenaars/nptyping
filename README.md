@@ -80,6 +80,19 @@ True
 
 ```
 
+### Record arrays
+The recarray is a specialization of a structured array. You can use `RecArray`
+to express them.
+
+```python
+>>> from nptyping import RecArray
+
+>>> arr = np.array([("Peter", 34)], dtype=[("name", "U10"), ("age", "i4")])
+>>> isinstance(arr, RecArray[Any, Structure["name: Str, age: Int"]])
+True
+
+```
+
 ### More examples
 
 Here is an example of a rich expression that can be done with `nptyping`:
