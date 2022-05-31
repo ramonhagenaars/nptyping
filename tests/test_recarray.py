@@ -20,10 +20,10 @@ class RecArrayTest(TestCase):
 
         self.assertIsInstance(rec_arr, RecArray)
         self.assertIsInstance(
-            rec_arr, RecArray[Shape["1"], Structure["name: Str, age: Int"]]
+            rec_arr, RecArray[Shape["1"], Structure["name: Str, age: Int32"]]
         )
         self.assertIsInstance(
-            rec_arr, NDArray[Shape["1"], Structure["name: Str, age: Int"]]
+            rec_arr, NDArray[Shape["1"], Structure["name: Str, age: Int32"]]
         )
 
     def test_rec_array_enforces_structure(self):

@@ -147,7 +147,7 @@ class NDArrayTest(TestCase):
         arr = np.array([("Pete", 34)], dtype=[("name", "U8"), ("age", "i4")])
         self.assertIsInstance(
             arr,
-            NDArray[Any, Structure["name: Str, age: Int"]],
+            NDArray[Any, Structure["name: Str, age: Int32"]],
         )
 
     def test_isinstance_fails_if_structure_doesnt_match(self):
@@ -160,7 +160,7 @@ class NDArrayTest(TestCase):
         arr = np.array([("Bill", 34)], dtype=[("name", "U8"), ("age", "i4")])
         self.assertNotIsInstance(
             arr,
-            NDArray[Any, Structure["name: String, age: Int"]],
+            NDArray[Any, Structure["name: String, age: Int32"]],
         )
 
         arr = np.array([("Clair", 34)], dtype=[("name", "U8"), ("age", "i4")])

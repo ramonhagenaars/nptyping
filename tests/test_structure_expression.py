@@ -16,7 +16,7 @@ from nptyping.typing_ import dtype_per_name
 class StructureExpressionTest(TestCase):
     def test_check_structure_true(self):
         dtype = np.dtype([("name", "U10"), ("age", "i4")])
-        structure = Structure["name: Str, age: Int"]
+        structure = Structure["name: Str, age: Int32"]
         self.assertTrue(check_structure(dtype, structure, dtype_per_name))
 
         dtype2 = np.dtype([("a", "i4"), ("b", "i4"), ("c", "i8")])
