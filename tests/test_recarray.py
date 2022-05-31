@@ -4,7 +4,7 @@ from unittest import TestCase
 import numpy as np
 
 from nptyping import (
-    Int,
+    Int32,
     NDArray,
     RecArray,
     Shape,
@@ -13,7 +13,7 @@ from nptyping import (
 from nptyping.error import InvalidArgumentsError
 
 
-class NDArrayTest(TestCase):
+class RecArrayTest(TestCase):
     def test_isinstance_succeeds_if_shape_and_structure_match(self):
         arr = np.array([("William", 23)], dtype=[("name", "U8"), ("age", "i4")])
         rec_arr = arr.view(np.recarray)
@@ -28,7 +28,7 @@ class NDArrayTest(TestCase):
 
     def test_rec_array_enforces_structure(self):
         with self.assertRaises(InvalidArgumentsError) as err:
-            RecArray[Any, Int]
+            RecArray[Any, Int32]
 
         self.assertEqual(
             "Unexpected argument <class 'numpy.int32'>. Expecting a Structure.",
