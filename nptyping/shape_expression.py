@@ -96,7 +96,9 @@ def get_dimensions(shape_expression: str) -> List[str]:
     :return: a list of dimensions without break downs.
     """
     shape_expression_without_breakdowns = shape_expression
-    for dim_breakdown in re.findall(r"(\[.+?\])", shape_expression_without_breakdowns):
+    for dim_breakdown in re.findall(
+        r"(\[[^\]]+\])", shape_expression_without_breakdowns
+    ):
         dim_size = len(dim_breakdown.split(","))
         shape_expression_without_breakdowns = (
             shape_expression_without_breakdowns.replace(dim_breakdown, str(dim_size))
