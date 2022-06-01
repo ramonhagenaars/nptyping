@@ -1,5 +1,9 @@
 # History
 
+## 2.1.1 (2022-06-01)
+
+- Fixed bug that numpy ndarrays were incorrectly instance checked against `RecArray`.
+
 ## 2.1.0 (2022-06-01)
 
 - Added `Structure` and "structure expressions" to support structured arrays.

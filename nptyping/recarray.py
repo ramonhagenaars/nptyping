@@ -23,6 +23,8 @@ SOFTWARE.
 """
 from typing import Any, Tuple
 
+import numpy as np
+
 from nptyping.error import InvalidArgumentsError
 from nptyping.ndarray import NDArray, NDArrayMeta
 from nptyping.structure import Structure
@@ -46,6 +48,13 @@ class RecArrayMeta(NDArrayMeta, implementation="RecArray"):
                 f"Unexpected argument {dtype_candidate}. Expecting a Structure."
             )
         return dtype_candidate
+
+    def __instancecheck__(  # pylint: disable=bad-mcs-method-argument
+        self, instance: Any
+    ) -> bool:
+        return isinstance(instance, np.recarray) and NDArrayMeta.__instancecheck__(
+            self, instance
+        )
 
 
 class RecArray(NDArray, metaclass=RecArrayMeta):
