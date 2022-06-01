@@ -117,7 +117,7 @@ class SubscriptableMetaTest(TestCase):
             ...
 
         with self.assertRaises(NPTypingError) as err:
-            issubclass(42, C)
+            issubclass(int, C)
 
         self.assertEqual(
             "Subclass checking is not supported for nptyping.C.", str(err.exception)
@@ -143,4 +143,4 @@ class SubscriptableMetaTest(TestCase):
         with self.assertRaises(NPTypingError):
             TestContainer["forbidden"]
 
-        self.assertFalse(issubclass("Bla", TestContainer))
+        self.assertFalse(issubclass(int, TestContainer))
