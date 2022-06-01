@@ -6,22 +6,24 @@
 
 * [Introduction](#Introduction)
 * [Usage](#Usage)
-* [NDArray](#NDArray)
-* [Shape expressions](#Shape-expressions)
-    * [Syntax](#Syntax)
-    * [Validation](#Validation)
-    * [Normalization](#Normalization)
-    * [Variables](#Variables)
-    * [Wildcards](#Wildcards)
-    * [N dimensions](#N-dimensions)
-    * [Dimension breakdowns](#Dimension-breakdowns)
-    * [Labels](#Labels)
-  * [DTypes](#DTypes)
+    * [NDArray](#NDArray)
+    * [Shape expressions](#Shape-expressions)
+        * [Syntax](#Syntax-shape-expressions)
+        * [Validation](#Validation)
+        * [Normalization](#Normalization)
+        * [Variables](#Variables)
+        * [Wildcards](#Wildcards)
+        * [N dimensions](#N-dimensions)
+        * [Dimension breakdowns](#Dimension-breakdowns)
+        * [Labels](#Labels)
+    * [DTypes](#DTypes)
+    * [Structure expressions](#Structure-expressions)
+      * [Syntax](#Syntax-structure-expressions)
+    * [RecArray](#RecArray)
 * [Examples](#Examples)
 * [Similar projects](#Similar-projects)
 * [FAQ](#FAQ)
 * [About](#About)
-
 
 ## Introduction
 
@@ -83,21 +85,23 @@ NDArray[Shape['3, 4'], Any]
 The above example shows an expression of a shape consisting of 2 dimensions of respectively size 3 and size 4. a fitting
 array would be: `np.array([[11, 12, 13, 14], [21, 22, 23, 24], [31, 32, 33, 34]])`.
 
-`Shape` is actually just an alias for `typing.Literal`:
+`Shape` is actually just a rich alias for `typing.Literal`:
 ```python
->>> Shape["2, 2"]
-typing.Literal['2, 2']
+>>> from typing import Literal
+
+>>> Shape["2, 2"] == Literal['2, 2']
+True
 
 ```
 This also means that you can use `typing.Literal` instead of `Shape` if you want.
 
-#### Syntax
+#### Syntax shape expressions
 
 A shape expression is just a comma separated list of dimensions. A dimension can be denoted by its size, like is done in
 the former examples. But you can also use variables, labels, wildcards and dimension breakdowns:
 ```python
 >>> Shape["3, 3 withLabel, *, Var, [entry1, entry2, entry3]"]
-typing.Literal['3, 3 withLabel, *, Var, [entry1, entry2, entry3]']
+Shape['3, 3 withLabel, *, Var, [entry1, entry2, entry3]']
 
 ```
 The shape expression above denotes a shape of size 3, 3, any, any, 3. For more details on the concepts of variables,
@@ -116,7 +120,7 @@ dimension-breakdown  =  "["<labels>"]"
 labels               =  <label>|<label>","<labels>
 label                =  <lletter>|<lletter><word>
 variable             =  <uletter>|<uletter><word>
-word                 =  letter|<word><underscore>|<word><number>
+word                 =  <letter>|<word><underscore>|<word><number>
 letter               =  <lletter>|<uletter> 
 uletter              =  "A"|"B"|"C"|"D"|"E"|"F"|"G"|"H"|"I"|"J"|"K"|"L"|"M"|"N"|"O"|"P"|"Q"|"R"|"S"|"T"|"U"|"V"|"W"|"X"|"Y"|"Z" 
 lletter              =  "a"|"b"|"c"|"d"|"e"|"f"|"g"|"h"|"i"|"j"|"k"|"l"|"m"|"n"|"o"|"p"|"q"|"r"|"s"|"t"|"u"|"v"|"w"|"x"|"y"|"z"
@@ -127,28 +131,26 @@ ellipsis             =  "..."
 ```
 
 #### Validation
-Shape expressions are validated when put into an `NDArray`. Invalid expressions raise an `InvalidShapeError`.
+Shape expressions are validated and may raise an `InvalidShapeError`.
 ```python
->>> from typing import Any
->>> from nptyping import NDArray, Shape, InvalidShapeError
+>>> from nptyping import Shape, InvalidShapeError
 
 >>> try:
-...    NDArray[Shape["3, 3,"], Any]
+...    Shape["3, 3,"]
 ... except InvalidShapeError as err:
 ...    print(err)
-'3, 3,' is not a valid shape expression
+'3, 3,' is not a valid shape expression.
 
 ```
 
 #### Normalization
-Shape expressions are normalized when put into an `NDArray`.
+Shape expressions are normalized, so your "shape expression style" won't affect its working.
 
 ```python
->>> from typing import Any
->>> from nptyping import NDArray, Shape
+>>> from nptyping import Shape
 
->>> NDArray[Shape[" 3 , 3 "], Any]
-NDArray[Shape['3, 3'], Any]
+>>> Shape[" 3 , 3 "]
+Shape['3, 3']
 
 ```
 
@@ -290,6 +292,7 @@ Void0
 Character
 Bytes
 String
+Str
 Bytes0
 Unicode
 Str0
@@ -304,7 +307,95 @@ These are just aliases for `numpy` dtypes.
 ```
 As a result, you may also provide `numpy` dtypes directly to an `NDArray`.
 
-## Examples
+### Structure expressions
+You can denote the structure of a structured array using what we call a **structure expression**. This expression 
+- again a string - can be put into `Structure` and can then be used in an `NDArray`.
+```python
+>>> from nptyping import Structure
+
+```
+An example of a structure expression in an `NDArray`:
+```python
+>>> from typing import Any
+
+>>> NDArray[Any, Structure["name: Str, age: Int"]]
+NDArray[Any, Structure['age: Int, name: Str']]
+
+```
+The above example shows an expression for a structured array with 2 fields.
+
+Like with `Shape`, you can use `typing.Literal` in an `NDArray`:
+```python
+>>> from typing import Literal
+
+>>> Structure["x: Float, y: Float"] == Literal["x: Float, y: Float"]
+True
+
+```
+This also means that you can use `typing.Literal` instead of `Structure` if you want.
+
+#### Syntax structure expressions
+
+A structure expression is a comma separated list of fields, with each field consisting of a name and a type.
+```python
+>>> Structure["a_name: AType, some_other_name: SomeOtherType"]
+Structure['a_name: AType, some_other_name: SomeOtherType']
+
+```
+
+You can combine fields if you want to express multiple names with the same type. Here is an example of how that may
+look:
+```python
+>>> from nptyping import Structure
+
+>>> Structure["[a, b, c]: Int, [d, e, f]: Float"]
+Structure['[d, e, f]: Float, [a, b, c]: Int']
+
+```
+
+It can make your expression more concise, but it's just an alternative way of expressing the same thing:
+```python
+>>> from nptyping import Structure
+
+>>> Structure["a: Int, b: Int, c: Int, d: Float, e: Float, f: Float"] \
+... is \
+... Structure["[a, b, c]: Int, [d, e, f]: Float"]
+True
+
+```
+
+The syntax of a structure expression can be formalized in BNF. Extra whitespacing is allowed (e.g. around commas and 
+colons), but this is not included in the schema below.
+```
+structure-expression  =  <fields>
+fields                =  <field>|<field>","<fields>
+field                 =  <field_name>":"<field_type>|"["<combined_field_names>"]:"<field_type>
+combined_field_names  =  <field_name>","<field_name>|<field_name>","<combined_field_names>
+field_type            =  <word>
+field_name            =  <word>
+word                  =  <letter>|<word><underscore>|<word><number>
+letter                =  <lletter>|<uletter> 
+uletter               =  "A"|"B"|"C"|"D"|"E"|"F"|"G"|"H"|"I"|"J"|"K"|"L"|"M"|"N"|"O"|"P"|"Q"|"R"|"S"|"T"|"U"|"V"|"W"|"X"|"Y"|"Z" 
+lletter               =  "a"|"b"|"c"|"d"|"e"|"f"|"g"|"h"|"i"|"j"|"k"|"l"|"m"|"n"|"o"|"p"|"q"|"r"|"s"|"t"|"u"|"v"|"w"|"x"|"y"|"z"
+number                =  <digit>|<number><digit> 
+digit                 =  "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
+underscore            =  "_"
+```
+
+### RecArray
+The `RecArray` corresponds to [numpy.recarray](https://numpy.org/doc/stable/reference/generated/numpy.recarray.html).
+It is an extension of `NDArray` and behaves similarly. A key difference is that with `RecArray`, the `Structure` OR 
+`typing.Any` are mandatory. 
+
+```python
+>>> from nptyping import RecArray
+
+>>> RecArray[Any, Structure["x: Float, y: Float"]]
+RecArray[Any, Structure['[x, y]: Float']]
+
+```
+
+### Examples
 
 Here is just a list of examples of how one can express arrays with `NDArray`.
 
@@ -380,16 +471,27 @@ NDArray[Shape['*, *'], UInt]
 
 ```
 
+An array with 2 dimensions of size 3 and 3 with a structured type.
+```python
+>>> NDArray[Shape["3, 3"], Structure["x: Float, y: Float"]]
+NDArray[Shape['3, 3'], Structure['[x, y]: Float']]
+
+```
+
 Here are some examples of rich expressions that `nptyping` facilitates:
 ```python
 >>> from nptyping import NDArray, Shape, Float
 
->>> def plan_route(locations: NDArray[Shape["[from, to], [x, y]"], Float]) -> NDArray[Shape["* stops, [x, y]"], Float]:
-...    ...
+>>> def plan_route(
+...        locations: NDArray[Shape["[from, to], [x, y]"], Float]
+... ) -> NDArray[Shape["* stops, [x, y]"], Float]:
+...   ...
 
 >>> AssetArray = NDArray[Shape["* assets, [id, type, age, state, x, y]"], Float]
 
->>> def get_assets_within_range(x: float, y: float, range_km: float, assets: AssetArray) -> AssetArray:
+>>> def get_assets_within_range(
+...     x: float, y: float, range_km: float, assets: AssetArray
+... ) -> AssetArray:
 ...     ...
 
 ```

@@ -7,13 +7,17 @@ class LibExportTest(TestCase):
     def test_all(self):
         expected_exports = {
             "NDArray",
+            "RecArray",
             "assert_isinstance",
             "validate_shape_expression",
             "normalize_shape_expression",
             "NPTypingError",
+            "InvalidDTypeError",
             "InvalidShapeError",
+            "InvalidStructureError",
             "InvalidArgumentsError",
             "Shape",
+            "Structure",
             "__version__",
             "DType",
             "Number",

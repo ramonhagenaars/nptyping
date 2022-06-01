@@ -21,32 +21,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-from typing import (
-    Any,
-    Optional,
-    Type,
-    TypeVar,
-)
-
 try:
-    from typing import TypeGuard  # type: ignore[attr-defined]
-except ImportError:  # pragma: no cover
-    from typing_extensions import TypeGuard  # type: ignore[attr-defined]
+    from typing import Literal  # type: ignore[attr-defined]
+except ImportError:
+    from typing_extensions import Literal  # type: ignore[attr-defined,misc]
 
-TYPE = TypeVar("TYPE")
+from typing import cast
 
-
-def assert_isinstance(
-    instance: Any, cls: Type[TYPE], message: Optional[str] = None
-) -> TypeGuard[TYPE]:
-    """
-    A TypeGuard function that is equivalent to `assert instance, cls, message`
-    that hides nasty MyPy or IDE warnings.
-    :param instance: the instance that is checked against cls.
-    :param cls: the class
-    :param message: any message that is displayed when the assert check fails.
-    :return: the type of cls.
-    """
-    message = message or f"instance={instance!r}, cls={cls!r}"
-    assert isinstance(instance, cls), message
-    return True
+Structure = cast(Literal, Structure)  # type: ignore[has-type,misc]

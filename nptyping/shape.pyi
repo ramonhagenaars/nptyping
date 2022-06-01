@@ -21,8 +21,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-from typing import Tuple
+try:
+    from typing import Literal  # type: ignore[attr-defined]
+except ImportError:
+    from typing_extensions import Literal  # type: ignore[attr-defined,misc]
 
-def check_shape(shape: Tuple[int, ...], shape_expression: str) -> bool: ...
-def validate_shape_expression(shape_expression: str) -> None: ...
-def normalize_shape_expression(shape_expression: str) -> str: ...
+from typing import cast
+
+Shape = cast(Literal, Shape)  # type: ignore[has-type,misc]
