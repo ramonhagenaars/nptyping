@@ -88,7 +88,8 @@ to express them.
 >>> from nptyping import RecArray
 
 >>> arr = np.array([("Peter", 34)], dtype=[("name", "U10"), ("age", "i4")])
->>> isinstance(arr, RecArray[Any, Structure["name: Str, age: Int"]])
+>>> rec_arr = arr.view(np.recarray)
+>>> isinstance(rec_arr, RecArray[Any, Structure["name: Str, age: Int"]])
 True
 
 ```

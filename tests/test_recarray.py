@@ -16,6 +16,9 @@ from nptyping.error import InvalidArgumentsError
 class RecArrayTest(TestCase):
     def test_isinstance_succeeds_if_shape_and_structure_match(self):
         arr = np.array([("William", 23)], dtype=[("name", "U8"), ("age", "i4")])
+
+        self.assertNotIsInstance(arr, RecArray)
+
         rec_arr = arr.view(np.recarray)
 
         self.assertIsInstance(rec_arr, RecArray)
