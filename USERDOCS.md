@@ -298,14 +298,23 @@ Unicode
 Str0
 
 ```
-These are just aliases for `numpy` dtypes.
+These are special aliases for `numpy` dtypes.
 ```python
 >>> from nptyping import Int
 >>> Int
 <class 'numpy.int32'>
 
 ```
-As a result, you may also provide `numpy` dtypes directly to an `NDArray`.
+You may also provide `numpy` dtypes directly to an `NDArray`. This is <strong>not</strong> recommended though, because 
+MyPy won't accept it.
+```python
+>>> import numpy as np
+
+>>> NDArray[Any, np.floating]
+NDArray[Any, Floating]
+
+```
+
 
 ### Structure expressions
 You can denote the structure of a structured array using what we call a **structure expression**. This expression 

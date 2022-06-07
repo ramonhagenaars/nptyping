@@ -40,6 +40,7 @@ _EXPECTED_FILES_IN_WHEEL = {
     "structure.pyi",
     "structure_expression.py",
     "typing_.py",
+    "typing_.pyi",
 }
 
 
