@@ -4,37 +4,39 @@
 #
 #    pip-compile --output-file=constraints.txt './dependencies\build-requirements.txt' './dependencies\qa-requirements.txt' './dependencies\requirements.txt'
 #
-astroid==2.9.3
+astroid==2.11.5
     # via pylint
 autoflake==1.4
     # via -r ./dependencies\qa-requirements.txt
 beartype==0.10.4 ; python_version >= "3.10"
     # via -r ./dependencies\qa-requirements.txt
-black==22.1.0
+black==22.3.0
     # via -r ./dependencies\qa-requirements.txt
-certifi==2021.10.8
+certifi==2022.5.18.1
     # via requests
 charset-normalizer==2.0.12
     # via requests
-click==8.0.4
+click==8.1.3
     # via
     #   black
     #   pip-tools
 codecov==2.1.12
-    # via -r ./dependencies\build-requirements.txt
+    # via -r ./dependencies\qa-requirements.txt
 colorama==0.4.4
     # via
     #   click
     #   pylint
-coverage==6.3.1
+coverage==6.4.1
     # via
     #   -r ./dependencies\qa-requirements.txt
     #   codecov
+dill==0.3.5.1
+    # via pylint
 feedparser==6.0.10
-    # via -r ./dependencies\build-requirements.txt
+    # via -r ./dependencies\qa-requirements.txt
 idna==3.3
     # via requests
-invoke==1.6.0
+invoke==1.7.1
     # via -r ./dependencies\build-requirements.txt
 isort==5.10.1
     # via
@@ -42,52 +44,53 @@ isort==5.10.1
     #   pylint
 lazy-object-proxy==1.7.1
     # via astroid
-mccabe==0.6.1
+mccabe==0.6.0
     # via pylint
-mypy==0.931
+mypy==0.961
     # via -r ./dependencies\qa-requirements.txt
 mypy-extensions==0.4.3
     # via
     #   black
     #   mypy
-numpy==1.21.5
+numpy==1.22.4 ; python_version >= "3.8"
     # via -r ./dependencies\requirements.txt
 pathspec==0.9.0
     # via black
 pep517==0.12.0
     # via pip-tools
-pip-tools==6.5.1
+pip-tools==6.6.2
     # via -r ./dependencies\build-requirements.txt
-platformdirs==2.5.1
+platformdirs==2.5.2
     # via
     #   black
     #   pylint
 pyflakes==2.4.0
     # via autoflake
-pylint==2.12.2
+pylint==2.14.1
     # via -r ./dependencies\qa-requirements.txt
 requests==2.27.1
     # via codecov
 sgmllib3k==1.0.0
     # via feedparser
-toml==0.10.2
-    # via pylint
 tomli==2.0.1
     # via
     #   black
     #   mypy
     #   pep517
+    #   pylint
+tomlkit==0.11.0
+    # via pylint
 typeguard==2.13.3
     # via -r ./dependencies\qa-requirements.txt
-typing-extensions==4.1.1
+typing-extensions==4.2.0
     # via mypy
-urllib3==1.26.8
+urllib3==1.26.9
     # via requests
 wheel==0.37.1
     # via
     #   -r ./dependencies\qa-requirements.txt
     #   pip-tools
-wrapt==1.13.3
+wrapt==1.14.1
     # via astroid
 
 # The following packages are considered to be unsafe in a requirements file:
