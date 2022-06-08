@@ -128,8 +128,12 @@ def lock(context, py=None):
 @task
 def install(context, py=None):
     """Install all dependencies (dev)."""
-    print(f"Installing dependencies into: {_DEFAULT_VENV}")
-    context.run(f"{get_pip(py)} install .[dev] --constraint constraints.txt")
+    for version in get_versions(py):
+        print_header(version, install)
+        print(f"Upgrading pip")
+        context.run(f"{get_py(version)} -m pip install --upgrade pip")
+        print(f"Installing dependencies into: {version}")
+        context.run(f"{get_pip(version)} install .[dev] --constraint constraints.txt")
 
 
 @task(clean, venv, lock, install)

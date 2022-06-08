@@ -30,7 +30,6 @@ from typing import (
     Dict,
     List,
     Mapping,
-    Tuple,
     Union,
 )
 
@@ -77,9 +76,7 @@ def check_structure(
     occur in a structure expression.
     :return: True if the given dtype is valid with the given target.
     """
-    fields: Mapping[
-        str, Union[Tuple[np.dtype[Any], int], Tuple[np.dtype[Any], int, Any]]
-    ] = (structured_dtype.fields or {})
+    fields: Mapping[str, Any] = structured_dtype.fields or {}  # type: ignore[assignment]
     for name, dtype_tuple in fields.items():
         dtype = dtype_tuple[0]
         target_type_name = target.get_type(name)
@@ -166,7 +163,7 @@ def _validate_structure_expression_contains_no_multiple_field_names(
     # Validate that there are not multiple occurrences of the same field names.
     matches = re.findall(_REGEX_FIELD, re.sub(r"\s*", "", structure_expression))
     field_name_combinations = [match[0].split(":")[0] for match in matches]
-    field_names = []
+    field_names: List[str] = []
     for field_name_combination in field_name_combinations:
         field_name_combination_match = re.match(
             _REGEX_FIELD_NAMES_COMBINATION, field_name_combination

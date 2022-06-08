@@ -1,6 +1,6 @@
 # History
 
-## 2.1.2 (2022-06-07)
+## 2.1.2 (2022-06-08)
 
 - Fixed bug that caused MyPy to fail with the message: Value of type variable "_DType_co" of "ndarray" cannot be "floating[Any]"
 
