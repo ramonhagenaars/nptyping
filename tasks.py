@@ -130,6 +130,8 @@ def install(context, py=None):
     """Install all dependencies (dev)."""
     for version in get_versions(py):
         print_header(version, install)
+        print(f"Upgrading pip")
+        context.run(f"{get_py(version)} -m pip install --upgrade pip")
         print(f"Installing dependencies into: {version}")
         context.run(f"{get_pip(version)} install .[dev] --constraint constraints.txt")
 
