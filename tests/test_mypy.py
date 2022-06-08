@@ -28,7 +28,6 @@ class MyPyTest(TestCase):
             NDArray[Any, Any]
         """
         )
-
         self.assertIn("Success", mypy_findings)
 
     def test_mypy_accepts_ndarray_with_shape(self):
@@ -130,14 +129,31 @@ class MyPyTest(TestCase):
             import numpy as np
 
 
-            NDArray[np.int_, Any]
-            NDArray[np.float_, Any]
-            NDArray[np.uint8, Any]
-            NDArray[np.bool_, Any]
+            NDArray[Any, np.dtype[np.int_]]
+            NDArray[Any, np.dtype[np.float_]]
+            NDArray[Any, np.dtype[np.uint8]]
+            NDArray[Any, np.dtype[np.bool_]]
         """
         )
 
         self.assertIn("Success", mypy_findings)
+
+    def test_mypy_wont_accept_numpy_types_without_dtype(self):
+        mypy_findings = _check_mypy_on_code(
+            """
+            from nptyping import NDArray
+            from typing import Any
+            import numpy as np
+
+
+            NDArray[Any, np.int_]
+        """
+        )
+
+        self.assertIn(
+            'Value of type variable "_DType_co" of "ndarray" cannot be "signedinteger[Any]"',
+            mypy_findings,
+        )
 
     def test_mypy_knows_of_ndarray_methods(self):
         # If MyPy knows of some arbitrary ndarray methods, we can assume that
@@ -162,7 +178,7 @@ class MyPyTest(TestCase):
     def test_mypy_accepts_nptyping_types(self):
         mypy_findings = _check_mypy_on_code(
             """
-            from typing import Any, TypeVar
+            from typing import Any
             import numpy as np
             import numpy.typing as npt
             from nptyping import (
@@ -231,72 +247,70 @@ class MyPyTest(TestCase):
                 Unicode,
                 Str0,
             )
-            
-            T = TypeVar("T", bound=npt.NBitBase)
 
-            NDArray[Number[T], Any]
-            NDArray[Bool, Any]
-            NDArray[Bool8, Any]
-            NDArray[Object, Any]
-            NDArray[Object0, Any]
-            NDArray[Datetime64, Any]
-            NDArray[Integer[T], Any]
-            NDArray[SignedInteger[T], Any]
-            NDArray[Int8, Any]
-            NDArray[Int16, Any]
-            NDArray[Int32, Any]
-            NDArray[Int64, Any]
-            NDArray[Byte, Any]
-            NDArray[Short, Any]
-            NDArray[IntC, Any]
-            NDArray[IntP, Any]
-            NDArray[Int0, Any]
-            NDArray[Int, Any]
-            NDArray[LongLong, Any]
-            NDArray[Timedelta64, Any]
-            NDArray[UnsignedInteger[T], Any]
-            NDArray[UInt8, Any]
-            NDArray[UInt16, Any]
-            NDArray[UInt32, Any]
-            NDArray[UInt64, Any]
-            NDArray[UByte, Any]
-            NDArray[UShort, Any]
-            NDArray[UIntC, Any]
-            NDArray[UIntP, Any]
-            NDArray[UInt0, Any]
-            NDArray[UInt, Any]
-            NDArray[ULongLong, Any]
-            NDArray[Inexact[T], Any]
-            NDArray[Floating[T], Any]
-            NDArray[Float16, Any]
-            NDArray[Float32, Any]
-            NDArray[Float64, Any]
-            NDArray[Half, Any]
-            NDArray[Single, Any]
-            NDArray[Double, Any]
-            NDArray[Float, Any]
-            NDArray[LongDouble, Any]
-            NDArray[LongFloat, Any]
-            NDArray[ComplexFloating[T, T], Any]
-            NDArray[Complex64, Any]
-            NDArray[Complex128, Any]
-            NDArray[CSingle, Any]
-            NDArray[SingleComplex, Any]
-            NDArray[CDouble, Any]
-            NDArray[Complex, Any]
-            NDArray[CFloat, Any]
-            NDArray[CLongDouble, Any]
-            NDArray[CLongFloat, Any]
-            NDArray[LongComplex, Any]
-            NDArray[Flexible, Any]
-            NDArray[Void, Any]
-            NDArray[Void0, Any]
-            NDArray[Character, Any]
-            NDArray[Bytes, Any]
-            NDArray[String, Any]
-            NDArray[Bytes0, Any]
-            NDArray[Unicode, Any]
-            NDArray[Str0, Any]
+            NDArray[Any, Number]
+            NDArray[Any, Bool]
+            NDArray[Any, Bool8]
+            NDArray[Any, Object]
+            NDArray[Any, Object0]
+            NDArray[Any, Datetime64]
+            NDArray[Any, Integer]
+            NDArray[Any, SignedInteger]
+            NDArray[Any, Int8]
+            NDArray[Any, Int16]
+            NDArray[Any, Int32]
+            NDArray[Any, Int64]
+            NDArray[Any, Byte]
+            NDArray[Any, Short]
+            NDArray[Any, IntC]
+            NDArray[Any, IntP]
+            NDArray[Any, Int0]
+            NDArray[Any, Int]
+            NDArray[Any, LongLong]
+            NDArray[Any, Timedelta64]
+            NDArray[Any, UnsignedInteger]
+            NDArray[Any, UInt8]
+            NDArray[Any, UInt16]
+            NDArray[Any, UInt32]
+            NDArray[Any, UInt64]
+            NDArray[Any, UByte]
+            NDArray[Any, UShort]
+            NDArray[Any, UIntC]
+            NDArray[Any, UIntP]
+            NDArray[Any, UInt0]
+            NDArray[Any, UInt]
+            NDArray[Any, ULongLong]
+            NDArray[Any, Inexact]
+            NDArray[Any, Floating]
+            NDArray[Any, Float16]
+            NDArray[Any, Float32]
+            NDArray[Any, Float64]
+            NDArray[Any, Half]
+            NDArray[Any, Single]
+            NDArray[Any, Double]
+            NDArray[Any, Float]
+            NDArray[Any, LongDouble]
+            NDArray[Any, LongFloat]
+            NDArray[Any, ComplexFloating]
+            NDArray[Any, Complex64]
+            NDArray[Any, Complex128]
+            NDArray[Any, CSingle]
+            NDArray[Any, SingleComplex]
+            NDArray[Any, CDouble]
+            NDArray[Any, Complex]
+            NDArray[Any, CFloat]
+            NDArray[Any, CLongDouble]
+            NDArray[Any, CLongFloat]
+            NDArray[Any, LongComplex]
+            NDArray[Any, Flexible]
+            NDArray[Any, Void]
+            NDArray[Any, Void0]
+            NDArray[Any, Character]
+            NDArray[Any, Bytes]
+            NDArray[Any, String]
+            NDArray[Any, Bytes0]
+            NDArray[Any, Unicode]
+            NDArray[Any, Str0]
         """
         )
 
