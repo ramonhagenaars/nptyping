@@ -26,6 +26,11 @@ try:
 except ImportError:
     from typing_extensions import Literal  # type: ignore[attr-defined,misc]
 
-from typing import cast
+from typing import Any, cast
 
+# For MyPy:
 Shape = cast(Literal, Shape)  # type: ignore[has-type,misc]
+
+# For PyRight:
+class Shape:  # type: ignore[no-redef]
+    def __class_getitem__(cls, item: Any) -> Any: ...

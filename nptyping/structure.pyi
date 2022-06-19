@@ -26,6 +26,13 @@ try:
 except ImportError:
     from typing_extensions import Literal  # type: ignore[attr-defined,misc]
 
-from typing import cast
+from typing import Any, cast
 
+import numpy as np
+
+# For MyPy:
 Structure = cast(Literal, Structure)  # type: ignore[has-type,misc]
+
+# For PyRight:
+class Structure(np.dtype[Any]):  # type: ignore[no-redef]
+    def __class_getitem__(cls, item: Any) -> Any: ...
