@@ -1,5 +1,10 @@
 # History
 
+## 2.1.3 (2022-06-19)
+
+- Fixed typing issue with Pyright/Pylance that caused the message: "Literal" is not a class
+- Fixed wrong error message when an invalid `Structure` was provided to `NDArray`.
+
 ## 2.1.2 (2022-06-08)
 
 - Fixed bug that caused MyPy to fail with the message: Value of type variable "_DType_co" of "ndarray" cannot be "floating[Any]"
