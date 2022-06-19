@@ -1,25 +1,20 @@
-import os
-from pathlib import Path
-from tempfile import TemporaryDirectory
-from textwrap import dedent
+from typing import Tuple
 from unittest import TestCase
 
 from mypy import api
 
+from tests.test_helpers.temp_file import temp_file
 
-def _check_mypy_on_code(python_code: str) -> str:
-    file_content = dedent(python_code).strip() + os.linesep
-    with TemporaryDirectory() as directory_name:
-        path_to_file = Path(directory_name) / "mypy_test.py"
-        with open(path_to_file, "w") as file:
-            file.write(file_content)
-        mypy_findings, _, _ = api.run([str(path_to_file)])
-    return mypy_findings
+
+def _check_mypy_on_code(python_code: str) -> Tuple[int, str, str]:
+    with temp_file(python_code) as path_to_file:
+        stdout, stderr, exit_code = api.run([str(path_to_file)])
+    return exit_code, stdout, stderr
 
 
 class MyPyTest(TestCase):
     def test_mypy_accepts_ndarray_with_any(self):
-        mypy_findings = _check_mypy_on_code(
+        exit_code, stdout, stderr = _check_mypy_on_code(
             """
             from typing import Any
             from nptyping import NDArray
@@ -28,10 +23,10 @@ class MyPyTest(TestCase):
             NDArray[Any, Any]
         """
         )
-        self.assertIn("Success", mypy_findings)
+        self.assertEqual(0, exit_code, stdout)
 
     def test_mypy_accepts_ndarray_with_shape(self):
-        mypy_findings = _check_mypy_on_code(
+        exit_code, stdout, stderr = _check_mypy_on_code(
             """
             from typing import Any
             from nptyping import NDArray, Shape
@@ -41,10 +36,10 @@ class MyPyTest(TestCase):
         """
         )
 
-        self.assertIn("Success", mypy_findings)
+        self.assertEqual(0, exit_code, stdout)
 
     def test_mypy_accepts_ndarray_with_structure(self):
-        mypy_findings = _check_mypy_on_code(
+        exit_code, stdout, stderr = _check_mypy_on_code(
             """
             from typing import Any
             from nptyping import NDArray, RecArray, Structure
@@ -54,10 +49,10 @@ class MyPyTest(TestCase):
         """
         )
 
-        self.assertIn("Success", mypy_findings)
+        self.assertEqual(0, exit_code, stdout)
 
     def test_mypy_disapproves_ndarray_with_wrong_function_arguments(self):
-        mypy_findings = _check_mypy_on_code(
+        exit_code, stdout, stderr = _check_mypy_on_code(
             """
             from typing import Any
             import numpy as np
@@ -72,12 +67,12 @@ class MyPyTest(TestCase):
         """
         )
 
-        self.assertIn('Argument 1 to "func" has incompatible type "str"', mypy_findings)
-        self.assertIn('expected "ndarray[Any, Any]"', mypy_findings)
-        self.assertIn("Found 1 error in 1 file", mypy_findings)
+        self.assertIn('Argument 1 to "func" has incompatible type "str"', stdout)
+        self.assertIn('expected "ndarray[Any, Any]"', stdout)
+        self.assertIn("Found 1 error in 1 file", stdout)
 
     def test_mypy_accepts_ndarrays_as_function_arguments(self):
-        mypy_findings = _check_mypy_on_code(
+        exit_code, stdout, stderr = _check_mypy_on_code(
             """
             from typing import Any
             import numpy as np
@@ -92,10 +87,10 @@ class MyPyTest(TestCase):
         """
         )
 
-        self.assertIn("Success", mypy_findings)
+        self.assertEqual(0, exit_code, stdout)
 
     def test_mypy_accepts_ndarrays_as_variable_hints(self):
-        mypy_findings = _check_mypy_on_code(
+        exit_code, stdout, stderr = _check_mypy_on_code(
             """
             from typing import Any
             import numpy as np
@@ -106,10 +101,10 @@ class MyPyTest(TestCase):
         """
         )
 
-        self.assertIn("Success", mypy_findings)
+        self.assertEqual(0, exit_code, stdout)
 
     def test_mypy_accepts_recarray_with_structure(self):
-        mypy_findings = _check_mypy_on_code(
+        exit_code, stdout, stderr = _check_mypy_on_code(
             """
             from typing import Any
             from nptyping import RecArray, Structure
@@ -119,10 +114,10 @@ class MyPyTest(TestCase):
         """
         )
 
-        self.assertIn("Success", mypy_findings)
+        self.assertEqual(0, exit_code, stdout)
 
     def test_mypy_accepts_numpy_types(self):
-        mypy_findings = _check_mypy_on_code(
+        exit_code, stdout, stderr = _check_mypy_on_code(
             """
             from typing import Any
             from nptyping import NDArray
@@ -136,10 +131,10 @@ class MyPyTest(TestCase):
         """
         )
 
-        self.assertIn("Success", mypy_findings)
+        self.assertEqual(0, exit_code, stdout)
 
     def test_mypy_wont_accept_numpy_types_without_dtype(self):
-        mypy_findings = _check_mypy_on_code(
+        exit_code, stdout, stderr = _check_mypy_on_code(
             """
             from nptyping import NDArray
             from typing import Any
@@ -152,13 +147,13 @@ class MyPyTest(TestCase):
 
         self.assertIn(
             'Value of type variable "_DType_co" of "ndarray" cannot be "signedinteger[Any]"',
-            mypy_findings,
+            stdout,
         )
 
     def test_mypy_knows_of_ndarray_methods(self):
         # If MyPy knows of some arbitrary ndarray methods, we can assume that
         # code completion works.
-        mypy_findings = _check_mypy_on_code(
+        exit_code, stdout, stderr = _check_mypy_on_code(
             """
             from typing import Any
             from nptyping import NDArray
@@ -173,10 +168,10 @@ class MyPyTest(TestCase):
         """
         )
 
-        self.assertIn("Success", mypy_findings)
+        self.assertEqual(0, exit_code, stdout)
 
     def test_mypy_accepts_nptyping_types(self):
-        mypy_findings = _check_mypy_on_code(
+        exit_code, stdout, stderr = _check_mypy_on_code(
             """
             from typing import Any
             import numpy as np
@@ -314,4 +309,4 @@ class MyPyTest(TestCase):
         """
         )
 
-        self.assertIn("Success", mypy_findings)
+        self.assertEqual(0, exit_code, stdout)
