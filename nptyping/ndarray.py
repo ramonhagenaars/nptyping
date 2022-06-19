@@ -147,7 +147,7 @@ class NDArrayMeta(
             raise InvalidArgumentsError(
                 f"Unexpected argument '{dtype_candidate}', expecting"
                 " Structure[<StructureExpression>]"
-                " or Literal[<ShapeExpression>]"
+                " or Literal[<StructureExpression>]"
                 " or a dtype"
                 " or typing.Any."
             )
