@@ -45,11 +45,8 @@ _EXPECTED_FILES_IN_WHEEL = {
 
 
 def determine_order(_: Any, x: str, __: str) -> int:
-    if x == "test_wheel_is_built_correctly":
-        return -1
-    if x == "test_wheel_can_be_installed":
-        return -1
-    return 1
+    prio_tests = ("test_wheel_is_built_correctly", "test_wheel_can_be_installed")
+    return -1 if x in prio_tests else 1
 
 
 TestLoader.sortTestMethodsUsing = determine_order
@@ -83,11 +80,12 @@ class WheelTest(TestCase):
 
     def test_wheel_is_built_correctly(self):
         with working_dir(_ROOT):
-            subprocess.check_output(
-                f"{sys.executable} setup.py bdist_wheel", shell=True
-            )
-            wheel_files = glob(f"dist/*{__version__}*")
+            subprocess.check_output(f"{sys.executable} -m invoke wheel", shell=True)
+            wheel_files = glob(f"dist/*{__version__}*.whl")
+            src_files = glob(f"dist/*{__version__}*.tar.gz")
+
             self.assertEqual(1, len(wheel_files))
+            self.assertEqual(1, len(src_files))
 
         with ZipFile(_ROOT / Path(wheel_files[0]), "r") as zip_:
             files_in_wheel = set(
