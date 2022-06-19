@@ -1,13 +1,14 @@
 autoflake
+beartype<0.10.0; python_version<'3.10'
+beartype>=0.10.0; python_version>='3.10'
 black
 coverage
 codecov>=2.1.0
+feedparser
 isort
 mypy
 pylint
+pyright
 setuptools
-wheel
-beartype<0.10.0; python_version<'3.10'
-beartype>=0.10.0; python_version>='3.10'
 typeguard
-feedparser
+wheel
