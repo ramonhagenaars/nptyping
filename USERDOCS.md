@@ -110,7 +110,7 @@ labels, wildcards and dimension breakdowns, they are described in the following 
 The syntax of a shape expression can be formalized in BNF. Extra whitespacing is allowed (e.g. around commas), but this
 is not included in the schema below (to avoid extra complexity).
 ```
-shape-expression     =  <dimensions>|<dimension>","<ellipsis>
+shape-expression     =  <dimensions>|<dimensions>","<ellipsis>
 dimensions           =  <dimension>|<dimension>","<dimensions>
 dimension            =  <unlabeled-dimension>|<labeled-dimension>
 labeled-dimension    =  <unlabeled-dimension>" "<label>
@@ -200,6 +200,19 @@ True
 
 ```
 The shape in the above example can be replaced with `typing.Any` to have the same effect.
+
+You can also express "at least N dimensions":
+```python
+>>> isinstance(random.randn(2, 2), NDArray[Shape["2, 2, ..."], Any])
+True
+>>> isinstance(random.randn(2, 2, 2, 2), NDArray[Shape["2, 2, ..."], Any])
+True
+>>> isinstance(random.randn(2), NDArray[Shape["2, 2, ..."], Any])
+False
+
+```
+
+
 
 #### Dimension breakdowns
 A dimension can be broken down into more detail. We call this a **dimension breakdown**. This can be useful to clearly

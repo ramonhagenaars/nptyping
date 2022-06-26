@@ -105,12 +105,30 @@ class NDArrayTest(TestCase):
             NDArray[Shape["*, ..."], Any],
             "This should match with an array of any dimensions of any size.",
         )
+        self.assertIsInstance(
+            np.array([[0]]),
+            NDArray[Shape["1, 1, ..."], Any],
+            "This should match with an array of shape (1, 1).",
+        )
+        self.assertIsInstance(
+            np.array([[[[0]]]]),
+            NDArray[Shape["1, 1, ..."], Any],
+            "This should match with an array of shape (1, 1, 1, 1).",
+        )
+        self.assertIsInstance(
+            np.array([[[[0, 0], [0, 0]], [[0, 0], [0, 0]]]]),
+            NDArray[Shape["1, 2, ..."], Any],
+        )
 
     def test_isinstance_fails_with_ellipsis(self):
         self.assertNotIsInstance(
             np.array([[[[[[0, 0]]]]]]),
             NDArray[Shape["1, ..."], Any],
             "This should match with an array of any dimensions of size 1.",
+        )
+        self.assertNotIsInstance(
+            np.array([[[[[0], [0]], [[0], [0]]], [[[0], [0]], [[0], [0]]]]]),
+            NDArray[Shape["1, 2, ..."], Any],
         )
 
     def test_isinstance_succeeds_with_dim_breakdown(self):

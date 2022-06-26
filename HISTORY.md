@@ -1,5 +1,9 @@
 # History
 
+## 2.2.0 (2022-06-26)
+
+- Added support for expressing "at least N dimensions".
+
 ## 2.1.3 (2022-06-19)
 
 - Fixed typing issue with Pyright/Pylance that caused the message: "Literal" is not a class
