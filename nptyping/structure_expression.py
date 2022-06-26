@@ -35,7 +35,13 @@ from typing import (
 
 import numpy as np
 
-from nptyping.error import InvalidStructureError
+from nptyping.error import InvalidShapeError, InvalidStructureError
+from nptyping.shape import Shape
+from nptyping.shape_expression import (
+    check_shape,
+    normalize_shape_expression,
+    validate_shape_expression,
+)
 from nptyping.typing_ import StructureExpression
 
 if TYPE_CHECKING:
@@ -59,6 +65,7 @@ def validate_structure_expression(
         _validate_structure_expression_contains_no_multiple_field_names(
             structure_expression
         )
+        _validate_sub_array_expressions(structure_expression)
 
 
 def check_structure(
@@ -80,9 +87,23 @@ def check_structure(
     for name, dtype_tuple in fields.items():
         dtype = dtype_tuple[0]
         target_type_name = target.get_type(name)
+        target_type_shape_match = re.search(_REGEX_FIELD_SHAPE, target_type_name)
+        actual_type = dtype.type
+        if target_type_shape_match:
+            if not dtype.subdtype:
+                # the dtype does not contain a shape.
+                return False
+            actual_type = dtype.subdtype[0].type
+            target_type_shape = target_type_shape_match.group(1)
+            shape_corresponds = check_shape(dtype.shape, Shape[target_type_shape])
+            if not shape_corresponds:
+                return False
+            target_type_name = target_type_name.replace(
+                target_type_shape_match.group(0), ""
+            )
         check_type_name(target_type_name, type_per_name)
         target_type = type_per_name[target_type_name]
-        if not issubclass(dtype.type, target_type):
+        if not issubclass(actual_type, target_type):
             return False
     return True
 
@@ -108,6 +129,8 @@ def check_type_name(type_name: str, type_per_name: Dict[str, type]) -> None:
     :param type_per_name: a dict that is looked in for type_name.
     :return: None.
     """
+    # Remove any subarray stuff here.
+    type_name = type_name.split("[")[0]
     if type_name not in type_per_name:
         close_matches = get_close_matches(
             type_name, type_per_name.keys(), 3, cutoff=0.4
@@ -135,7 +158,7 @@ def normalize_structure_expression(
     structure_expression = re.sub(r"\s*", "", structure_expression)
     type_to_names_dict = _create_type_to_names_dict(structure_expression)
     normalized_structure_expression = _type_to_names_dict_to_str(type_to_names_dict)
-    return normalized_structure_expression.replace(",", ", ")
+    return normalized_structure_expression.replace(",", ", ").replace("  ", " ")
 
 
 def create_name_to_type_dict(
@@ -188,6 +211,23 @@ def _validate_structure_expression_contains_no_multiple_field_names(
         )
 
 
+def _validate_sub_array_expressions(structure_expression: str) -> None:
+    # Validate that the given structure expression does not contain any shape
+    # expressions for sub arrays that are invalid.
+    for field_match in re.findall(_REGEX_FIELD, structure_expression):
+        field_type = field_match[0].split(_FIELD_TYPE_POINTER)[1]
+        type_shape_match = re.search(_REGEX_FIELD_SHAPE, field_type)
+        if type_shape_match:
+            type_shape = type_shape_match[1]
+            try:
+                validate_shape_expression(type_shape)
+            except InvalidShapeError as err:
+                raise InvalidStructureError(
+                    f"'{structure_expression}' is not a valid structure"
+                    f" expression; {str(err)}"
+                ) from err
+
+
 def _create_type_to_names_dict(
     structure_expression: StructureExpression,
 ) -> Dict[str, List[str]]:
@@ -199,10 +239,17 @@ def _create_type_to_names_dict(
         field_name_combination_match = re.match(
             _REGEX_FIELD_NAMES_COMBINATION, field_name_combination
         )
+        field_type_shape_match = re.search(_REGEX_FIELD_SHAPE, field_type)
         if field_name_combination_match:
             field_names = field_name_combination_match.group(2).split(_SEPARATOR)
         else:
             field_names = [field_name_combination]
+        if field_type_shape_match:
+            type_shape = field_type_shape_match.group(1)
+            normalized_type_shape = normalize_shape_expression(type_shape)
+            field_type = field_type.replace(
+                field_type_shape_match.group(0), f"[{normalized_type_shape}]"
+            )
         names_per_type[field_type] += field_names
     return {
         field_type: sorted(names_per_type[field_type])
@@ -230,7 +277,11 @@ _REGEX_FIELD_NAMES_COMBINATION = rf"(\s*\[{_REGEX_FIELD_NAMES}\]\s*)"
 _REGEX_FIELD_LEFT = rf"({_REGEX_FIELD_NAME}|{_REGEX_FIELD_NAMES_COMBINATION})"
 _REGEX_FIELD_TYPE = r"(\s*[a-zA-Z]\w*\s*)"
 _REGEX_FIELD_TYPE_WILDCARD = r"(\s*\*\s*)"
-_REGEX_FIELD_RIGHT = rf"({_REGEX_FIELD_TYPE}|{_REGEX_FIELD_TYPE_WILDCARD})"
+_REGEX_FIELD_SHAPE = r"\[([^\]]+)\]"
+_REGEX_FIELD_SHAPE_MAYBE = rf"\s*({_REGEX_FIELD_SHAPE})?\s*"
+_REGEX_FIELD_RIGHT = (
+    rf"({_REGEX_FIELD_TYPE}|{_REGEX_FIELD_TYPE_WILDCARD}){_REGEX_FIELD_SHAPE_MAYBE}"
+)
 _REGEX_FIELD_TYPE_POINTER = rf"(\s*{_FIELD_TYPE_POINTER}\s*)"
 _REGEX_FIELD = (
     rf"(\s*{_REGEX_FIELD_LEFT}{_REGEX_FIELD_TYPE_POINTER}{_REGEX_FIELD_RIGHT}\s*)"

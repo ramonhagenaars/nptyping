@@ -19,6 +19,7 @@
     * [DTypes](#DTypes)
     * [Structure expressions](#Structure-expressions)
       * [Syntax](#Syntax-structure-expressions)
+      * [Subarrays](#Subarrays)
     * [RecArray](#RecArray)
 * [Examples](#Examples)
 * [Similar projects](#Similar-projects)
@@ -212,8 +213,6 @@ False
 
 ```
 
-
-
 #### Dimension breakdowns
 A dimension can be broken down into more detail. We call this a **dimension breakdown**. This can be useful to clearly
 describe what a dimension means. Example:
@@ -328,7 +327,6 @@ NDArray[Any, Floating]
 
 ```
 
-
 ### Structure expressions
 You can denote the structure of a structured array using what we call a **structure expression**. This expression 
 - again a string - can be put into `Structure` and can then be used in an `NDArray`.
@@ -391,10 +389,11 @@ colons), but this is not included in the schema below.
 ```
 structure-expression  =  <fields>
 fields                =  <field>|<field>","<fields>
-field                 =  <field_name>":"<field_type>|"["<combined_field_names>"]:"<field_type>
-combined_field_names  =  <field_name>","<field_name>|<field_name>","<combined_field_names>
-field_type            =  <word>
-field_name            =  <word>
+field                 =  <field-name>":"<field-type>|"["<combined-field-names>"]:"<field-type>
+combined-field-names  =  <field-name>","<field-name>|<field-name>","<combined-field-names>
+field-type            =  <word>|<word><field-subarray-shape>
+field-subarray-shape  = "["<shape-expression>"]"
+field-name            =  <word>
 word                  =  <letter>|<word><underscore>|<word><number>
 letter                =  <lletter>|<uletter> 
 uletter               =  "A"|"B"|"C"|"D"|"E"|"F"|"G"|"H"|"I"|"J"|"K"|"L"|"M"|"N"|"O"|"P"|"Q"|"R"|"S"|"T"|"U"|"V"|"W"|"X"|"Y"|"Z" 
@@ -402,6 +401,20 @@ lletter               =  "a"|"b"|"c"|"d"|"e"|"f"|"g"|"h"|"i"|"j"|"k"|"l"|"m"|"n"
 number                =  <digit>|<number><digit> 
 digit                 =  "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
 underscore            =  "_"
+```
+
+#### Subarrays
+You can express the shape of a subarray using brackets after a type. You can use the full power of shape expressions.
+
+```python
+>>> from typing import Any
+>>> import numpy as np
+>>> from nptyping import NDArray, Structure
+
+>>> arr = np.array([("x")], np.dtype([("x", "U10", (2, 2))]))
+>>> isinstance(arr, NDArray[Any, Structure["x: Str[2, 2]"]])
+True
+
 ```
 
 ### RecArray

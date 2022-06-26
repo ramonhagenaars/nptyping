@@ -23,6 +23,40 @@ class StructureExpressionTest(TestCase):
         structure2 = Structure["[a, b, c]: Integer"]
         self.assertTrue(check_structure(dtype2, structure2, dtype_per_name))
 
+    def test_check_structure_with_sub_array(self):
+        dtype = np.dtype([("x", "U10", (2, 2))])
+        structure = Structure["x: Str[2, 2]"]
+        self.assertTrue(check_structure(dtype, structure, dtype_per_name))
+
+        dtype2 = np.dtype([("x", "U10", (2, 2))])
+        structure2 = Structure["x: Int[2, 2]"]
+        self.assertFalse(
+            check_structure(dtype2, structure2, dtype_per_name),
+            "It should fail because of the type.",
+        )
+
+        dtype3 = np.dtype([("x", "U10", (3, 3))])
+        structure3 = Structure["x: Str[2, 2]"]
+        self.assertFalse(
+            check_structure(dtype3, structure3, dtype_per_name),
+            "It should fail because of the shape.",
+        )
+
+        dtype4 = np.dtype([("x", "U10", (2, 2)), ("y", "U10", (2, 2))])
+        structure4 = Structure["x: Str[2, 2], y: Str[2, 2]"]
+        self.assertTrue(check_structure(dtype4, structure4, dtype_per_name))
+
+        dtype5 = np.dtype([("x", "U10", (2, 2)), ("y", "U10", (2, 2))])
+        structure5 = Structure["[x, y]: Str[2, 2]"]
+        self.assertTrue(check_structure(dtype5, structure5, dtype_per_name))
+
+        dtype6 = np.dtype([("x", "U10")])
+        structure6 = Structure["x: Str[2, 2]"]
+        self.assertFalse(
+            check_structure(dtype6, structure6, dtype_per_name),
+            "It should fail because it doesn't contain a sub array at all.",
+        )
+
     def test_check_structure_false(self):
         dtype = np.dtype([("name", "U10"), ("age", "i4")])
         structure = Structure["name: Str, age: UInt"]
@@ -66,8 +100,12 @@ class StructureExpressionTest(TestCase):
         validate_structure_expression("a_123: t")
         validate_structure_expression("abc: type")
         validate_structure_expression("abc: *")
+        validate_structure_expression("abc: type[2, 2]")
+        validate_structure_expression("abc: type [*, ...]")
         validate_structure_expression("abc: type, def: type")
+        validate_structure_expression("abc: type[*, 2, ...], def: type[2 ]")
         validate_structure_expression("[abc, def]: type")
+        validate_structure_expression("[abc, def]: type[*, ...]")
         validate_structure_expression("[abc, def]: type1, ghi: type2")
         validate_structure_expression("[abc, def]: type1, [ghi, jkl]: type2")
         validate_structure_expression(
@@ -104,6 +142,15 @@ class StructureExpressionTest(TestCase):
             validate_structure_expression("[a,b,]: type")
         with self.assertRaises(InvalidStructureError):
             validate_structure_expression("[,a,b]: type")
+        with self.assertRaises(InvalidStructureError):
+            validate_structure_expression("abc: type []")
+        with self.assertRaises(InvalidStructureError):
+            validate_structure_expression("a: t[]")
+        with self.assertRaises(InvalidStructureError) as err:
+            validate_structure_expression(
+                "a: t[*, 2, ...], b: t[not-a-valid-shape-expression]"
+            )
+        self.assertIn("not-a-valid-shape-expression", str(err.exception))
         with self.assertRaises(InvalidStructureError) as err:
             validate_structure_expression("a: t1, b: t2, c: t3, a: t4")
         self.assertEqual(
@@ -137,6 +184,9 @@ class StructureExpressionTest(TestCase):
         self.assertEqual(
             "[a, b, d, e]: t1, c: t2",
             normalize_structure_expression("[b, a]: t1, c: t2, [d, e]: t1"),
+        )
+        self.assertEqual(
+            "a: t[*, ...]", normalize_structure_expression("  a  :  t  [ * , ... ]")
         )
 
     def test_create_name_to_type_dict(self):
