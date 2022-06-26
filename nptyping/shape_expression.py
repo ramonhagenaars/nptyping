@@ -47,8 +47,8 @@ def check_shape(shape: ShapeTuple, target: "Shape") -> bool:
     :param target: the shape expression to which shape is tested.
     :return: True if the given shape corresponds to shape_expression.
     """
-    dim_strings = _handle_ellipsis(target.prepared_args, shape)
-    return _check_dimensions_against_shape(dim_strings, shape)
+    target_shape = _handle_ellipsis(shape, target.prepared_args)
+    return _check_dimensions_against_shape(shape, target_shape)
 
 
 def validate_shape_expression(shape_expression: Union[ShapeExpression, Any]) -> None:
@@ -113,37 +113,41 @@ def remove_labels(dimensions: List[str]) -> List[str]:
     :param dimensions: a list of dimensions.
     :return: a copy of the given list without labels.
     """
-    return [re.sub(r"\b[a-z]\w*", "", dim) for dim in dimensions]
+    return [re.sub(r"\b[a-z]\w*", "", dim).strip() for dim in dimensions]
 
 
-def _check_dimensions_against_shape(dimensions: List[str], shape: ShapeTuple) -> bool:
-    # Walk through the dimensions and test them against the given shape,
+def _check_dimensions_against_shape(shape: ShapeTuple, target: List[str]) -> bool:
+    # Walk through the shape and test them against the given target,
     # taking into consideration variables, wildcards, etc.
-    if len(shape) != len(dimensions):
+
+    if len(shape) != len(target):
         return False
-    assigned_variables: Dict[str, str] = {}
-    for inst_dim, cls_dim in zip(shape, dimensions):
-        cls_dim_ = cls_dim.strip()
-        inst_dim_ = str(inst_dim)
-        if _is_variable(cls_dim_):
-            # Since cls_dim_ is a variable, try to assign it with
-            # inst_dim_. This always succeeds if a variable with the same
-            # name hasn't been assigned already.
-            if (
-                cls_dim_ in assigned_variables
-                and assigned_variables[cls_dim_] != inst_dim_
-            ):
-                result = False
-                break
-            assigned_variables[cls_dim_] = inst_dim_
-        elif inst_dim_ != cls_dim_ and not _is_wildcard(cls_dim_):
-            # Identical dimension sizes or wildcards are fine.
-            result = False
-            break
-    else:
-        # All is well, no errors have been encountered.
-        result = True
-    return result
+    shape_as_strings = (str(dim) for dim in shape)
+    variables: Dict[str, str] = {}
+    for dim, target_dim in zip(shape_as_strings, target):
+        if _is_wildcard(target_dim) or _is_assignable_var(dim, target_dim, variables):
+            continue
+        if dim != target_dim:
+            return False
+    return True
+
+
+def _handle_ellipsis(shape: ShapeTuple, target: List[str]) -> List[str]:
+    # Let the ellipsis allows for any number of dimensions by replacing the
+    # ellipsis with the dimension size repeated the number of times that
+    # corresponds to the shape of the instance.
+    if target[-1] == "...":
+        dim_to_repeat = target[-2]
+        target = target[0:-1]
+        if len(shape) > len(target):
+            difference = len(shape) - len(target)
+            target += difference * [dim_to_repeat]
+    return target
+
+
+def _is_assignable_var(dim: str, target_dim: str, variables: Dict[str, str]) -> bool:
+    # Return whether target_dim is a variable and can be assigned with dim.
+    return _is_variable(target_dim) and _can_assign_variable(dim, target_dim, variables)
 
 
 def _is_variable(dim: str) -> bool:
@@ -151,20 +155,17 @@ def _is_variable(dim: str) -> bool:
     return dim[0] in string.ascii_uppercase
 
 
+def _can_assign_variable(dim: str, target_dim: str, variables: Dict[str, str]) -> bool:
+    # Check and assign a variable.
+    assignable = variables.get(target_dim) in (None, dim)
+    variables[target_dim] = dim
+    return assignable
+
+
 def _is_wildcard(dim: str) -> bool:
     # Return whether dim is a wildcard (i.e. the character that takes any
     # dimension size).
     return dim == "*"
-
-
-def _handle_ellipsis(dimensions: List[str], shape: ShapeTuple) -> List[str]:
-    # Let the ellipsis allows for any number of dimensions by replacing the
-    # ellipsis with the dimension size repeated the number of times that
-    # corresponds to the shape of the instance.
-    result = dimensions
-    if len(dimensions) == 2 and dimensions[1].strip() == "...":
-        result = dimensions[0:1] * len(shape)
-    return result
 
 
 _REGEX_SEPARATOR = r"(\s*,\s*)"
@@ -184,7 +185,5 @@ _REGEX_DIMENSION_WITH_LABEL = rf"({_REGEX_DIMENSION}(\s+{_REGEX_LABEL})*)"
 _REGEX_DIMENSIONS = (
     rf"{_REGEX_DIMENSION_WITH_LABEL}({_REGEX_SEPARATOR}{_REGEX_DIMENSION_WITH_LABEL})*"
 )
-_REGEX_DIMENSION_ELLIPSIS = (
-    rf"({_REGEX_DIMENSION_WITH_LABEL}{_REGEX_SEPARATOR}\.\.\.\s*)"
-)
-_REGEX_SHAPE_EXPRESSION = rf"^({_REGEX_DIMENSIONS}|{_REGEX_DIMENSION_ELLIPSIS})$"
+_REGEX_DIMENSIONS_ELLIPSIS = rf"({_REGEX_DIMENSIONS}{_REGEX_SEPARATOR}\.\.\.\s*)"
+_REGEX_SHAPE_EXPRESSION = rf"^({_REGEX_DIMENSIONS}|{_REGEX_DIMENSIONS_ELLIPSIS})$"
