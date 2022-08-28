@@ -30,6 +30,7 @@ from typing import (
     Dict,
     List,
     Mapping,
+    Type,
     Union,
 )
 
@@ -84,6 +85,11 @@ def check_structure(
     :return: True if the given dtype is valid with the given target.
     """
     fields: Mapping[str, Any] = structured_dtype.fields or {}  # type: ignore[assignment]
+
+    # Add the wildcard to the lexicon. We want to do this here to keep
+    # knowledge on wildcards in one place (this module).
+    type_per_name_with_wildcard = {**type_per_name, "*": object}  # type: ignore[arg-type]
+
     for name, dtype_tuple in fields.items():
         dtype = dtype_tuple[0]
         target_type_name = target.get_type(name)
@@ -101,14 +107,16 @@ def check_structure(
             target_type_name = target_type_name.replace(
                 target_type_shape_match.group(0), ""
             )
-        check_type_name(target_type_name, type_per_name)
-        target_type = type_per_name[target_type_name]
+        check_type_name(target_type_name, type_per_name_with_wildcard)
+        target_type = type_per_name_with_wildcard[target_type_name]
         if not issubclass(actual_type, target_type):
             return False
     return True
 
 
-def check_type_names(structure: "Structure", type_per_name: Dict[str, type]) -> None:
+def check_type_names(
+    structure: "Structure", type_per_name: Dict[str, Type[object]]
+) -> None:
     """
     Check the given structure for any invalid type names in the given context
     of type_per_name. Raises an InvalidStructureError if a type name is
@@ -121,7 +129,7 @@ def check_type_names(structure: "Structure", type_per_name: Dict[str, type]) -> 
         check_type_name(type_, type_per_name)
 
 
-def check_type_name(type_name: str, type_per_name: Dict[str, type]) -> None:
+def check_type_name(type_name: str, type_per_name: Dict[str, Type[object]]) -> None:
     """
     Check if the given type_name is in type_per_name and raise a meaningful
     error if not.

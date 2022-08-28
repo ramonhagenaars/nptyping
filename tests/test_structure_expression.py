@@ -23,6 +23,10 @@ class StructureExpressionTest(TestCase):
         structure2 = Structure["[a, b, c]: Integer"]
         self.assertTrue(check_structure(dtype2, structure2, dtype_per_name))
 
+        dtype3 = np.dtype([("name", "U10")])
+        structure3 = Structure["name: *"]
+        self.assertTrue(check_structure(dtype3, structure3, dtype_per_name))
+
     def test_check_structure_with_sub_array(self):
         dtype = np.dtype([("x", "U10", (2, 2))])
         structure = Structure["x: Str[2, 2]"]
