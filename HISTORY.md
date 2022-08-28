@@ -1,5 +1,10 @@
 # History
 
+## 2.3.0 (2022-08-28)
+
+- Added support for subarrays with shape expressions inside structure expressions.
+- Added support for wildcards in structure expressions.
+
 ## 2.2.0 (2022-06-26)
 
 - Added support for expressing "at least N dimensions".

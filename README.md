@@ -80,6 +80,13 @@ True
 
 ```
 
+Subarrays can be expressed with a shape expression between square brackets:
+```python
+>>> Structure["name: Int[3, 3]"]
+Structure['name: Int[3, 3]']
+
+```
+
 ### Record arrays
 The recarray is a specialization of a structured array. You can use `RecArray`
 to express them.

@@ -187,6 +187,10 @@ class NDArrayTest(TestCase):
             NDArray[Any, Structure["[name, age]: Str"]],
         )
 
+    def test_isinstance_succeeds_if_structure_subarray_matches(self):
+        arr = np.array([("x")], np.dtype([("x", "U10", (2, 2))]))
+        self.assertIsInstance(arr, NDArray[Any, Structure["x: Str[2, 2]"]])
+
     def test_isinstance_fails_if_structure_contains_invalid_types(self):
         with self.assertRaises(InvalidStructureError) as err:
             NDArray[Any, Structure["name: Str, age: Float, address: Address"]]
