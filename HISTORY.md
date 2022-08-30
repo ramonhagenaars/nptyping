@@ -3,6 +3,7 @@
 ## 2.3.1 (????-??-??)
 
 - Fixed mypy error of inheriting final dtype as of numpy==1.23.1.
+- Allowed for quotes in shape expressions to appease PyCharm.
 
 ## 2.3.0 (2022-08-28)
 

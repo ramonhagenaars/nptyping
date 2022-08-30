@@ -25,3 +25,7 @@ class ShapeTest(TestCase):
     def test_shape_can_be_compared_to_literal(self):
         self.assertEqual(Shape["2, 2"], Literal["2, 2"])
         self.assertEqual(Shape[" 2 , 2 "], Literal["2,2"])
+
+    def test_quotes_are_allowed(self):
+        self.assertEqual(Shape["2, 2"], Shape["'2, 2'"])
+        self.assertEqual(Shape["2, 2"], Shape['"2, 2"'])

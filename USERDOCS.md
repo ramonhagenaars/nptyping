@@ -559,8 +559,13 @@ quite far. `MyPy` will support it (to some extent), but you won't have any insta
   
 ## FAQ
 
+* PyCharm complains about `Shape[<expression>]`, what should I do? <br/>
+*Unfortunately, some IDEs try to parse what's between quotes in a type hint. You are left with 2 options:*
+  1. *Do nothing, accept the IDE complaints, wait and hope for the IDE to mature*
+  2. *Use an extra pair of quotes: `Shape['"<expression>"']`*, this appeases PyCharm and is accepted by `nptyping`
 * Can `MyPy` do the instance checking? <br/>
-*Unfortunately no. The checking done by MyPy is limited to "`ndarray` or not an `ndarray`".*
+*Because of the dynamic nature of `numpy`, this is not possible. The checking done by MyPy is limited to "`ndarray` or*
+*not an `ndarray`".*
 * Will there ever be support for Pandas DataFrames? Or for Tensorflow Tensors? Or for... ? <br/>
 *Maybe. Possibly. If there is enough demand for it and if I find the spare time.*
 
