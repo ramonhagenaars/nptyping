@@ -58,9 +58,9 @@ def validate_shape_expression(shape_expression: Union[ShapeExpression, Any]) -> 
     :param shape_expression: the shape expression to validate.
     :return: None.
     """
-
+    shape_expression_no_quotes = shape_expression.replace("'", "").replace('"', "")
     if shape_expression is not Any and not re.match(
-        _REGEX_SHAPE_EXPRESSION, shape_expression
+        _REGEX_SHAPE_EXPRESSION, shape_expression_no_quotes
     ):
         raise InvalidShapeError(
             f"'{shape_expression}' is not a valid shape expression."
@@ -74,6 +74,7 @@ def normalize_shape_expression(shape_expression: ShapeExpression) -> ShapeExpres
     :param shape_expression: the shape expression that is to be normalized.
     :return: a normalized shape expression.
     """
+    shape_expression = shape_expression.replace("'", "").replace('"', "")
     # Replace whitespaces right before labels with $.
     shape_expression = re.sub(rf"\s*{_REGEX_LABEL}", r"$\1", shape_expression)
     # Let all commas be followed by a $.

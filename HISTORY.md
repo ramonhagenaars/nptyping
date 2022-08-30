@@ -1,5 +1,10 @@
 # History
 
+## 2.3.1 (2022-08-30)
+
+- Fixed mypy error of inheriting final dtype as of numpy==1.23.1.
+- Allowed for quotes in shape expressions to appease PyCharm.
+
 ## 2.3.0 (2022-08-28)
 
 - Added support for subarrays with shape expressions inside structure expressions.
