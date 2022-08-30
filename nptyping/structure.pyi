@@ -34,5 +34,5 @@ import numpy as np
 Structure = cast(Literal, Structure)  # type: ignore[has-type,misc]
 
 # For PyRight:
-class Structure(np.dtype[Any]):  # type: ignore[no-redef]
+class Structure(np.dtype[Any]):  # type: ignore[no-redef,misc]
     def __class_getitem__(cls, item: Any) -> Any: ...

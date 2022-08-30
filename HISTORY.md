@@ -1,5 +1,9 @@
 # History
 
+## 2.3.1 (????-??-??)
+
+- Fixed mypy error of inheriting final dtype as of numpy==1.23.1.
+
 ## 2.3.0 (2022-08-28)
 
 - Added support for subarrays with shape expressions inside structure expressions.
