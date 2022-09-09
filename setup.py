@@ -40,6 +40,7 @@ if version_unsupported:
 extras = {
     "build": _get_dependencies("build-requirements.txt"),
     "qa": _get_dependencies("qa-requirements.txt"),
+    "pandas": _get_dependencies("pandas-requirements.txt"),
 }
 # Complete: all extras for end users, excluding dev dependencies.
 extras["complete"] = [

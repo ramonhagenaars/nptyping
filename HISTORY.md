@@ -1,5 +1,10 @@
 # History
 
+## 2.4.0 (????-??-??)
+
+- Added hint for pandas DataFrame.
+- Fixed bug for checking against a Structure where a different number of fields did not fail the check. 
+
 ## 2.3.1 (2022-08-30)
 
 - Fixed mypy error of inheriting final dtype as of numpy==1.23.1.

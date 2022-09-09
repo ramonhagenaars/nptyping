@@ -41,6 +41,8 @@ _EXPECTED_FILES_IN_WHEEL = {
     "structure_expression.py",
     "typing_.py",
     "typing_.pyi",
+    "pandas_/__init__.py",
+    "pandas_/dataframe.py",
 }
 
 

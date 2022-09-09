@@ -83,6 +83,7 @@ class LibExportTest(TestCase):
             "Bytes0",
             "Unicode",
             "Str0",
+            "DataFrame",
         }
 
         self.assertSetEqual(expected_exports, set(__all__))

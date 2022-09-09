@@ -560,9 +560,10 @@ quite far. `MyPy` will support it (to some extent), but you won't have any insta
 ## FAQ
 
 * PyCharm complains about `Shape[<expression>]`, what should I do? <br/>
-*Unfortunately, some IDEs try to parse what's between quotes in a type hint. You are left with 2 options:*
-  1. *Do nothing, accept the IDE complaints, wait and hope for the IDE to mature*
+*Unfortunately, some IDEs try to parse what's between quotes in a type hint. You are left with 3 options:*
+  1. *Use `typing.Literal` instead of `Shape`, `nptyping` can handle this perfectly fine*
   2. *Use an extra pair of quotes: `Shape['"<expression>"']`*, this appeases PyCharm and is accepted by `nptyping`
+  3. *Do nothing, accept the IDE complaints, wait and hope for the IDE to mature*
 * Can `MyPy` do the instance checking? <br/>
 *Because of the dynamic nature of `numpy`, this is not possible. The checking done by MyPy is limited to "`ndarray` or*
 *not an `ndarray`".*

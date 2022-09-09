@@ -41,3 +41,7 @@ class InvalidStructureError(NPTypingError):
 
 class InvalidDTypeError(NPTypingError):
     """Raised when an argument is not a DType."""
+
+
+class DependencyError(NPTypingError):
+    """Raised when a dependency has not been installed."""
