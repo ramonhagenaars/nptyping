@@ -247,6 +247,7 @@ The second argument of `NDArray` can be `typing.Any` or any of the following dty
 Number
 Bool
 Bool8
+Obj
 Object
 Object0
 Datetime64
@@ -314,7 +315,7 @@ These are special aliases for `numpy` dtypes.
 ```python
 >>> from nptyping import Int
 >>> Int
-<class 'numpy.int32'>
+<class 'numpy.integer'>
 
 ```
 You may also provide `numpy` dtypes directly to an `NDArray`. This is <strong>not</strong> recommended though, because 
