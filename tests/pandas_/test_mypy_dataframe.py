@@ -18,4 +18,24 @@ class MyPyDataFrameTest(TestCase):
         )
         self.assertEqual(0, exit_code, stdout)
 
+    def test_mypy_knows_of_dataframe_methods(self):
+        # If MyPy knows of some arbitrary DataFrame methods, we can assume that
+        # code completion works.
+        exit_code, stdout, stderr = check_mypy_on_code(
+            """
+            from typing import Any
+            from nptyping import DataFrame
+
+
+            df: DataFrame[Any]
+            df.shape
+            df.dtypes
+            df.values
+            df.boxplot
+            df.filter
+        """
+        )
+
+        self.assertEqual(0, exit_code, stdout)
+
     # FIXME: add more tests here...
