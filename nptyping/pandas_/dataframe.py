@@ -37,9 +37,9 @@ from nptyping.base_meta_classes import (
 )
 from nptyping.error import DependencyError
 from nptyping.nptyping_type import NPTypingType
+from nptyping.pandas_.typing_ import dtype_per_name
 from nptyping.structure import Structure
 from nptyping.structure_expression import check_structure
-from nptyping.typing_ import dtype_per_name
 
 try:
     import pandas as pd
@@ -88,13 +88,14 @@ class DataFrameMeta(
         return (Structure[getattr(item, "__args__")[0]],)
 
     def __str__(cls) -> str:
-        shape = cls.__args__[0]
-        shape_expression = shape.__args__[0]
-        return f"{cls.__name__}[{shape_expression}]"
+        structure = cls.__args__[0]
+        structure_str = "Any" if structure is Any else structure.__args__[0]
+        return f"{cls.__name__}[{structure_str}]"
 
     def __repr__(cls) -> str:
-        shape = cls.__args__[0]
-        return f"{cls.__name__}[{shape}]"
+        structure = cls.__args__[0]
+        structure_str = "Any" if structure is Any else structure
+        return f"{cls.__name__}[{structure_str}]"
 
     def _check_item(cls, item: Any) -> None:
         # Check if the item is what we expect and raise if it is not.
