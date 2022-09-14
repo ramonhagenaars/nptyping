@@ -104,4 +104,26 @@ class DataFrameMeta(
 
 
 class DataFrame(NPTypingType, ABC, metaclass=DataFrameMeta):
+    """
+    An nptyping equivalent of pandas DataFrame.
+
+    ## No arguments means a DataFrame of any structure.
+    >>> DataFrame
+    DataFrame[Any]
+
+    ## You can use Structure Expression.
+    >>> from nptyping import DataFrame, Structure
+    >>> DataFrame[Structure["x: Int, y: Int"]]
+    DataFrame[Structure['[x, y]: Int']]
+
+    ## Instance checking can be done and the structure is also checked.
+    >>> import pandas as pd
+    >>> df = pd.DataFrame({'x': [1, 2, 3], 'y': [4., 5., 6.]})
+    >>> isinstance(df, DataFrame[Structure['x: Int, y: Float']])
+    True
+    >>> isinstance(df, DataFrame[Structure['x: Float, y: Int']])
+    False
+
+    """
+
     __args__ = (Any,)
