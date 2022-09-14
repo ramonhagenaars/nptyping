@@ -54,6 +54,8 @@ class DataframeTest(TestCase):
         self.assertEqual(
             "DataFrame[Structure['[x, y]: Int']]", repr(DataFrame[_["x: Int, y: Int"]])
         )
+        self.assertEqual("DataFrame[Any]", repr(DataFrame))
 
     def test_str(self):
         self.assertEqual("DataFrame[[x, y]: Int]", str(DataFrame[_["x: Int, y: Int"]]))
+        self.assertEqual("DataFrame[Any]", str(DataFrame))
