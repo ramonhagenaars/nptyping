@@ -21,6 +21,7 @@
       * [Syntax](#Syntax-structure-expressions)
       * [Subarrays](#Subarrays)
     * [RecArray](#RecArray)
+    * [Pandas DataFrame](#Pandas-DataFrame)
 * [Examples](#Examples)
 * [Similar projects](#Similar-projects)
 * [FAQ](#FAQ)
@@ -432,6 +433,20 @@ RecArray[Any, Structure['[x, y]: Float']]
 
 ```
 
+### Pandas DataFrame
+The `nptyping.DataFrame` can be used for expressing structures of `pandas.DataFrame`. It takes a `Structure` and uses
+the same Structure Expression syntax. 
+
+```python
+>>> from nptyping import DataFrame, Structure as _
+
+>>> DataFrame[_["name: Str, x: Float, y: Float"]]
+DataFrame[Structure['[x, y]: Float, name: Str']]
+
+```
+
+Check out the documentation on [Structure Expressions](#Structure-expressions) for more details.
+
 ### Examples
 
 Here is just a list of examples of how one can express arrays with `NDArray`.
@@ -568,7 +583,7 @@ quite far. `MyPy` will support it (to some extent), but you won't have any insta
 * Can `MyPy` do the instance checking? <br/>
 *Because of the dynamic nature of `numpy`, this is not possible. The checking done by MyPy is limited to "`ndarray` or*
 *not an `ndarray`".*
-* Will there ever be support for Pandas DataFrames? Or for Tensorflow Tensors? Or for... ? <br/>
+* Will there ever be support for Tensorflow Tensors? Or for... ? <br/>
 *Maybe. Possibly. If there is enough demand for it and if I find the spare time.*
 
 ## About
