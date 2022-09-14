@@ -175,7 +175,7 @@ def doctest(context, py=None):
     context.run(f"{get_py(py)} -m doctest USERDOCS.md")
 
     # And check all the modules.
-    for filename in glob(f"{_ROOT}/*.py", recursive=True):
+    for filename in glob(f"{_ROOT}/**/*.py", recursive=True):
         context.run(f"{get_py(py)} -m doctest {filename}")
 
 
