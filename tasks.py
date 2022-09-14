@@ -51,7 +51,7 @@ def get_venv(py=None):
 def get_constraints(py=None):
     if py is not None:
         # Skip the patch version.
-        py = py.strip(".")[:2]
+        py = py.split(".")[:2]
 
     return f"constraints-{py}.txt" if py else "constraints.txt"
 
