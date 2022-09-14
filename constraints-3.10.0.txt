@@ -81,7 +81,7 @@ pylint==2.15.2
     # via -r ./dependencies\qa-requirements.txt
 pyparsing==3.0.9
     # via packaging
-pyright==1.1.270
+pyright==1.1.271
     # via -r ./dependencies\qa-requirements.txt
 python-dateutil==2.8.2
     # via pandas
