@@ -27,9 +27,9 @@ Example of a hinted `numpy.ndarray`:
 Example of a hinted `pandas.DataFrame`:
 
 ```python
->>> from nptyping import DataFrame, Structure as _
+>>> from nptyping import DataFrame, Structure as S
 
->>> df: DataFrame[_["name: Str, x: Float, y: Float"]]
+>>> df: DataFrame[S["name: Str, x: Float, y: Float"]]
 
 ```
 
@@ -115,9 +115,9 @@ True
 ### Pandas DataFrames
 Pandas DataFrames can be expressed with `Structure` also. To make it more concise, you may want to alias `Structure`.
 ```python
->>> from nptyping import DataFrame, Structure as _
+>>> from nptyping import DataFrame, Structure as S
 
->>> df: DataFrame[_["x: Float, y: Float"]]
+>>> df: DataFrame[S["x: Float, y: Float"]]
 
 ```
 

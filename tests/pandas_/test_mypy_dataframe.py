@@ -9,11 +9,11 @@ class MyPyDataFrameTest(TestCase):
     def test_mypy_accepts_dataframe(self):
         exit_code, stdout, stderr = check_mypy_on_code(
             """
-            from nptyping import DataFrame, Structure as _
+            from nptyping import DataFrame, Structure as S
             import pandas as pd
 
 
-            df: DataFrame[_["x: Int, y: Int"]] = pd.DataFrame({"x": [1], "y": [1]})
+            df: DataFrame[S["x: Int, y: Int"]] = pd.DataFrame({"x": [1], "y": [1]})
         """
         )
         self.assertEqual(0, exit_code, stdout)

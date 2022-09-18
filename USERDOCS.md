@@ -438,9 +438,9 @@ The `nptyping.DataFrame` can be used for expressing structures of `pandas.DataFr
 the same Structure Expression syntax. 
 
 ```python
->>> from nptyping import DataFrame, Structure as _
+>>> from nptyping import DataFrame, Structure as S
 
->>> DataFrame[_["name: Str, x: Float, y: Float"]]
+>>> DataFrame[S["name: Str, x: Float, y: Float"]]
 DataFrame[Structure['[x, y]: Float, name: Str']]
 
 ```
