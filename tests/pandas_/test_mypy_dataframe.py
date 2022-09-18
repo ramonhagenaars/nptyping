@@ -18,6 +18,26 @@ class MyPyDataFrameTest(TestCase):
         )
         self.assertEqual(0, exit_code, stdout)
 
+    def test_mypy_disapproves_dataframe_with_wrong_function_arguments(self):
+        exit_code, stdout, stderr = check_mypy_on_code(
+            """
+            from typing import Any
+            import numpy as np
+            from nptyping import DataFrame, Structure as S
+
+
+            def func(_: DataFrame[S["x: Float, y: Float"]]) -> None:
+                ...
+
+
+            func("Not an array...")
+        """
+        )
+
+        self.assertIn('Argument 1 to "func" has incompatible type "str"', stdout)
+        self.assertIn('expected "DataFrame[Any]"', stdout)
+        self.assertIn("Found 1 error in 1 file", stdout)
+
     def test_mypy_knows_of_dataframe_methods(self):
         # If MyPy knows of some arbitrary DataFrame methods, we can assume that
         # code completion works.
@@ -37,5 +57,3 @@ class MyPyDataFrameTest(TestCase):
         )
 
         self.assertEqual(0, exit_code, stdout)
-
-    # FIXME: add more tests here...
