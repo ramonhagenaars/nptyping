@@ -78,12 +78,17 @@ class DataFrameMeta(
         if not isinstance(instance, pd.DataFrame):
             return False
 
+        if structure is Any:
+            return True
+
         structured_dtype = np.dtype(
             [(column, dtype.str) for column, dtype in instance.dtypes.items()]
         )
         return check_structure(structured_dtype, structure, dtype_per_name)
 
     def _get_item(cls, item: Any) -> Tuple[Structure]:
+        if item is Any:
+            return (Any,)
         cls._check_item(item)
         return (Structure[getattr(item, "__args__")[0]],)
 
