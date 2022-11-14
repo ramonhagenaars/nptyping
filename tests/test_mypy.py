@@ -1,20 +1,11 @@
-from typing import Tuple
 from unittest import TestCase
 
-from mypy import api
-
-from tests.test_helpers.temp_file import temp_file
-
-
-def _check_mypy_on_code(python_code: str) -> Tuple[int, str, str]:
-    with temp_file(python_code) as path_to_file:
-        stdout, stderr, exit_code = api.run([str(path_to_file)])
-    return exit_code, stdout, stderr
+from tests.test_helpers.check_mypy_on_code import check_mypy_on_code
 
 
 class MyPyTest(TestCase):
     def test_mypy_accepts_ndarray_with_any(self):
-        exit_code, stdout, stderr = _check_mypy_on_code(
+        exit_code, stdout, stderr = check_mypy_on_code(
             """
             from typing import Any
             from nptyping import NDArray
@@ -26,7 +17,7 @@ class MyPyTest(TestCase):
         self.assertEqual(0, exit_code, stdout)
 
     def test_mypy_accepts_ndarray_with_shape(self):
-        exit_code, stdout, stderr = _check_mypy_on_code(
+        exit_code, stdout, stderr = check_mypy_on_code(
             """
             from typing import Any
             from nptyping import NDArray, Shape
@@ -39,7 +30,7 @@ class MyPyTest(TestCase):
         self.assertEqual(0, exit_code, stdout)
 
     def test_mypy_accepts_ndarray_with_structure(self):
-        exit_code, stdout, stderr = _check_mypy_on_code(
+        exit_code, stdout, stderr = check_mypy_on_code(
             """
             from typing import Any
             from nptyping import NDArray, RecArray, Structure
@@ -52,7 +43,7 @@ class MyPyTest(TestCase):
         self.assertEqual(0, exit_code, stdout)
 
     def test_mypy_disapproves_ndarray_with_wrong_function_arguments(self):
-        exit_code, stdout, stderr = _check_mypy_on_code(
+        exit_code, stdout, stderr = check_mypy_on_code(
             """
             from typing import Any
             import numpy as np
@@ -72,7 +63,7 @@ class MyPyTest(TestCase):
         self.assertIn("Found 1 error in 1 file", stdout)
 
     def test_mypy_accepts_ndarrays_as_function_arguments(self):
-        exit_code, stdout, stderr = _check_mypy_on_code(
+        exit_code, stdout, stderr = check_mypy_on_code(
             """
             from typing import Any
             import numpy as np
@@ -90,7 +81,7 @@ class MyPyTest(TestCase):
         self.assertEqual(0, exit_code, stdout)
 
     def test_mypy_accepts_ndarrays_as_variable_hints(self):
-        exit_code, stdout, stderr = _check_mypy_on_code(
+        exit_code, stdout, stderr = check_mypy_on_code(
             """
             from typing import Any
             import numpy as np
@@ -104,7 +95,7 @@ class MyPyTest(TestCase):
         self.assertEqual(0, exit_code, stdout)
 
     def test_mypy_accepts_recarray_with_structure(self):
-        exit_code, stdout, stderr = _check_mypy_on_code(
+        exit_code, stdout, stderr = check_mypy_on_code(
             """
             from typing import Any
             from nptyping import RecArray, Structure
@@ -117,7 +108,7 @@ class MyPyTest(TestCase):
         self.assertEqual(0, exit_code, stdout)
 
     def test_mypy_accepts_numpy_types(self):
-        exit_code, stdout, stderr = _check_mypy_on_code(
+        exit_code, stdout, stderr = check_mypy_on_code(
             """
             from typing import Any
             from nptyping import NDArray
@@ -134,7 +125,7 @@ class MyPyTest(TestCase):
         self.assertEqual(0, exit_code, stdout)
 
     def test_mypy_wont_accept_numpy_types_without_dtype(self):
-        exit_code, stdout, stderr = _check_mypy_on_code(
+        exit_code, stdout, stderr = check_mypy_on_code(
             """
             from nptyping import NDArray
             from typing import Any
@@ -153,7 +144,7 @@ class MyPyTest(TestCase):
     def test_mypy_knows_of_ndarray_methods(self):
         # If MyPy knows of some arbitrary ndarray methods, we can assume that
         # code completion works.
-        exit_code, stdout, stderr = _check_mypy_on_code(
+        exit_code, stdout, stderr = check_mypy_on_code(
             """
             from typing import Any
             from nptyping import NDArray
@@ -171,7 +162,7 @@ class MyPyTest(TestCase):
         self.assertEqual(0, exit_code, stdout)
 
     def test_mypy_accepts_nptyping_types(self):
-        exit_code, stdout, stderr = _check_mypy_on_code(
+        exit_code, stdout, stderr = check_mypy_on_code(
             """
             from typing import Any
             import numpy as np

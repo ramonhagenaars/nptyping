@@ -48,6 +48,14 @@ def get_venv(py=None):
     return f".venv{py}" if py else _DEFAULT_VENV
 
 
+def get_constraints(py=None):
+    if py is not None:
+        # Skip the patch version.
+        py = ".".join(py.split(".")[:2])
+
+    return f"constraints-{py}.txt" if py else "constraints.txt"
+
+
 def get_py(py=None):
     return f"{get_venv(py)}{_PY_SUFFIX}"
 
@@ -119,10 +127,11 @@ def venv(context, py=None):
 @task
 def lock(context, py=None):
     """Lock the project dependencies in a constraints file."""
-    print("Updating the constraints.txt")
-    context.run(
-        f"{get_py(py)} -m piptools compile ./dependencies/* --output-file constraints.txt --quiet"
-    )
+    for version in get_versions(py):
+        print_header(version, lock)
+        context.run(
+            f"{get_py(version)} -m piptools compile ./dependencies/* --output-file {get_constraints(version)} --quiet"
+        )
 
 
 @task
@@ -133,7 +142,12 @@ def install(context, py=None):
         print(f"Upgrading pip")
         context.run(f"{get_py(version)} -m pip install --upgrade pip")
         print(f"Installing dependencies into: {version}")
-        context.run(f"{get_pip(version)} install .[dev] --constraint constraints.txt")
+        print(
+            f"{get_pip(version)} install .[dev] --constraint {get_constraints(version)}"
+        )
+        context.run(
+            f"{get_pip(version)} install .[dev] --constraint {get_constraints(version)}"
+        )
 
 
 @task(clean, venv, lock, install)
@@ -168,7 +182,7 @@ def doctest(context, py=None):
     context.run(f"{get_py(py)} -m doctest USERDOCS.md")
 
     # And check all the modules.
-    for filename in glob(f"{_ROOT}/*.py", recursive=True):
+    for filename in glob(f"{_ROOT}/**/*.py", recursive=True):
         context.run(f"{get_py(py)} -m doctest {filename}")
 
 

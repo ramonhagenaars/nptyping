@@ -23,9 +23,13 @@ class StructureExpressionTest(TestCase):
         structure2 = Structure["[a, b, c]: Integer"]
         self.assertTrue(check_structure(dtype2, structure2, dtype_per_name))
 
-        dtype3 = np.dtype([("name", "U10")])
-        structure3 = Structure["name: *"]
+        dtype3 = np.dtype([("a", "i4"), ("b", "i4"), ("c", "i8")])
+        structure3 = Structure["[a, b, c]: Int"]
         self.assertTrue(check_structure(dtype3, structure3, dtype_per_name))
+
+        dtype4 = np.dtype([("name", "U10")])
+        structure4 = Structure["name: *"]
+        self.assertTrue(check_structure(dtype4, structure4, dtype_per_name))
 
     def test_check_structure_with_sub_array(self):
         dtype = np.dtype([("x", "U10", (2, 2))])
@@ -93,6 +97,15 @@ class StructureExpressionTest(TestCase):
         self.assertEqual(
             "Type 'not_even_close' is not valid in this context.", str(err.exception)
         )
+
+    def test_check_structure_that_is_subset_or_superset_of_dtype(self):
+        dtype1 = np.dtype([("x", "i4"), ("y", "i4")])
+        structure1 = Structure["x: Int"]
+        self.assertFalse(check_structure(dtype1, structure1, dtype_per_name))
+
+        dtype2 = np.dtype([("x", "i4"), ("y", "i4")])
+        structure2 = Structure["x: Int, y: Int, z: Int"]
+        self.assertFalse(check_structure(dtype2, structure2, dtype_per_name))
 
     def test_validate_structure_expression_success(self):
         # validate_structure_expression("_: t")

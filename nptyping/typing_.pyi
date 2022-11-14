@@ -24,6 +24,7 @@ SOFTWARE.
 
 try:
     from typing import (  # type: ignore[attr-defined] # pylint: disable=unused-import
+        Dict,
         TypeAlias,
     )
 except ImportError:  # pragma: no cover
@@ -108,3 +109,6 @@ String: TypeAlias = np.dtype[np.string_]
 Bytes0: TypeAlias = np.dtype[np.bytes0]
 Unicode: TypeAlias = np.dtype[np.unicode_]
 Str0: TypeAlias = np.dtype[np.str0]
+
+dtype_per_name: Dict[str, np.dtype[Any]]
+name_per_dtype: Dict[np.dtype[Any], str]

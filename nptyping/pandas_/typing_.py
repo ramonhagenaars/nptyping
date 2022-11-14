@@ -21,27 +21,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
+from nptyping.typing_ import Object
+from nptyping.typing_ import dtype_per_name as dtype_per_name_default
 
-
-class NPTypingError(Exception):
-    """Base error for all NPTyping errors."""
-
-
-class InvalidArgumentsError(NPTypingError):
-    """Raised when a invalid arguments are provided to an nptyping type."""
-
-
-class InvalidShapeError(NPTypingError):
-    """Raised when a shape is considered not valid."""
-
-
-class InvalidStructureError(NPTypingError):
-    """Raised when a structure is considered not valid."""
-
-
-class InvalidDTypeError(NPTypingError):
-    """Raised when an argument is not a DType."""
-
-
-class DependencyError(NPTypingError):
-    """Raised when a dependency has not been installed."""
+dtype_per_name = {
+    **dtype_per_name_default,  # type: ignore[arg-type]
+    # Override the `String` and `Str` to point to `Object`. Pandas uses Object
+    # for string types in Dataframes and Series.
+    "String": Object,
+    "Str": Object,
+}

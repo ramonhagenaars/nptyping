@@ -49,6 +49,7 @@ ShapeTuple: TypeAlias = Tuple[int, ...]
 Number = np.number
 Bool = np.bool_
 Bool8 = np.bool8
+Obj = np.object_  # Obj is a common abbreviation and should be usable.
 Object = np.object_
 Object0 = np.object0
 Datetime64 = np.datetime64
@@ -63,7 +64,8 @@ Short = np.short
 IntC = np.intc
 IntP = np.intp
 Int0 = np.int0
-Int = np.int_
+Int = np.integer  # Int should translate to the "generic" int type.
+Int_ = np.int_
 LongLong = np.longlong
 Timedelta64 = np.timedelta64
 UnsignedInteger = np.unsignedinteger
@@ -115,6 +117,7 @@ dtypes = [
     (Number, "Number"),
     (Bool, "Bool"),
     (Bool8, "Bool8"),
+    (Obj, "Obj"),
     (Object, "Object"),
     (Object0, "Object0"),
     (Datetime64, "Datetime64"),
