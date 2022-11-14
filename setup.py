@@ -47,7 +47,7 @@ extras["complete"] = [
     req for key, reqs in extras.items() for req in reqs if key not in ("build", "qa")
 ]
 # Dev: all extras for developers, including build and qa dependencies.
-extras["dev"] = [req for key, reqs in extras.items() for req in reqs if key]
+extras["dev"] = [req for key, reqs in extras.items() for req in reqs]
 
 pyi_files = [
     Path(pyi_file).name for pyi_file in glob("nptyping/**/*.pyi", recursive=True)
