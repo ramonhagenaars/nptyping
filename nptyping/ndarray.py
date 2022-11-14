@@ -177,7 +177,7 @@ class NDArray(NPTypingType, ABC, metaclass=NDArrayMeta):
     ## You can provide a DType and a Shape Expression.
     >>> from nptyping import Int32, Shape
     >>> NDArray[Shape["2, 2"], Int32]
-    NDArray[Shape['2, 2'], Int]
+    NDArray[Shape['2, 2'], Int32]
 
     ## Instance checking can be done and the shape is also checked.
     >>> import numpy as np

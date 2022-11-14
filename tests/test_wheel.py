@@ -7,7 +7,11 @@ from glob import glob
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Any
-from unittest import TestCase, TestLoader
+from unittest import (
+    TestCase,
+    TestLoader,
+    skipIf,
+)
 from zipfile import ZipFile
 
 from nptyping.package_info import __version__
@@ -41,6 +45,9 @@ _EXPECTED_FILES_IN_WHEEL = {
     "structure_expression.py",
     "typing_.py",
     "typing_.pyi",
+    "pandas_/__init__.py",
+    "pandas_/dataframe.py",
+    "pandas_/typing_.py",
 }
 
 
@@ -62,6 +69,7 @@ def working_dir(path: Path):
         os.chdir(origin)
 
 
+@skipIf(sys.version_info.minor >= 11, "Does not work on 3.11 due to invoke")
 class WheelTest(TestCase):
     temp_dir: TemporaryDirectory
     py: str

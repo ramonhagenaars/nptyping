@@ -22,26 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+import pandas as pd
 
-class NPTypingError(Exception):
-    """Base error for all NPTyping errors."""
-
-
-class InvalidArgumentsError(NPTypingError):
-    """Raised when a invalid arguments are provided to an nptyping type."""
-
-
-class InvalidShapeError(NPTypingError):
-    """Raised when a shape is considered not valid."""
-
-
-class InvalidStructureError(NPTypingError):
-    """Raised when a structure is considered not valid."""
-
-
-class InvalidDTypeError(NPTypingError):
-    """Raised when an argument is not a DType."""
-
-
-class DependencyError(NPTypingError):
-    """Raised when a dependency has not been installed."""
+DataFrame = pd.DataFrame

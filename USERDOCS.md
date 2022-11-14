@@ -21,6 +21,7 @@
       * [Syntax](#Syntax-structure-expressions)
       * [Subarrays](#Subarrays)
     * [RecArray](#RecArray)
+    * [Pandas DataFrame](#Pandas-DataFrame)
 * [Examples](#Examples)
 * [Similar projects](#Similar-projects)
 * [FAQ](#FAQ)
@@ -247,6 +248,7 @@ The second argument of `NDArray` can be `typing.Any` or any of the following dty
 Number
 Bool
 Bool8
+Obj
 Object
 Object0
 Datetime64
@@ -314,7 +316,7 @@ These are special aliases for `numpy` dtypes.
 ```python
 >>> from nptyping import Int
 >>> Int
-<class 'numpy.int32'>
+<class 'numpy.integer'>
 
 ```
 You may also provide `numpy` dtypes directly to an `NDArray`. This is <strong>not</strong> recommended though, because 
@@ -430,6 +432,20 @@ It is an extension of `NDArray` and behaves similarly. A key difference is that 
 RecArray[Any, Structure['[x, y]: Float']]
 
 ```
+
+### Pandas DataFrame
+The `nptyping.DataFrame` can be used for expressing structures of `pandas.DataFrame`. It takes a `Structure` and uses
+the same Structure Expression syntax. 
+
+```python
+>>> from nptyping import DataFrame, Structure as S
+
+>>> DataFrame[S["name: Str, x: Float, y: Float"]]
+DataFrame[Structure['[x, y]: Float, name: Str']]
+
+```
+
+Check out the documentation on [Structure Expressions](#Structure-expressions) for more details.
 
 ### Examples
 
@@ -560,13 +576,15 @@ quite far. `MyPy` will support it (to some extent), but you won't have any insta
 ## FAQ
 
 * PyCharm complains about `Shape[<expression>]`, what should I do? <br/>
-*Unfortunately, some IDEs try to parse what's between quotes in a type hint. You are left with 2 options:*
-  1. *Do nothing, accept the IDE complaints, wait and hope for the IDE to mature*
+*Unfortunately, some IDEs try to parse what's between quotes in a type hint sometimes. You are left with 3 options:*
+  1. *Use `typing.Literal` instead of `Shape`, `nptyping` can handle this perfectly fine*
   2. *Use an extra pair of quotes: `Shape['"<expression>"']`*, this appeases PyCharm and is accepted by `nptyping`
+  3. *Do nothing, accept the IDE complaints, wait and hope for the IDE to mature*
 * Can `MyPy` do the instance checking? <br/>
-*Because of the dynamic nature of `numpy`, this is not possible. The checking done by MyPy is limited to "`ndarray` or*
-*not an `ndarray`".*
-* Will there ever be support for Pandas DataFrames? Or for Tensorflow Tensors? Or for... ? <br/>
+*Because of the dynamic nature of `numpy` and `pandas`, this is currently not possible. The checking done by MyPy is* 
+*limited to detecting whether or not a `numpy` or `pandas` type is provided when that is hinted. There are no static*
+*checks on shapes, structures or types.*
+* Will there ever be support for Tensorflow Tensors? Or for... ? <br/>
 *Maybe. Possibly. If there is enough demand for it and if I find the spare time.*
 
 ## About

@@ -89,7 +89,8 @@ def check_structure(
     # Add the wildcard to the lexicon. We want to do this here to keep
     # knowledge on wildcards in one place (this module).
     type_per_name_with_wildcard = {**type_per_name, "*": object}  # type: ignore[arg-type]
-
+    if set(target.get_names()) != set(fields.keys()):
+        return False
     for name, dtype_tuple in fields.items():
         dtype = dtype_tuple[0]
         target_type_name = target.get_type(name)

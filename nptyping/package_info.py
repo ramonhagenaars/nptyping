@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 __title__ = "nptyping"
-__version__ = "2.3.1"
+__version__ = "2.4.0"
 __author__ = "Ramon Hagenaars"
 __author_email__ = "ramon.hagenaars@gmail.com"
 __description__ = "Type hints for NumPy."
@@ -33,4 +33,5 @@ __python_versions__ = [
     "3.8",
     "3.9",
     "3.10",
+    "3.11",
 ]

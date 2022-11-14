@@ -31,6 +31,7 @@ from nptyping.error import (
 )
 from nptyping.ndarray import NDArray
 from nptyping.package_info import __version__
+from nptyping.pandas_.dataframe import DataFrame
 from nptyping.recarray import RecArray
 from nptyping.shape import Shape
 from nptyping.shape_expression import (
@@ -183,4 +184,5 @@ __all__ = [
     "Bytes0",
     "Unicode",
     "Str0",
+    "DataFrame",
 ]

@@ -12,23 +12,35 @@
 </p>
 
 💡 *Type hints for `NumPy`* <br/>
-💡 *Extends `numpy.typing`* <br/>
-💡 *Extensive dynamic type checks for dtypes and shapes of arrays* <br/>
+💡 *Type hints for `pandas.DataFrame`* <br/>
+💡 *Extensive dynamic type checks for dtypes shapes and structures* <br/>
 
-Example of a hinted function with `nptyping`:
+Example of a hinted `numpy.ndarray`:
 
 ```python
 >>> from nptyping import NDArray, Int, Shape
 
->>> def func(arr: NDArray[Shape["2, 2"], Int]) -> None:
-...     pass
+>>> arr: NDArray[Shape["2, 2"], Int]
 
 ```
+
+Example of a hinted `pandas.DataFrame`:
+
+```python
+>>> from nptyping import DataFrame, Structure as S
+
+>>> df: DataFrame[S["name: Str, x: Float, y: Float"]]
+
+```
+⚠️`pandas.DataFrame` is not yet supported on Python 3.11.
 
 ### Installation
-```
-pip install nptyping
-```
+
+| Command                          | Description                                               |
+|:---------------------------------|-----------------------------------------------------------|
+| `pip install nptyping`           | Install the basics                                        |
+| `pip install nptyping[pandas]`   | Install with pandas extension (⚠️Python 3.10 or lower)  |
+| `pip install nptyping[complete]` | Install with all extensions                               |
 
 ### Instance checking
 
@@ -57,7 +69,7 @@ True
 
 ```
 
-### Structured arrays
+### NumPy Structured arrays
 
 You can also express structured arrays using `nptyping.Structure`:
 ```python
@@ -87,7 +99,7 @@ Structure['name: Int[3, 3]']
 
 ```
 
-### Record arrays
+### NumPy Record arrays
 The recarray is a specialization of a structured array. You can use `RecArray`
 to express them.
 
@@ -98,6 +110,15 @@ to express them.
 >>> rec_arr = arr.view(np.recarray)
 >>> isinstance(rec_arr, RecArray[Any, Structure["name: Str, age: Int"]])
 True
+
+```
+
+### Pandas DataFrames
+Pandas DataFrames can be expressed with `Structure` also. To make it more concise, you may want to alias `Structure`.
+```python
+>>> from nptyping import DataFrame, Structure as S
+
+>>> df: DataFrame[S["x: Float, y: Float"]]
 
 ```
 
