@@ -6,9 +6,7 @@ from urllib.request import Request, urlopen
 class ForkSyncTest(TestCase):
     @skipIf(os.environ.get("CI"), reason="Only run locally")
     def test_pandas_stubs_fork_is_synchronized(self):
-        url = (
-            "https://github.com/ramonhagenaars/pandas-stubs/tree/feature/generic-for-df"
-        )
+        url = "https://github.com/ramonhagenaars/pandas-stubs/tree/main"
         httprequest = Request(url, headers={"Accept": "text/html"})
 
         with urlopen(httprequest) as response:

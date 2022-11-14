@@ -32,14 +32,15 @@ Example of a hinted `pandas.DataFrame`:
 >>> df: DataFrame[S["name: Str, x: Float, y: Float"]]
 
 ```
+⚠️`pandas.DataFrame` is not yet supported on Python 3.11.
 
 ### Installation
 
-| Command                          | Description                   |
-|:---------------------------------|-------------------------------|
-| `pip install nptyping`           | Install the basics            |
-| `pip install nptyping[pandas]`   | Install with pandas extension |
-| `pip install nptyping[complete]` | Install with all extensions   |
+| Command                          | Description                                               |
+|:---------------------------------|-----------------------------------------------------------|
+| `pip install nptyping`           | Install the basics                                        |
+| `pip install nptyping[pandas]`   | Install with pandas extension (⚠️Python 3.10 or lower)  |
+| `pip install nptyping[complete]` | Install with all extensions                               |
 
 ### Instance checking
 

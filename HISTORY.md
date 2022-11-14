@@ -1,10 +1,11 @@
 # History
 
-## 2.4.0 (????-??-??)
+## 2.4.0 (2022-11-14)
 
 - Added hint for pandas DataFrame.
 - Fixed bug for checking against a Structure where a different number of fields did not fail the check. 
 - Changed `nptyping.Int` pointing to the more generic `numpy.integer` rather than `numpy.int32`.
+- Added support for Python 3.11 with the exception of `pandas.DataFrame`.
 
 ## 2.3.1 (2022-08-30)
 

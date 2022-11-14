@@ -1,11 +1,13 @@
 import sys
-from unittest import TestCase, skipIf
+from unittest import TestCase, skipUnless
 
 from tests.test_helpers.check_mypy_on_code import check_mypy_on_code
 
 
 class MyPyDataFrameTest(TestCase):
-    @skipIf(sys.version_info.minor <= 7, "MyPy does not work with DataFrame on 3.7")
+    @skipUnless(
+        7 < sys.version_info.minor < 11, "MyPy does not work with DataFrame on 3.7"
+    )
     def test_mypy_accepts_dataframe(self):
         exit_code, stdout, stderr = check_mypy_on_code(
             """
@@ -18,7 +20,9 @@ class MyPyDataFrameTest(TestCase):
         )
         self.assertEqual(0, exit_code, stdout)
 
-    @skipIf(sys.version_info.minor <= 7, "MyPy does not work with DataFrame on 3.7")
+    @skipUnless(
+        7 < sys.version_info.minor < 11, "MyPy does not work with DataFrame on 3.7"
+    )
     def test_mypy_disapproves_dataframe_with_wrong_function_arguments(self):
         exit_code, stdout, stderr = check_mypy_on_code(
             """
@@ -39,7 +43,9 @@ class MyPyDataFrameTest(TestCase):
         self.assertIn('expected "DataFrame[Any]"', stdout)
         self.assertIn("Found 1 error in 1 file", stdout)
 
-    @skipIf(sys.version_info.minor <= 7, "MyPy does not work with DataFrame on 3.7")
+    @skipUnless(
+        7 < sys.version_info.minor < 11, "MyPy does not work with DataFrame on 3.7"
+    )
     def test_mypy_knows_of_dataframe_methods(self):
         # If MyPy knows of some arbitrary DataFrame methods, we can assume that
         # code completion works.

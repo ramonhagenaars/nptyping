@@ -1,2 +1,2 @@
 pandas
-pandas-stubs @ git+https://github.com/ramonhagenaars/pandas-stubs.git@main ; python_version >= "3.8"
+pandas-stubs @ git+https://github.com/ramonhagenaars/pandas-stubs.git@main ; python_version>="3.8,<3.11"
