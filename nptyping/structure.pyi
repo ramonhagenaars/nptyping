@@ -24,14 +24,14 @@ SOFTWARE.
 try:
     from typing import Literal  # type: ignore[attr-defined]
 except ImportError:
-    from typing_extensions import Literal  # type: ignore[attr-defined,misc]
+    from typing_extensions import Literal  # type: ignore[attr-defined,misc,assignment]
 
 from typing import Any, cast
 
 import numpy as np
 
 # For MyPy:
-Structure = cast(Literal, Structure)  # type: ignore[has-type,misc]
+Structure = cast(Literal, Structure)  # type: ignore[has-type,misc,valid-type]
 
 # For PyRight:
 class Structure(np.dtype[Any]):  # type: ignore[no-redef,misc]

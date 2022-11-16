@@ -24,12 +24,12 @@ SOFTWARE.
 try:
     from typing import Literal  # type: ignore[attr-defined]
 except ImportError:
-    from typing_extensions import Literal  # type: ignore[attr-defined,misc]
+    from typing_extensions import Literal  # type: ignore[attr-defined,misc,assignment]
 
 from typing import Any, cast
 
 # For MyPy:
-Shape = cast(Literal, Shape)  # type: ignore[has-type,misc]
+Shape = cast(Literal, Shape)  # type: ignore[has-type,misc,valid-type]
 
 # For PyRight:
 class Shape:  # type: ignore[no-redef]
