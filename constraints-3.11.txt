@@ -49,7 +49,7 @@ lazy-object-proxy==1.8.0
     # via astroid
 mccabe==0.7.0
     # via pylint
-mypy==0.990
+mypy==0.991
     # via -r ./dependencies\qa-requirements.txt
 mypy-extensions==0.4.3
     # via

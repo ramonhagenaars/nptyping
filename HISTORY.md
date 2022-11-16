@@ -1,5 +1,9 @@
 # History
 
+## 2.4.1 (2022-11-16)
+
+- Fixed compatibility with `mypy==0.991`.
+
 ## 2.4.0 (2022-11-14)
 
 - Added hint for pandas DataFrame.
