@@ -21,6 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
+import inspect
 from abc import ABC
 from typing import Any, Tuple
 
@@ -101,6 +102,10 @@ class DataFrameMeta(
         structure = cls.__args__[0]
         structure_str = "Any" if structure is Any else structure
         return f"{cls.__name__}[{structure_str}]"
+
+    @property
+    def __module__(cls) -> str:
+        return cls._get_module(inspect.stack(), "nptyping.pandas_.dataframe")
 
     def _check_item(cls, item: Any) -> None:
         # Check if the item is what we expect and raise if it is not.

@@ -1,5 +1,9 @@
 # History
 
+## 2.5.0 (2023-02-06)
+
+- Fixed the `help` text for functions that use `nptyping` types as hints.
+
 ## 2.4.1 (2022-11-16)
 
 - Fixed compatibility with `mypy==0.991`.
