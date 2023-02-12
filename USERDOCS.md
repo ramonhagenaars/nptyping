@@ -331,7 +331,7 @@ NDArray[Any, Floating]
 
 ### Structure expressions
 You can denote the structure of a structured array using what we call a **structure expression**. This expression 
-- again a string - can be put into `Structure` and can then be used in an `NDArray`.
+(again a string) can be put into `Structure` and can then be used in an `NDArray`.
 ```python
 >>> from nptyping import Structure
 
@@ -419,6 +419,23 @@ You can express the shape of a subarray using brackets after a type. You can use
 True
 
 ```
+
+#### Wildcards
+You can use wildcards for field types or globally (for complete fields).
+Here is an example of a wildcard for a field type:
+```python
+>>> Structure["anyType: *"]
+Structure['anyType: *']
+
+```
+
+And here is an example with a global wildcard:
+```python
+>>> Structure["someType: int, *"]
+Structure['someType: int, *']
+
+```
+This expresses a structure that has *at least* a field `someType: int`. Any other fields are also accepted.
 
 ### RecArray
 The `RecArray` corresponds to [numpy.recarray](https://numpy.org/doc/stable/reference/generated/numpy.recarray.html).
