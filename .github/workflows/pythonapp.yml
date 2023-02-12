@@ -8,8 +8,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: [ '3.7', '3.8', '3.9', '3.10', '3.11' ]
-        # FIXME: 3.11 fails because of invoke. See https://github.com/pyinvoke/invoke/pull/877
+        python-version: [ '3.7', '3.8', '3.9', '3.10', '3.11', '3.12' ]
         os: [ ubuntu-latest, macOS-latest, windows-latest ]
     name: Python ${{ matrix.python-version }} on ${{ matrix.os }}
     steps:
