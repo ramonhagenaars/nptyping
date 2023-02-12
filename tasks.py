@@ -39,6 +39,7 @@ _DEFAULT_VENV = f".venv{_PY_VERSION_STR}"
 
 if sys.version_info.minor >= 11:
     # Patch invoke to replace a deprecated inspect function.
+    # FIXME: https://github.com/pyinvoke/invoke/pull/877
     invoke_tasks.inspect.getargspec = invoke_tasks.inspect.getfullargspec
 
 
