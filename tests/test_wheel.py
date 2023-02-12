@@ -69,7 +69,8 @@ def working_dir(path: Path):
         os.chdir(origin)
 
 
-@skipIf(sys.version_info.minor >= 11, "Does not work on 3.11 due to invoke")
+# No need to run these tests on all versions. They take a long time.
+@skipIf(sys.version_info.minor != 10, "Does not work on 3.11 due to invoke")
 class WheelTest(TestCase):
     temp_dir: TemporaryDirectory
     py: str
@@ -110,6 +111,9 @@ class WheelTest(TestCase):
             # For some reason, with_pip=True fails, so we do it separately.
             subprocess.check_output(
                 f"{self.py} -m ensurepip --upgrade --default-pip", shell=True
+            )
+            subprocess.check_output(
+                f"{self.py} -m pip install --upgrade pip", shell=True
             )
             subprocess.check_output(
                 f"{self.pip} install {_ROOT / 'dist' / _WHEEL_NAME}", shell=True
