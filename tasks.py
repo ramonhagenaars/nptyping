@@ -175,7 +175,7 @@ def test(context, py=None):
 
 
 @task
-def doctest(context, py=None):
+def doctest(context, py=None, verbose=False):
     """Run the doctests."""
     # Check the README.
     context.run(f"{get_py(py)} -m doctest README.md")
@@ -183,6 +183,8 @@ def doctest(context, py=None):
 
     # And check all the modules.
     for filename in glob(f"{_ROOT}/**/*.py", recursive=True):
+        if verbose:
+            print(f"doctesting {filename}")
         context.run(f"{get_py(py)} -m doctest {filename}")
 
 
@@ -250,6 +252,6 @@ def autoflake(context, check=False, py=None):
 @task
 def format(context, check=False, py=None):
     """Run the formatters."""
-    autoflake(context, check=check)
-    isort(context, check=check)
-    black(context, check=check)
+    autoflake(context, check=check, py=py)
+    isort(context, check=check, py=py)
+    black(context, check=check, py=py)
