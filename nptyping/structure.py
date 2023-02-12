@@ -51,7 +51,10 @@ class StructureMeta(ContainerMeta, implementation="Structure"):
         return normalize_structure_expression(item)
 
     def _get_additional_values(cls, item: Any) -> Dict[str, Any]:
-        return {"_type_per_name": create_name_to_type_dict(item)}
+        return {
+            "_type_per_name": create_name_to_type_dict(item),
+            "_has_wildcard": item.replace(" ", "").endswith(",*"),
+        }
 
 
 class Structure(NPTypingType, ABC, metaclass=StructureMeta):
@@ -67,6 +70,15 @@ class Structure(NPTypingType, ABC, metaclass=StructureMeta):
     """
 
     _type_per_name = {}
+    _has_wildcard = False
+
+    @classmethod
+    def has_wildcard(cls) -> bool:
+        """
+        Returns whether this Structure has a wildcard for any other columns.
+        :return: True if this Structure expresses "any other columns".
+        """
+        return cls._has_wildcard
 
     @classmethod
     def get_types(cls) -> List[str]:

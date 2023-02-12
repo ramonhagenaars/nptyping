@@ -2,6 +2,7 @@
 
 ## 2.5.0 (2023-02-06)
 
+- Added the column wildcard in structure expressions to allow expressing 'a structure with at least ...'. 
 - Fixed the `help` text for functions that use `nptyping` types as hints.
 
 ## 2.4.1 (2022-11-16)

@@ -389,7 +389,7 @@ True
 The syntax of a structure expression can be formalized in BNF. Extra whitespacing is allowed (e.g. around commas and 
 colons), but this is not included in the schema below.
 ```
-structure-expression  =  <fields>
+structure-expression  =  <fields>|<fields>","<wildcard>
 fields                =  <field>|<field>","<fields>
 field                 =  <field-name>":"<field-type>|"["<combined-field-names>"]:"<field-type>
 combined-field-names  =  <field-name>","<field-name>|<field-name>","<combined-field-names>
