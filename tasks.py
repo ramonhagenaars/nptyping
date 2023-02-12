@@ -28,6 +28,7 @@ import venv as venv_
 from glob import glob
 from pathlib import Path
 
+import invoke.tasks as invoke_tasks
 from invoke import task
 
 _ROOT = "nptyping"
@@ -35,6 +36,11 @@ _PY_VERSION_STR = (
     f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
 )
 _DEFAULT_VENV = f".venv{_PY_VERSION_STR}"
+
+if sys.version_info.minor >= 11:
+    # Patch invoke to replace a deprecated inspect function.
+    invoke_tasks.inspect.getargspec = invoke_tasks.inspect.getfullargspec
+
 
 if os.name == "nt":
     _PY_SUFFIX = "\\Scripts\\python.exe"
