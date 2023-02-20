@@ -11,10 +11,10 @@
   </a> 
 </p>
 
-💡 *Type hints for `NumPy`* <br/>
-💡 *Type hints for `pandas.DataFrame`* <br/>
+🧊 *Type hints for `NumPy`* <br/>
+🐼 *Type hints for `pandas.DataFrame`* <br/>
 💡 *Extensive dynamic type checks for dtypes shapes and structures* <br/>
-💡 *[Jump to the Quickstart](https://github.com/ramonhagenaars/nptyping/blob/master/USERDOCS.md#Quickstart)*
+🚀 *[Jump to the Quickstart](https://github.com/ramonhagenaars/nptyping/blob/master/USERDOCS.md#Quickstart)*
 
 Example of a hinted `numpy.ndarray`:
 
