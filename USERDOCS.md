@@ -59,7 +59,7 @@ Use the combination of these packages to add type safety and readability:
 >>> from beartype import beartype
 
 >>> @beartype  # The function signature is now type safe
-... def fun(df: DataFrame[S["a: int, b: str"]]) -> DataFrame[S["a: int, b: str"]]:
+... def fun(df: DataFrame[S["a: Int, b: Str"]]) -> DataFrame[S["a: Int, b: Str"]]:
 ...     return df
 
 ```
