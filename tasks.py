@@ -28,6 +28,7 @@ import venv as venv_
 from glob import glob
 from pathlib import Path
 
+import invoke.tasks as invoke_tasks
 from invoke import task
 
 _ROOT = "nptyping"
@@ -35,6 +36,12 @@ _PY_VERSION_STR = (
     f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
 )
 _DEFAULT_VENV = f".venv{_PY_VERSION_STR}"
+
+if sys.version_info.minor >= 11:
+    # Patch invoke to replace a deprecated inspect function.
+    # FIXME: https://github.com/pyinvoke/invoke/pull/877
+    invoke_tasks.inspect.getargspec = invoke_tasks.inspect.getfullargspec
+
 
 if os.name == "nt":
     _PY_SUFFIX = "\\Scripts\\python.exe"
@@ -111,6 +118,7 @@ def clean(context, py=None):
     shutil.rmtree("build", ignore_errors=True)
     shutil.rmtree(".mypy_cache", ignore_errors=True)
     shutil.rmtree(".pytest_cache", ignore_errors=True)
+    shutil.rmtree("__pycache__", ignore_errors=True)
 
 
 @task
@@ -160,7 +168,7 @@ def wheel(context, py=None):
     """Build a wheel."""
     print(f"Installing dependencies into: {_DEFAULT_VENV}")
     context.run(f"{get_py(py)} setup.py sdist")
-    context.run(f"{get_py(py)} setup.py bdist_wheel")
+    context.run(f"{get_pip(py)} wheel . --wheel-dir dist --no-deps")
 
 
 # QA TOOLS
@@ -175,7 +183,7 @@ def test(context, py=None):
 
 
 @task
-def doctest(context, py=None):
+def doctest(context, py=None, verbose=False):
     """Run the doctests."""
     # Check the README.
     context.run(f"{get_py(py)} -m doctest README.md")
@@ -183,6 +191,8 @@ def doctest(context, py=None):
 
     # And check all the modules.
     for filename in glob(f"{_ROOT}/**/*.py", recursive=True):
+        if verbose:
+            print(f"doctesting {filename}")
         context.run(f"{get_py(py)} -m doctest {filename}")
 
 
@@ -250,6 +260,6 @@ def autoflake(context, check=False, py=None):
 @task
 def format(context, check=False, py=None):
     """Run the formatters."""
-    autoflake(context, check=check)
-    isort(context, check=check)
-    black(context, check=check)
+    autoflake(context, check=check, py=py)
+    isort(context, check=check, py=py)
+    black(context, check=check, py=py)

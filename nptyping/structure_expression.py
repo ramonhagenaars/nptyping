@@ -1,7 +1,7 @@
 """
 MIT License
 
-Copyright (c) 2022 Ramon Hagenaars
+Copyright (c) 2023 Ramon Hagenaars
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -28,8 +28,10 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Dict,
+    Generator,
     List,
     Mapping,
+    Tuple,
     Type,
     Union,
 )
@@ -88,31 +90,62 @@ def check_structure(
 
     # Add the wildcard to the lexicon. We want to do this here to keep
     # knowledge on wildcards in one place (this module).
-    type_per_name_with_wildcard = {**type_per_name, "*": object}  # type: ignore[arg-type]
-    if set(target.get_names()) != set(fields.keys()):
-        return False
-    for name, dtype_tuple in fields.items():
-        dtype = dtype_tuple[0]
-        target_type_name = target.get_type(name)
-        target_type_shape_match = re.search(_REGEX_FIELD_SHAPE, target_type_name)
-        actual_type = dtype.type
-        if target_type_shape_match:
-            if not dtype.subdtype:
-                # the dtype does not contain a shape.
-                return False
-            actual_type = dtype.subdtype[0].type
-            target_type_shape = target_type_shape_match.group(1)
-            shape_corresponds = check_shape(dtype.shape, Shape[target_type_shape])
-            if not shape_corresponds:
-                return False
-            target_type_name = target_type_name.replace(
-                target_type_shape_match.group(0), ""
-            )
-        check_type_name(target_type_name, type_per_name_with_wildcard)
-        target_type = type_per_name_with_wildcard[target_type_name]
-        if not issubclass(actual_type, target_type):
+    type_per_name_with_wildcard: Dict[str, type] = {
+        **type_per_name,
+        "*": object,
+    }  # type: ignore[arg-type]
+
+    if target.has_wildcard():
+        # Check from the Target's perspective. All fields in the Target should be
+        # in the subject.
+        def iterator() -> Generator[Tuple[str, Tuple[np.dtype, int]], None, None]:  # type: ignore[type-arg] # pylint: disable=line-too-long
+            for name_ in target.get_names():
+                yield name_, fields.get(name_)  # type: ignore[misc]
+
+    else:
+        # Check from the subject's perspective. All fields in the subject
+        # should be in the target.
+        if set(target.get_names()) != set(fields.keys()):
+            return False
+
+        def iterator() -> Generator[Tuple[str, Tuple[np.dtype, int]], None, None]:  # type: ignore[type-arg] # pylint: disable=line-too-long
+            for name_, dtype_tuple_ in fields.items():
+                yield name_, dtype_tuple_  # type: ignore[misc]
+
+    for name, dtype_tuple in iterator():
+        field_in_target_not_in_subject = dtype_tuple is None
+        if field_in_target_not_in_subject or not _check_structure_field(
+            name, dtype_tuple, target, type_per_name_with_wildcard
+        ):
             return False
     return True
+
+
+def _check_structure_field(
+    name: str,
+    dtype_tuple: Tuple[np.dtype, int],  # type: ignore[type-arg]
+    target: "Structure",
+    type_per_name_with_wildcard: Dict[str, type],
+) -> bool:
+    dtype = dtype_tuple[0]
+    target_type_name = target.get_type(name)
+    target_type_shape_match = re.search(_REGEX_FIELD_SHAPE, target_type_name)
+    actual_type = dtype.type
+    if target_type_shape_match:
+        if not dtype.subdtype:
+            # the dtype does not contain a shape.
+            return False
+        actual_type = dtype.subdtype[0].type
+        target_type_shape = target_type_shape_match.group(1)
+        shape_corresponds = check_shape(dtype.shape, Shape[target_type_shape])
+        if not shape_corresponds:
+            return False
+        target_type_name = target_type_name.replace(
+            target_type_shape_match.group(0), ""
+        )
+    check_type_name(target_type_name, type_per_name_with_wildcard)
+    target_type = type_per_name_with_wildcard[target_type_name]
+    return issubclass(actual_type, target_type)
 
 
 def check_type_names(
@@ -167,7 +200,11 @@ def normalize_structure_expression(
     structure_expression = re.sub(r"\s*", "", structure_expression)
     type_to_names_dict = _create_type_to_names_dict(structure_expression)
     normalized_structure_expression = _type_to_names_dict_to_str(type_to_names_dict)
-    return normalized_structure_expression.replace(",", ", ").replace("  ", " ")
+    result = normalized_structure_expression.replace(",", ", ").replace("  ", " ")
+    has_wildcard_end = structure_expression.replace(" ", "").endswith(",*")
+    if has_wildcard_end:
+        result += ", *"
+    return result
 
 
 def create_name_to_type_dict(
@@ -295,4 +332,8 @@ _REGEX_FIELD_TYPE_POINTER = rf"(\s*{_FIELD_TYPE_POINTER}\s*)"
 _REGEX_FIELD = (
     rf"(\s*{_REGEX_FIELD_LEFT}{_REGEX_FIELD_TYPE_POINTER}{_REGEX_FIELD_RIGHT}\s*)"
 )
-_REGEX_STRUCTURE_EXPRESSION = rf"^({_REGEX_FIELD}({_REGEX_SEPARATOR}{_REGEX_FIELD})*)$"
+_REGEX_STRUCTURE_EXPRESSION = (
+    rf"^({_REGEX_FIELD}"
+    rf"({_REGEX_SEPARATOR}{_REGEX_FIELD})*"
+    rf"({_REGEX_SEPARATOR}{_REGEX_FIELD_TYPE_WILDCARD})?)$"
+)

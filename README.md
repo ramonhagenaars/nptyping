@@ -11,9 +11,10 @@
   </a> 
 </p>
 
-💡 *Type hints for `NumPy`* <br/>
-💡 *Type hints for `pandas.DataFrame`* <br/>
+🧊 *Type hints for `NumPy`* <br/>
+🐼 *Type hints for `pandas.DataFrame`* <br/>
 💡 *Extensive dynamic type checks for dtypes shapes and structures* <br/>
+🚀 *[Jump to the Quickstart](https://github.com/ramonhagenaars/nptyping/blob/master/USERDOCS.md#Quickstart)*
 
 Example of a hinted `numpy.ndarray`:
 
@@ -32,15 +33,14 @@ Example of a hinted `pandas.DataFrame`:
 >>> df: DataFrame[S["name: Str, x: Float, y: Float"]]
 
 ```
-⚠️`pandas.DataFrame` is not yet supported on Python 3.11.
 
 ### Installation
 
-| Command                          | Description                                               |
-|:---------------------------------|-----------------------------------------------------------|
-| `pip install nptyping`           | Install the basics                                        |
-| `pip install nptyping[pandas]`   | Install with pandas extension (⚠️Python 3.10 or lower)  |
-| `pip install nptyping[complete]` | Install with all extensions                               |
+| Command                          | Description                   |
+|:---------------------------------|-------------------------------|
+| `pip install nptyping`           | Install the basics            |
+| `pip install nptyping[pandas]`   | Install with pandas extension |
+| `pip install nptyping[complete]` | Install with all extensions   |
 
 ### Instance checking
 

@@ -1,7 +1,7 @@
 """
 MIT License
 
-Copyright (c) 2022 Ramon Hagenaars
+Copyright (c) 2023 Ramon Hagenaars
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,9 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 from abc import ABCMeta, abstractmethod
+from inspect import FrameInfo
 from typing import (
     Any,
     Dict,
+    List,
     Optional,
     Set,
     Tuple,
@@ -122,6 +124,11 @@ class SubscriptableMeta(ABCMeta):
     @abstractmethod
     def _get_item(cls, item: Any) -> Tuple[Any, ...]:
         ...  # pragma: no cover
+
+    def _get_module(cls, stack: List[FrameInfo], module: str) -> str:
+        # The magic below makes Python's help function display a meaningful
+        # text with nptyping types.
+        return "typing" if stack[1][3] == "formatannotation" else module
 
     def _get_additional_values(
         cls, item: Any  # pylint: disable=unused-argument

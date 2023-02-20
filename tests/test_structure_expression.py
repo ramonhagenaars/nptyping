@@ -122,6 +122,7 @@ class StructureExpressionTest(TestCase):
         validate_structure_expression("abc: type, def: type")
         validate_structure_expression("abc: type[*, 2, ...], def: type[2 ]")
         validate_structure_expression("[abc, def]: type")
+        validate_structure_expression("[abc, def]: type, *")
         validate_structure_expression("[abc, def]: type[*, ...]")
         validate_structure_expression("[abc, def]: type1, ghi: type2")
         validate_structure_expression("[abc, def]: type1, [ghi, jkl]: type2")
@@ -210,3 +211,18 @@ class StructureExpressionTest(TestCase):
         output = create_name_to_type_dict("a: t1, b: t2, c: t1")
         expected = {"a": "t1", "b": "t2", "c": "t1"}
         self.assertDictEqual(expected, output)
+
+    def test_structure_depicting_at_least(self):
+        # Test that you can define a Structure that expresses a structure with
+        # at least some columns of some type.
+        dtype_true1 = np.dtype([("a", "U10"), ("b", "i4")])
+        dtype_true2 = np.dtype([("a", "U10"), ("b", "i4"), ("c", "i4"), ("d", "i4")])
+        dtype_false1 = np.dtype([("a", "U10"), ("b", "U10")])
+        dtype_false2 = np.dtype([("b", "i4"), ("c", "i4"), ("d", "i4")])
+
+        structure = Structure["a: Str, b: Int32, *"]
+
+        self.assertTrue(check_structure(dtype_true1, structure, dtype_per_name))
+        self.assertTrue(check_structure(dtype_true2, structure, dtype_per_name))
+        self.assertFalse(check_structure(dtype_false1, structure, dtype_per_name))
+        self.assertFalse(check_structure(dtype_false2, structure, dtype_per_name))

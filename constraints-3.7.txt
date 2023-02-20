@@ -56,7 +56,7 @@ mccabe==0.7.0
     # via pylint
 mypy==0.991
     # via -r ./dependencies\qa-requirements.txt
-mypy-extensions==0.4.3
+mypy-extensions==1.0.0
     # via
     #   black
     #   mypy
@@ -86,7 +86,7 @@ pylint==2.15.2
     # via -r ./dependencies\qa-requirements.txt
 pyparsing==3.0.9
     # via packaging
-pyright==1.1.273
+pyright==1.1.294
     # via -r ./dependencies\qa-requirements.txt
 python-dateutil==2.8.2
     # via pandas

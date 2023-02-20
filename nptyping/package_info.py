@@ -1,7 +1,7 @@
 """
 MIT License
 
-Copyright (c) 2022 Ramon Hagenaars
+Copyright (c) 2023 Ramon Hagenaars
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 __title__ = "nptyping"
-__version__ = "2.4.1"
+__version__ = "2.5.0"
 __author__ = "Ramon Hagenaars"
 __author_email__ = "ramon.hagenaars@gmail.com"
 __description__ = "Type hints for NumPy."
