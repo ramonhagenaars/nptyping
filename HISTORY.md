@@ -1,6 +1,6 @@
 # History
 
-## 2.5.0 (2023-02-06)
+## 2.5.0 (2023-02-20)
 
 - Added the column wildcard in structure expressions to allow expressing 'a structure with at least ...'. 
 - Fixed the `help` text for functions that use `nptyping` types as hints.
