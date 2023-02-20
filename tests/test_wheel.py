@@ -47,6 +47,7 @@ _EXPECTED_FILES_IN_WHEEL = {
     "typing_.pyi",
     "pandas_/__init__.py",
     "pandas_/dataframe.py",
+    "pandas_/dataframe.pyi",
     "pandas_/typing_.py",
 }
 

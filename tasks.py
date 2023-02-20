@@ -118,6 +118,7 @@ def clean(context, py=None):
     shutil.rmtree("build", ignore_errors=True)
     shutil.rmtree(".mypy_cache", ignore_errors=True)
     shutil.rmtree(".pytest_cache", ignore_errors=True)
+    shutil.rmtree("__pycache__", ignore_errors=True)
 
 
 @task
@@ -167,7 +168,7 @@ def wheel(context, py=None):
     """Build a wheel."""
     print(f"Installing dependencies into: {_DEFAULT_VENV}")
     context.run(f"{get_py(py)} setup.py sdist")
-    context.run(f"{get_py(py)} setup.py bdist_wheel")
+    context.run(f"{get_pip(py)} wheel . --wheel-dir dist --no-deps")
 
 
 # QA TOOLS

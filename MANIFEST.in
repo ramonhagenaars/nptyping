@@ -1,0 +1,12 @@
+# See also:
+# https://packaging.python.org/guides/using-manifest-in/#how-files-are-included-in-an-sdist
+include CONTRIBUTING.md
+include HISTORY.md
+include USERDOCS.md
+include dependencies/*
+include dependencies/**/*
+include resources/*
+include resources/**/*
+include tests/*.py
+include tests/**/*.py
+recursive-exclude *.pyc

@@ -1,5 +1,4 @@
 import sys
-from glob import glob
 from pathlib import Path
 
 from setuptools import find_packages, setup
@@ -49,9 +48,6 @@ extras["complete"] = [
 # Dev: all extras for developers, including build and qa dependencies.
 extras["dev"] = [req for key, reqs in extras.items() for req in reqs]
 
-pyi_files = [
-    Path(pyi_file).name for pyi_file in glob("nptyping/**/*.pyi", recursive=True)
-]
 
 setup(
     name=package_info["__title__"],
@@ -64,11 +60,9 @@ setup(
     long_description_content_type="text/markdown",
     license=package_info["__license__"],
     package_data={
-        "nptyping": pyi_files + ["py.typed"],
+        "": ["*.pyi", "py.typed"],
     },
-    packages=find_packages(
-        exclude=("tests", "tests.*", "test_resources", "test_resources.*")
-    ),
+    packages=find_packages(include=("nptyping", "nptyping.*")),
     install_requires=_get_dependencies("requirements.txt"),
     extras_require=extras,
     python_requires=f">={supp_versions[0]}",

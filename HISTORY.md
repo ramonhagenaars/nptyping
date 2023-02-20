@@ -4,6 +4,8 @@
 
 - Added the column wildcard in structure expressions to allow expressing 'a structure with at least ...'. 
 - Fixed the `help` text for functions that use `nptyping` types as hints.
+- Fixed the distribution of `dataframe.pyi` that was missing.
+- Fixed the sdist to include tests and dependencies.
 
 ## 2.4.1 (2022-11-16)
 
