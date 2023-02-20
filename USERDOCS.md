@@ -5,6 +5,7 @@
 # *User documentation*
 
 * [Introduction](#Introduction)
+* [Quickstart](#Quickstart)
 * [Usage](#Usage)
     * [NDArray](#NDArray)
     * [Shape expressions](#Shape-expressions)
@@ -12,7 +13,7 @@
         * [Validation](#Validation)
         * [Normalization](#Normalization)
         * [Variables](#Variables)
-        * [Wildcards](#Wildcards)
+        * [Wildcards](#Shape-Wildcards)
         * [N dimensions](#N-dimensions)
         * [Dimension breakdowns](#Dimension-breakdowns)
         * [Labels](#Labels)
@@ -20,6 +21,7 @@
     * [Structure expressions](#Structure-expressions)
       * [Syntax](#Syntax-structure-expressions)
       * [Subarrays](#Subarrays)
+      * [Wildcards](#Structure-Wildcards)
     * [RecArray](#RecArray)
     * [Pandas DataFrame](#Pandas-DataFrame)
 * [Examples](#Examples)
@@ -42,6 +44,32 @@ raise your question [in a new issue](https://github.com/ramonhagenaars/nptyping/
 
 You will find a lot of code blocks in this document. If you wonder why they are written the way they are (e.g. with the 
 `>>>` and the `...`): all code blocks are tested using [doctest](https://docs.python.org/3/library/doctest.html).
+
+## Quickstart
+Install `nptyping` for the type hints and the recommended `beartype` for dynamic type checks:
+```shell
+pip install nptyping[complete], beartype
+```
+
+Use the combination of these packages to add type safety and readability:
+```python
+# File: myfile.py
+
+>>> from nptyping import DataFrame, Structure as S
+>>> from beartype import beartype
+
+>>> @beartype  # The function signature is now type safe
+... def fun(df: DataFrame[S["a: int, b: str"]]) -> DataFrame[S["a: int, b: str"]]:
+...     return df
+
+```
+
+On your production environments, run Python in optimized mode. This disables the type checks done by beartype and any
+overhead it may cause:
+```shell
+python -OO myfile.py
+```
+You're now good to go. You can sleep tight knowing that today you made your codebase safer and more transparent.
 
 ## Usage
 
@@ -173,7 +201,7 @@ They are interpreted from left to right. This means that in the last example, up
 
 A variable is a word that may contain underscores and digits as long as *it starts with an uppercase letter*.
 
-#### Wildcards
+#### Shape Wildcards
 A wildcard accepts any dimension size. It is denoted by the asterisk (`*`). Example:
 ```python
 >>> isinstance(random.randn(42, 43), NDArray[Shape["*, *"], Any])
@@ -420,7 +448,7 @@ True
 
 ```
 
-#### Wildcards
+#### Structure Wildcards
 You can use wildcards for field types or globally (for complete fields).
 Here is an example of a wildcard for a field type:
 ```python
