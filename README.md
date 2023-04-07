@@ -14,7 +14,8 @@
 🧊 *Type hints for `NumPy`* <br/>
 🐼 *Type hints for `pandas.DataFrame`* <br/>
 💡 *Extensive dynamic type checks for dtypes shapes and structures* <br/>
-🚀 *[Jump to the Quickstart](https://github.com/ramonhagenaars/nptyping/blob/master/USERDOCS.md#Quickstart)*
+🚀 *[Jump to the Quickstart](https://github.com/ramonhagenaars/nptyping/blob/master/USERDOCS.md#Quickstart)* <br/>
+📄 *Or, [learn how this library compares with `numpy.typing`](https://github.com/ramonhagenaars/nptyping/blob/master/USERDOCS.md#Similar-projects)*
 
 Example of a hinted `numpy.ndarray`:
 
