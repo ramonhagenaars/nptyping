@@ -610,7 +610,7 @@ Here is an example of how to get type safety to the max, by stacking `nptyping` 
 * [numpy.typing](https://numpy.org/devdocs/reference/typing.html) <br/>
 *First and foremost, `numpy`'s own typing. The pyi files are more complete and up to date than `nptyping`'s, so if code
 completion in an IDE is most important to you, this might be your go to. On the other hand, at the moment of writing, it
-does not offer instance checking with shapes as `nptptying` does.*
+does not offer instance checking with shapes as `nptyping` does.*
 * [dataenforce](https://github.com/CedricFR/dataenforce) <br/>
 *Although not for `numpy`, this library offers type hinting for `pandas.DataFrame`. Currently, there seems to be no
 `MyPy` integration, but apart from that it seems easy to use.*
