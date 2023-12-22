@@ -171,9 +171,7 @@ class MyPyTest(TestCase):
                 NDArray,
                 Number,
                 Bool,
-                Bool8,
                 Object,
-                Object0,
                 Datetime64,
                 Integer,
                 SignedInteger,
@@ -185,7 +183,6 @@ class MyPyTest(TestCase):
                 Short,
                 IntC,
                 IntP,
-                Int0,
                 Int,
                 LongLong,
                 Timedelta64,
@@ -198,7 +195,6 @@ class MyPyTest(TestCase):
                 UShort,
                 UIntC,
                 UIntP,
-                UInt0,
                 UInt,
                 ULongLong,
                 Inexact,
@@ -225,20 +221,15 @@ class MyPyTest(TestCase):
                 LongComplex,
                 Flexible,
                 Void,
-                Void0,
                 Character,
                 Bytes,
                 String,
-                Bytes0,
                 Unicode,
-                Str0,
             )
 
             NDArray[Any, Number]
             NDArray[Any, Bool]
-            NDArray[Any, Bool8]
             NDArray[Any, Object]
-            NDArray[Any, Object0]
             NDArray[Any, Datetime64]
             NDArray[Any, Integer]
             NDArray[Any, SignedInteger]
@@ -250,7 +241,6 @@ class MyPyTest(TestCase):
             NDArray[Any, Short]
             NDArray[Any, IntC]
             NDArray[Any, IntP]
-            NDArray[Any, Int0]
             NDArray[Any, Int]
             NDArray[Any, LongLong]
             NDArray[Any, Timedelta64]
@@ -263,7 +253,6 @@ class MyPyTest(TestCase):
             NDArray[Any, UShort]
             NDArray[Any, UIntC]
             NDArray[Any, UIntP]
-            NDArray[Any, UInt0]
             NDArray[Any, UInt]
             NDArray[Any, ULongLong]
             NDArray[Any, Inexact]
@@ -290,13 +279,10 @@ class MyPyTest(TestCase):
             NDArray[Any, LongComplex]
             NDArray[Any, Flexible]
             NDArray[Any, Void]
-            NDArray[Any, Void0]
             NDArray[Any, Character]
             NDArray[Any, Bytes]
             NDArray[Any, String]
-            NDArray[Any, Bytes0]
             NDArray[Any, Unicode]
-            NDArray[Any, Str0]
         """
         )
 

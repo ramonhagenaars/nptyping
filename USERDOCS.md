@@ -4,30 +4,31 @@
 
 # *User documentation*
 
-* [Introduction](#Introduction)
-* [Quickstart](#Quickstart)
-* [Usage](#Usage)
-    * [NDArray](#NDArray)
-    * [Shape expressions](#Shape-expressions)
-        * [Syntax](#Syntax-shape-expressions)
-        * [Validation](#Validation)
-        * [Normalization](#Normalization)
-        * [Variables](#Variables)
-        * [Wildcards](#Shape-Wildcards)
-        * [N dimensions](#N-dimensions)
-        * [Dimension breakdowns](#Dimension-breakdowns)
-        * [Labels](#Labels)
-    * [DTypes](#DTypes)
-    * [Structure expressions](#Structure-expressions)
-      * [Syntax](#Syntax-structure-expressions)
-      * [Subarrays](#Subarrays)
-      * [Wildcards](#Structure-Wildcards)
-    * [RecArray](#RecArray)
-    * [Pandas DataFrame](#Pandas-DataFrame)
-* [Examples](#Examples)
-* [Similar projects](#Similar-projects)
-* [FAQ](#FAQ)
-* [About](#About)
+- [*User documentation*](#user-documentation)
+  - [Introduction](#introduction)
+  - [Quickstart](#quickstart)
+  - [Usage](#usage)
+    - [NDArray](#ndarray)
+    - [Shape expressions](#shape-expressions)
+      - [Syntax shape expressions](#syntax-shape-expressions)
+      - [Validation](#validation)
+      - [Normalization](#normalization)
+      - [Variables](#variables)
+      - [Shape Wildcards](#shape-wildcards)
+      - [N dimensions](#n-dimensions)
+      - [Dimension breakdowns](#dimension-breakdowns)
+      - [Labels](#labels)
+    - [DTypes](#dtypes)
+    - [Structure expressions](#structure-expressions)
+      - [Syntax structure expressions](#syntax-structure-expressions)
+      - [Subarrays](#subarrays)
+      - [Structure Wildcards](#structure-wildcards)
+    - [RecArray](#recarray)
+    - [Pandas DataFrame](#pandas-dataframe)
+    - [Examples](#examples)
+  - [Similar projects](#similar-projects)
+  - [FAQ](#faq)
+  - [About](#about)
 
 ## Introduction
 
@@ -275,10 +276,8 @@ The second argument of `NDArray` can be `typing.Any` or any of the following dty
 ...     print(dtype_name)
 Number
 Bool
-Bool8
 Obj
 Object
-Object0
 Datetime64
 Integer
 SignedInteger
@@ -290,7 +289,6 @@ Byte
 Short
 IntC
 IntP
-Int0
 Int
 LongLong
 Timedelta64
@@ -303,7 +301,6 @@ UByte
 UShort
 UIntC
 UIntP
-UInt0
 UInt
 ULongLong
 Inexact
@@ -330,14 +327,11 @@ CLongFloat
 LongComplex
 Flexible
 Void
-Void0
 Character
 Bytes
 String
 Str
-Bytes0
 Unicode
-Str0
 
 ```
 These are special aliases for `numpy` dtypes.
